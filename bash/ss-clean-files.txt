@@ -871,7 +871,7 @@ ss_rm /var/www/html/test.php ## obvious phpinfo files
 ss_rm /var/www/html/test.html ## obvious phpinfo files
 ss_rm /var/www/html/theme-option-export-file* ## local theme export archives
 ss_rm /var/www/html/web.config*
-ss_rm /var/www/html/wordfence-waf* ## ss conflicts, bloated, creates instability (WordFence)
+#ss_rm /var/www/html/wordfence-waf* ## ss conflicts, bloated, creates instability (WordFence)
 ss_rm /var/www/html/yandex*.html  ## junk domain verification files
 ss_rm /var/www/html/wp-snapshots* ## unsafe archives (Duplicator)
 ss_rm /var/www/html/wps-fbre-logs* ## unknown
@@ -898,7 +898,7 @@ ss_rm /var/www/html/wp-content/siteground-migrator* ## vendor-specific
 ss_rm /var/www/html/wp-content/temp-write-test* ## junk files
 ss_rm /var/www/html/wp-content/w3tc-config* ## ss conflicts
 ss_rm /var/www/html/wp-content/wcfe* ## ss conflicts (by WP Config File Editor)
-ss_rm /var/www/html/wp-content/wflogs* ## ss conflicts (by WordFence)
+#ss_rm /var/www/html/wp-content/wflogs* ## ss conflicts (by WordFence)
 ss_rm /var/www/html/wp-content/wp-cache-config.php* ## ss conflicts
 ss_rm /var/www/html/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
 ss_rm /var/www/html/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
@@ -922,7 +922,7 @@ ss_rm /var/www/html/staging/wp-content/siteground-migrator* ## vendor-specific
 ss_rm /var/www/html/staging/wp-content/temp-write-test* ## junk files
 ss_rm /var/www/html/staging/wp-content/w3tc-config* ## ss conflicts
 ss_rm /var/www/html/staging/wp-content/wcfe* ## ss conflicts (by WP Config File Editor)
-ss_rm /var/www/html/staging/wp-content/wflogs* ## ss conflicts (by WordFence)
+#ss_rm /var/www/html/staging/wp-content/wflogs* ## ss conflicts (by WordFence)
 ss_rm /var/www/html/staging/wp-content/wp-cache-config.php* ## ss conflicts
 ss_rm /var/www/html/staging/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
 ss_rm /var/www/html/staging/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
@@ -947,7 +947,7 @@ ss_rm /var/www/html/dev/wp-content/siteground-migrator* ## vendor-specific
 ss_rm /var/www/html/dev/wp-content/temp-write-test* ## junk files
 ss_rm /var/www/html/dev/wp-content/w3tc-config* ## ss conflicts
 ss_rm /var/www/html/dev/wp-content/wcfe* ## ss conflicts (by WP Config File Editor)
-ss_rm /var/www/html/dev/wp-content/wflogs* ## ss conflicts (by WordFence)
+#ss_rm /var/www/html/dev/wp-content/wflogs* ## ss conflicts (by WordFence)
 ss_rm /var/www/html/dev/wp-content/wp-cache-config.php* ## ss conflicts
 ss_rm /var/www/html/dev/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
 ss_rm /var/www/html/dev/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
@@ -1084,7 +1084,7 @@ ss_rm /var/www/html/wp-content/plugins/weather-for-us-widget* ## cryptomining
 ss_rm /var/www/html/wp-content/plugins/wistia-responsive* ## exists in wp core
 ss_rm /var/www/html/wp-content/plugins/woocommerce-jquery-cookie-fix* ## ss conflicts, creates instability
 ss_rm /var/www/html/wp-content/plugins/woothemes-updater* ## deprecated
-ss_rm /var/www/html/wp-content/plugins/wordfence* ## ss conflicts
+#ss_rm /var/www/html/wp-content/plugins/wordfence* ## ss conflicts
 ss_rm /var/www/html/wp-content/plugins/wp-advanced-importer* ## not maintained, serious errors
 ss_rm /var/www/html/wp-content/plugins/wp-amp-it-up ## ss conflicts
 ss_rm /var/www/html/wp-content/plugins/wp-amp-website ## ss conflicts
@@ -1113,7 +1113,7 @@ ss_rm /var/www/html/wp-content/plugins/wpengine-geoip* ## vendor specific (by WP
 ss_rm /var/www/html/wp-content/plugins/wpframework* ## malware (reported by Sucuri)
 ss_rm /var/www/html/wp-content/plugins/wpide ## exists in wp core (syntax editor)
 ss_rm /var/www/html/wp-content/plugins/wpmudev-updates* ## ss conflicts, vendor specific (by WPMU Dev)
-ss_rm /var/www/html/wp-content/plugins/wps-hide-login* ## ss conflicts
+#ss_rm /var/www/html/wp-content/plugins/wps-hide-login* ## ss conflicts
 ss_rm /var/www/html/wp-content/plugins/yoast-seo-search-index-purge* ## ss conflicts, serious errors
 ss_rm /var/www/html/wp-content/plugins/youtube-embed-* ## malware
 ss_rm /var/www/html/wp-content/plugins/yuzo-related-post* ## deprecated, exploitable
@@ -1227,7 +1227,7 @@ ss_rm /var/www/html/staging/wp-content/plugins/weather-for-us-widget* ## cryptom
 ss_rm /var/www/html/staging/wp-content/plugins/wistia-responsive* ## exists in wp core
 ss_rm /var/www/html/staging/wp-content/plugins/woocommerce-jquery-cookie-fix* ## ss conflicts, creates instability
 ss_rm /var/www/html/staging/wp-content/plugins/woothemes-updater* ## deprecated
-ss_rm /var/www/html/staging/wp-content/plugins/wordfence* ## ss conflicts
+#ss_rm /var/www/html/staging/wp-content/plugins/wordfence* ## ss conflicts
 ss_rm /var/www/html/staging/wp-content/plugins/wp-advanced-importer* ## not maintained, serious errors
 ss_rm /var/www/html/staging/wp-content/plugins/wp-amp-it-up ## ss conflicts
 ss_rm /var/www/html/staging/wp-content/plugins/wp-amp-website ## ss conflicts
@@ -1255,7 +1255,7 @@ ss_rm /var/www/html/staging/wp-content/plugins/wpengine-geoip* ## vendor specifi
 ss_rm /var/www/html/staging/wp-content/plugins/wpframework* ## malware (reported by Sucuri)
 ss_rm /var/www/html/staging/wp-content/plugins/wpide ## exists in wp core (syntax editor)
 ss_rm /var/www/html/staging/wp-content/plugins/wpmudev-updates* ## ss conflicts, vendor specific (by WPMU Dev)
-ss_rm /var/www/html/staging/wp-content/plugins/wps-hide-login* ## ss conflicts
+#ss_rm /var/www/html/staging/wp-content/plugins/wps-hide-login* ## ss conflicts
 ss_rm /var/www/html/staging/wp-content/plugins/yoast-seo-search-index-purge* ## ss conflicts, serious errors
 ss_rm /var/www/html/staging/wp-content/plugins/youtube-embed-* ## malware
 ss_rm /var/www/html/staging/wp-content/plugins/yuzo-related-post* ## deprecated, exploitable
@@ -1368,7 +1368,7 @@ ss_rm /var/www/html/dev/wp-content/plugins/weather-for-us-widget* ## cryptominin
 ss_rm /var/www/html/dev/wp-content/plugins/wistia-responsive* ## exists in wp core
 ss_rm /var/www/html/dev/wp-content/plugins/woocommerce-jquery-cookie-fix* ## ss conflicts, creates instability
 ss_rm /var/www/html/dev/wp-content/plugins/woothemes-updater* ## deprecated
-ss_rm /var/www/html/dev/wp-content/plugins/wordfence* ## ss conflicts
+#ss_rm /var/www/html/dev/wp-content/plugins/wordfence* ## ss conflicts
 ss_rm /var/www/html/dev/wp-content/plugins/wp-advanced-importer* ## not maintained, serious errors
 ss_rm /var/www/html/dev/wp-content/plugins/wp-amp-it-up ## ss conflicts
 ss_rm /var/www/html/dev/wp-content/plugins/wp-amp-website ## ss conflicts
@@ -1396,7 +1396,7 @@ ss_rm /var/www/html/dev/wp-content/plugins/wpengine-geoip* ## vendor specific (b
 ss_rm /var/www/html/dev/wp-content/plugins/wpframework* ## malware (reported by Sucuri)
 ss_rm /var/www/html/dev/wp-content/plugins/wpide ## exists in wp core (syntax editor)
 ss_rm /var/www/html/dev/wp-content/plugins/wpmudev-updates* ## ss conflicts, vendor specific (by WPMU Dev)
-ss_rm /var/www/html/dev/wp-content/plugins/wps-hide-login* ## ss conflicts
+#ss_rm /var/www/html/dev/wp-content/plugins/wps-hide-login* ## ss conflicts
 ss_rm /var/www/html/dev/wp-content/plugins/yoast-seo-search-index-purge* ## ss conflicts, serious errors
 ss_rm /var/www/html/dev/wp-content/plugins/youtube-embed-* ## malware
 ss_rm /var/www/html/dev/wp-content/plugins/yuzo-related-post* ## deprecated, exploitable
