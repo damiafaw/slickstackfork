@@ -1,17 +1,17 @@
 ####################################################################################################
 #### author: SlickStack ############################################################################
 #### link: https://slickstack.io ###################################################################
-#### mirror: littlebizzy/slickstack/blob/master/modules/nginx/includes/real-ips-conf.txt ###########
+#### mirror: littlebizzy/slickstack/blob/master/modules/nginx/includes/allowed-ips-conf.txt ########
 #### path: n/a (boilerplate) #######################################################################
-#### destination: /var/www/sites/includes/real-ips.conf ############################################
-#### purpose: Nginx submodule to tell Cloudflare to forward real client IP addresses ###############
+#### destination: /var/www/sites/includes/allowed-ips.conf (after install) #########################
+#### purpose: list of Cloudflare IP addresses allowed by Nginx (included in nginx.conf) ############
 #### module version: Nginx 1.18.x ##################################################################
-#### sourced by: nginx.conf ########################################################################
-#### bash aliases: n/a (ss-install-nginx-config) ###################################################
+#### sourced by: /etc/nginx/nginx.conf #############################################################
+#### bash aliases: n/a #############################################################################
 ####################################################################################################
 
 ####################################################################################################
-#### TABLE OF CONTENTS (Real-IPs.conf) #############################################################
+#### TABLE OF CONTENTS (Allowed-IPs.conf) ##########################################################
 ####################################################################################################
 
 ## this is a brief summary of the different code snippets you will find in this script ##
@@ -19,34 +19,31 @@
 
 ## A. Cloudflare IPv4 List
 ## B. Cloudflare IPv6 List
-## C. Activate Real IP Header
+## C. Deny All Others
 
 ####################################################################################################
-#### A. Real-IPs.conf: Cloudflare IPv4 List ########################################################
+#### A. Allowed-IPs.conf: Cloudflare IPv4 List #####################################################
 ####################################################################################################
 
 @CLOUDFLARE_IPV4_LIST
 
 ####################################################################################################
-#### B. Real-IPs.conf: Cloudflare IPv6 List ########################################################
+#### B. Allowed-IPs.conf: Cloudflare IPv6 List #####################################################
 ####################################################################################################
 
 @CLOUDFLARE_IPV6_LIST
 
 ####################################################################################################
-#### C. Real-IPs.conf: Activate Real IP Header #####################################################
+#### C. Allowed-IPs.conf: Deny All Others ##########################################################
 ####################################################################################################
 
-real_ip_header CF-Connecting-IP;
+deny all;
 
 ####################################################################################################
 #### SlickStack: External References Used To Improve This Script (Thanks, Interwebz) ###############
 ####################################################################################################
 
-## Ref: https://github.com/littlebizzy/slickstack/issues/198
-## Ref: https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/
-## Ref: https://www.cloudflare.com/ips/
-## Ref: https://github.com/ergin/nginx-cloudflare-real-ip
-## Ref: https://slickstack.io/forum/topic/when-is-cloudflare-real-ip-actually-needed-for-wordpress
+## Ref: https://frankindev.com/2020/11/18/allow-cloudflare-only-in-nginx/
+## Ref: https://github.com/littlebizzy/slickstack/issues/199
 
 ## SS_EOF

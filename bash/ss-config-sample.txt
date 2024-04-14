@@ -21,7 +21,7 @@
 ## run ss-update-config if outdated (check the public mirror link for current build) ##
 ## lockdown option prevents automatic updates of SlickStack scripts and config ##
 
-SS_BUILD="APR2024X"
+SS_BUILD="APR2024FF"
 
 ## SS_LOCKDOWN = [false|true] stops dev site from being overwritten... and more soon ##
 ## SS_APP = [wordpress|etc] only wordpress is supported currently (feedback welcome) ##
@@ -178,10 +178,12 @@ GUEST_PASSWORD="@GUEST_PASSWORD"
 ## authenticated pulls requires you to also activate it in the Cloudflare panel ##
 
 ## CLOUDFLARE_REAL_IPS = [true|false] allows your server logs to see the real client IPs ##
-## CLOUDFLARE_AUTHENTICATED_ORIGIN = [false|true] allows only Cloudflare to connect ##
+## CLOUDFLARE_AUTHENTICATED_ORIGIN = [false|true] allows only Cloudflare TLS to connect ##
+## CLOUDFLARE_IPS_ONLY = [false|true] allows only Cloudflare IP addresses to connect ##
 
 CLOUDFLARE_REAL_IPS="true"
 CLOUDFLARE_AUTHENTICATED_ORIGIN="false"
+CLOUDFLARE_IPS_ONLY="false"
 
 ####################################################################################################
 #### SS-Config: WordPress Settings #################################################################
@@ -681,24 +683,15 @@ OPCACHE_BLACKLIST_FILENAME=""
 ## [often|regular|quarter-hourly|half-hourly|hourly|quarter-daily|half-daily|daily|half-weekly|weekly|half-monthly|monthly|sometimes] ##
 ## often = 2min, regular = 5min, sometimes = 2months
 
-## INTERVAL_SS_CHECK = [often|regular|quarter-hourly|half-hourly|hourly] ##
 ## INTERVAL_SS_CLEAN_DATABASE = [hourly|quarter-daily|half-daily|daily|half-weekly|weekly] ##
 ## INTERVAL_SS_CLEAN_FILES = [hourly|quarter-daily|half-daily|daily] ##
 ## INTERVAL_SS_DUMP_DATABASE = [often|regular|quarter-hourly|half-hourly|hourly|quarter-daily|half-daily|daily] ##
 ## INTERVAL_SS_DUMP_FILES = [half-hourly|hourly|quarter-daily|half-daily|daily|half-weekly] ##
 ## INTERVAL_SS_EMPTY_LOGS = [quarter-daily|half-daily|daily|half-weekly|weekly] ##
-## INTERVAL_SS_ENCRYPT_ACME = 
 ## INTERVAL_SS_ENCRYPT_CERTBOT = [weekly|half-monthly|monthly] ##
 ## INTERVAL_SS_ENCRYPT_OPENSSL = [weekly|half-monthly|monthly|sometimes] ##
-## INTERVAL_SS_INSTALL_ADMINER = [half-weekly|weekly|half-monthly|monthly|sometimes] ##
 ## INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS = [daily|half-weekly|weekly] ##
 ## INTERVAL_SS_INSTALL_UBUNTU_BASH = [daily|half-weekly|weekly|half-monthly] ##
-## INTERVAL_SS_INSTALL_UBUNTU_CRONTAB = [sometimes] ##
-## INTERVAL_SS_INSTALL_UBUNTU_KERNEL = [weekly|half-monthly|monthly] ##
-## INTERVAL_SS_INSTALL_UBUNTU_SSH = [weekly|half-monthly|monthly] ##
-## INTERVAL_SS_INSTALL_UBUNTU_SWAPFILE = [sometimes] ##
-## INTERVAL_SS_INSTALL_UBUNTU_USERS = [half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_INSTALL_UBUNTU_UTILS = [monthly|sometimes] ##
 ## INTERVAL_SS_INSTALL_UFW_CONFIG = [monthly|sometimes] ##
 ## INTERVAL_SS_INSTALL_UFW_PACKAGES = [monthly|sometimes] ##
 ## INTERVAL_SS_INSTALL_WORDPRESS_CLI = [weekly|half-monthly|monthly|sometimes] ##
@@ -708,41 +701,21 @@ OPCACHE_BLACKLIST_FILENAME=""
 ## INTERVAL_SS_OPTIMIZE_DATABASE = [daily|half-weekly|weekly|half-monthly] ##
 ## INTERVAL_SS_OPTIMIZE_FILES = [half-daily|daily|half-weekly|weekly|half-monthly] ##
 ## INTERVAL_SS_PERMS = [hourly|quarter-daily|half-daily|daily] ##
-## INTERVAL_SS_PURGE_NGINX = [quarter-daily|half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_PURGE_OPCACHE = [quarter-daily|half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_PURGE_MEMCACHED = [quarter-daily|half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_PURGE_TRANSIENTS = [quarter-daily|half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
 ## INTERVAL_SS_REBOOT_MACHINE = [weekly|half-monthly|monthly|sometimes] ##
 ## INTERVAL_SS_REMOTE_BACKUP = [half-daily|daily|half-weekly|weekly] ##
-## INTERVAL_SS_RESET_PASSWORD_SFTP = [half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_RESTART_MYSQL = [half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_RESTART_NGINX = [half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_RESTART_PHP = [half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_RESTART_MEMCACHED = [half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
-## INTERVAL_SS_RESTART_UFW = [half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
 ## INTERVAL_SS_SYNC_STAGING = [hourly|quarter-daily|half-daily|daily|half-weekly] ##
 ## INTERVAL_SS_UPDATE_CONFIG = [half-monthly|monthly|sometimes] ##
 ## INTERVAL_SS_UPDATE_MODULES = [monthly|sometimes] ##
-## INTERVAL_SS_WORKER = [regular|quarter-hourly|half-hourly|hourly|quarter-daily] ##
 
-INTERVAL_SS_CHECK="often" ## ss default = often
 INTERVAL_SS_CLEAN_DATABASE="never" ## ss default = never (not functional yet)
 INTERVAL_SS_CLEAN_FILES="half-daily" ## ss default = half-daily
 INTERVAL_SS_DUMP_DATABASE="hourly" ## ss default = hourly
 INTERVAL_SS_DUMP_FILES="never" ## ss default = never
 INTERVAL_SS_EMPTY_LOGS="never" ## ss default = never
-INTERVAL_SS_ENCRYPT_ACME="never" ## ss default = never (not functional yet)
 INTERVAL_SS_ENCRYPT_CERTBOT="weekly" ## ss default = weekly
 INTERVAL_SS_ENCRYPT_OPENSSL="never" ## ss default = never
-INTERVAL_SS_INSTALL_ADMINER="monthly" ## ss default = monthly
 INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS="half-weekly" ## ss default = half-weekly
 INTERVAL_SS_INSTALL_UBUNTU_BASH="half-weekly" ## ss default = half-weekly
-INTERVAL_SS_INSTALL_UBUNTU_CRONTAB="sometimes" ## ss default = sometimes
-INTERVAL_SS_INSTALL_UBUNTU_KERNEL="never" ## ss default = never
-INTERVAL_SS_INSTALL_UBUNTU_SSH="never" ## ss default = never
-INTERVAL_SS_INSTALL_UBUNTU_SWAPFILE="never" ## ss default = never
-INTERVAL_SS_INSTALL_UBUNTU_USERS="never" ## ss default = never
-INTERVAL_SS_INSTALL_UBUNTU_UTILS="never" ## ss default = never
 INTERVAL_SS_INSTALL_UFW_CONFIG="never" ## ss default = never
 INTERVAL_SS_INSTALL_UFW_PACKAGES="never" ## ss default = never
 INTERVAL_SS_INSTALL_WORDPRESS_CLI="never" ## ss default = never
@@ -752,22 +725,11 @@ INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS="half-weekly" ## ss default = half-week
 INTERVAL_SS_OPTIMIZE_DATABASE="weekly" ## ss default = weekly
 INTERVAL_SS_OPTIMIZE_FILES="half-weekly" ## ss default = half-weekly
 INTERVAL_SS_PERMS="quarter-daily" ## ss default = quarter-daily
-INTERVAL_SS_PURGE_NGINX="never" ## ss default = never
-INTERVAL_SS_PURGE_OPCACHE="never" ## ss default = never
-INTERVAL_SS_PURGE_MEMCACHED="never" ## ss default = never
-INTERVAL_SS_PURGE_TRANSIENTS="never" ## ss default = never
 INTERVAL_SS_REBOOT_MACHINE="never" ## ss default = never
 INTERVAL_SS_REMOTE_BACKUP="never" ## ss default = never
-INTERVAL_SS_RESET_PASSWORD_SFTP="never" ## ss default = never
-INTERVAL_SS_RESTART_MYSQL="never" ## ss default = never
-INTERVAL_SS_RESTART_NGINX="never" ## ss default = never
-INTERVAL_SS_RESTART_PHP="never" ## ss default = never
-INTERVAL_SS_RESTART_MEMCACHED="never" ## ss default = never
-INTERVAL_SS_RESTART_UFW="never" ## ss default = never
 INTERVAL_SS_SYNC_STAGING="half-daily" ## ss default = half-daily
 INTERVAL_SS_UPDATE_CONFIG="never" ## ss default = never
 INTERVAL_SS_UPDATE_MODULES="never" ## ss default = never
-INTERVAL_SS_WORKER="regular" ## ss default = regular
 
 ####################################################################################################
 #### SS-Config: MU (Must-Use) WordPress Plugins (Custom List) ######################################

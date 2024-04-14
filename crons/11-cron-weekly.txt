@@ -228,11 +228,6 @@ if [[ "${INTERVAL_SS_OPTIMIZE_FILES}" == "weekly" ]]; then
     source "${PATH_SS_OPTIMIZE_FILES}"
 fi
 
-## run ss-install-adminer if set to weekly ##
-if [[ "${INTERVAL_SS_INSTALL_ADMINER}" == "weekly" ]]; then 
-    source "${PATH_SS_INSTALL_ADMINER}"
-fi
-
 ## run ss-install-wordpress-config if set to weekly ##
 if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CONFIG}" == "weekly" ]]; then 
     source "${PATH_SS_INSTALL_WORDPRESS_CONFIG}"
@@ -303,49 +298,9 @@ if [[ "${INTERVAL_SS_ENCRYPT_OPENSSL}" == "weekly" ]]; then
     source "${PATH_SS_ENCRYPT_OPENSSL}"
 fi
 
-## run ss-purge-nginx if set to weekly ##
-if [[ "${INTERVAL_SS_PURGE_NGINX}" == "weekly" ]]; then 
-    source "${PATH_SS_PURGE_NGINX}"
-fi
-
-## run ss-purge-opcache if set to weekly ##
-if [[ "${INTERVAL_SS_PURGE_OPCACHE}" == "weekly" ]]; then 
-    source "${PATH_SS_PURGE_OPCACHE}"
-fi
-
-## run ss-purge-memcached if set to weekly ##
-if [[ "${INTERVAL_SS_PURGE_MEMCACHED}" == "weekly" ]]; then 
-    source "${PATH_SS_PURGE_MEMCACHED}"
-fi
-
-## run ss-purge-transients if set to weekly ##
-if [[ "${INTERVAL_SS_PURGE_TRANSIENTS}" == "weekly " ]]; then 
-    source "${PATH_SS_PURGE_TRANSIENTS}"
-fi
-
-## run ss-reset-password-sftp if set to weekly ##
-if [[ "${INTERVAL_SS_RESET_PASSWORD_SFTP}" == "weekly" ]]; then 
-    source "${PATH_SS_RESET_PASSWORD_SFTP}"
-fi
-
-## run ss-install-ubuntu-users if set to weekly ##
-if [[ "${INTERVAL_SS_INSTALL_UBUNTU_USERS}" == "weekly" ]]; then 
-    source "${PATH_SS_INSTALL_UBUNTU_USERS}"
-fi
-
 ## run ss-install-ubuntu-bash if set to weekly ##
 if [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" == "weekly" ]]; then 
     source "${PATH_SS_INSTALL_UBUNTU_BASH}"
-fi
-
-## run ss-install-ubuntu-ssh if set to weekly ##
-if [[ "${INTERVAL_SS_INSTALL_UBUNTU_SSH}" == "weekly" ]]; then 
-    source "${PATH_SS_INSTALL_UBUNTU_SSH}"
-fi
-
-## run ss-install-ubuntu-kernel if set to weekly ##
-if [[ "${INTERVAL_SS_INSTALL_UBUNTU_KERNEL}" == "weekly" ]]; then 
-    source "${PATH_SS_INSTALL_UBUNTU_KERNEL}"
 fi
 
 ## run ss-remote-backup if set to weekly ##
@@ -356,31 +311,6 @@ fi
 ## run ss-install-nginx-cloudflare-ips if set to weekly ##
 if [[ "${INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS}" == "weekly" ]]; then 
     source "${PATH_SS_INSTALL_NGINX_CLOUDFLARE_IPS}"
-fi
-
-## run ss-restart-mysql if set to weekly ##
-if [[ "${INTERVAL_SS_RESTART_MYSQL}" == "weekly" ]]; then 
-    source "${PATH_SS_RESTART_MYSQL}"
-fi
-
-## run ss-restart-nginx if set to weekly ##
-if [[ "${INTERVAL_SS_RESTART_NGINX}" == "weekly" ]]; then 
-    source "${PATH_SS_RESTART_NGINX}"
-fi
-
-## run ss-restart-php if set to weekly ##
-if [[ "${INTERVAL_SS_RESTART_PHP}" == "weekly" ]]; then 
-    source "${PATH_SS_RESTART_PHP}"
-fi
-
-## run ss-restart-memcached if set to weekly ##
-if [[ "${INTERVAL_SS_RESTART_MEMCACHED}" == "weekly" ]]; then 
-    source "${PATH_SS_RESTART_MEMCACHED}"
-fi
-
-## run ss-restart-ufw if set to weekly ##
-if [[ "${INTERVAL_SS_RESTART_UFW}" == "weekly" ]]; then 
-    source "${PATH_SS_RESTART_UFW}"
 fi
 
 ## run ss-empty-logs if set to weekly ##
