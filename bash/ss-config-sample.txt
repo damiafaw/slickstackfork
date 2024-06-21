@@ -7,7 +7,7 @@
 #### path: /var/www/ss-config-sample (for reference only) ##########################################
 #### destination: /var/www/ss-config (can be configured by ss-install wizard or manually) ##########
 #### purpose: SlickStack configuration file boilerplate ############################################
-#### module version: Ubuntu 22.04 LTS ##############################################################
+#### module version: Ubuntu 24.04 LTS ##############################################################
 #### bash aliases: n/a (ss status) #################################################################
 ####################################################################################################
 
@@ -21,7 +21,7 @@
 ## run ss-update-config if outdated (check the public mirror link for current build) ##
 ## lockdown option prevents automatic updates of SlickStack scripts and config ##
 
-SS_BUILD="APR2024FF"
+SS_BUILD="JUN2024H"
 
 ## SS_LOCKDOWN = [false|true] stops dev site from being overwritten... and more soon ##
 ## SS_APP = [wordpress|etc] only wordpress is supported currently (feedback welcome) ##
@@ -32,6 +32,7 @@ SS_BUILD="APR2024FF"
 ## SS_SYNC_STAGING [true|false] enabled by default (change to false to stop auto-syncing) ##
 ## SS_REBOOT_MIN_UPTIME = [1 hour|3 days|etc] min server uptime to allow ss-reboot to run ##
 ## SS_REMOTE_BACKUPS = [none|rsync|rclone] which method of remote backups you want ##
+## SS_MASSIVE_SITE = [false|true] when true it skips certain time consuming tasks ##
 
 SS_LOCKDOWN="false" ## limited functionality
 SS_APP="wordpress"
@@ -42,21 +43,18 @@ SS_SYNC_DEVELOPMENT="false"
 SS_SYNC_STAGING="true"
 SS_REBOOT_MIN_UPTIME="1 hour"
 SS_REMOTE_BACKUPS="none"
+SS_MASSIVE_SITE="false"
 
 ####################################################################################################
 #### SS-Config: Pilot File Settings ################################################################
 ####################################################################################################
 
-## in the pilot file you can enter all variable of ss-config that you want to change ##
-## check the current version of ss-worker.txt on github to see what variables are already implemented ##
-## enter them VARIABLE_NAME="variable value" like seen here, one in each line ##
-## paste the full URL to your secret gist in this config or during the install ##
-## your ss-config will be updated on every ss-worker run (see the interval settings section below) ##
-## some updated settings may only be used when running ss-update or other specialized ss functions ##
+## use the pilot file to control ss-config settings across unlimited SlickStack servers ##
+## find supported variables in ss-worker (which will update ss-config on every run) ##
 
-## SS_PILOT_FILE = [*must be unique*] the direct URL to your secret Gist file or otherwise ##
+## SS_PILOT_FILE = [*must be unique*] full raw URL to your secret Gist file with variables ##
 
-SS_PILOT_FILE="@SS_PILOT_FILE"
+SS_PILOT_FILE=""
 
 ####################################################################################################
 #### SS-Config: Access Settings ####################################################################
@@ -98,11 +96,16 @@ SFTP_PASSWORD="@SFTP_PASSWORD"
 ## below domain values are used in order to hardcode Nginx and WordPress configuration ##
 ## changing domain settings in the database will not override these settings ##
 
-## SITE_TLD = [example.com] the TLD root domain without any prefixes or subdomains ##
-## SITE_DOMAIN = [www.example.com|sub.example.com] subdomains okay but not subdirectories ##
+## SITE_ROOT_DOMAIN = [example.com|etc] the root domain without any prefixes or subdomains ##
+## SITE_FULL_DOMAIN = [example.com|www.example.com|blog.example.com|etc] no subdirectories ##
 
+## old ##
 SITE_TLD="@SITE_TLD"
 SITE_DOMAIN="@SITE_DOMAIN"
+
+## coming soon ##
+SITE_ROOT_DOMAIN="@SITE_ROOT_DOMAIN"
+SITE_FULL_DOMAIN="@SITE_FULL_DOMAIN"
 
 ####################################################################################################
 #### SS-Config: Database Settings ##################################################################
@@ -565,6 +568,7 @@ INNODB_FLUSH_METHOD="O_DIRECT_NO_FSYNC"
 ## PHP_MAX_INPUT_TIME = [30|60|120|300|etc] most websites should use 30-60 ##
 ## PHP_MAX_INPUT_NESTING_LEVEL = [64|etc] not many reasons to change default value (64) ##
 ## PHP_MAX_INPUT_VARS = [3000|5000|10000|etc] mostly to support extremely bloated themes ##
+## PHP_MAX_MULTIPART_BODY_PARTS = [1500|etc] helps reduce the strength of DDOS attacks ##
 ## PHP_MEMORY_LIMIT = [256M|512M|etc] should probably be 512M for most websites ##
 ## PHP_POST_MAX_SIZE = [256M|512M|etc] limit the size of post data ##
 ## PHP_UPLOAD_MAX_FILESIZE = [256M|512M|1024M|etc] limit the size of large uploads ##
@@ -583,6 +587,7 @@ PHP_MAX_EXECUTION_TIME="60"
 PHP_MAX_INPUT_TIME="60"
 PHP_MAX_INPUT_NESTING_LEVEL="64"
 PHP_MAX_INPUT_VARS="5000"
+PHP_MAX_MULTIPART_BODY_PARTS="1500" ## PHP 8.3+
 PHP_MEMORY_LIMIT="512M"
 PHP_POST_MAX_SIZE="512M"
 PHP_UPLOAD_MAX_FILESIZE="512M"
@@ -672,6 +677,10 @@ OPCACHE_REVALIDATE_FREQUENCY="2"
 OPCACHE_HUGE_CODE_PAGES="false"
 OPCACHE_PRELOAD=""
 OPCACHE_BLACKLIST_FILENAME=""
+
+## new for ubuntu 24.04 and php 8.3 ##
+OPCACHE_JIT_CRTO="1255"
+OPCACHE_JIT_BUFFER_SIZE=""
 
 ####################################################################################################
 #### SS-Config: Interval Settings ##################################################################

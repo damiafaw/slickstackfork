@@ -20,12 +20,14 @@
 ## this is a brief summary of the different code snippets you will find in this script ##
 ## each section should be commented so you understand what is being accomplished ##
 
-## A. Catch-All Redirect To Canonical Domain
-## B. Canonical Domain (Single Website)
-## C. Well-Known (Domain Verification)
-## D. Redirect Any AMP Requests
-## E. Redirect Junk URLs
+## A. Port 80 Server (Certbot Only + Redirect All Others)
+## B. Catch-All Default Server
+## C. Port 443 Server (Canonical)
+## D. Error Pages
+## E. Well-Known (Domain Verification)
+## F. Redirect Any AMP Requests
 
+## E. Redirect Junk URLs
 ## E. Noindex Thin Content (Regex)
 ## E. Noindex Certain File Types
 ## F. FastCGI Cache Settings
@@ -43,11 +45,34 @@
 ## R. Deny Access To Unsafe SlickStack Files
 
 ####################################################################################################
-#### A. Server Block (Production): Catch-All Redirect To Canonical Domain ##########################
+#### A. Server Block (Production): Port 80 Server (Certbot Only + Redirect All Others) #############
 ####################################################################################################
 
 ## here we force redirect any non-canonical requests to the canonical server block below ##
 ## this vastly improves security, prevents IP snooping, SEO problems, and beyond ##
+
+server {
+	listen 80;
+	listen [::]:80;
+	server_name @SITE_DOMAIN_INCLUDING_WWW @SITE_DOMAIN_EXCLUDING_WWW;
+
+	location /.well-known/acme-challenge/ {
+		allow all;
+		auth_basic off;
+		default_type "text/plain";
+		try_files $uri =404;
+		root /var/www/html;
+	}
+
+	location / {
+		return 301 https://@SITE_DOMAIN$request_uri;
+	}
+
+}
+
+####################################################################################################
+#### B. Server Block (Production): Catch-All Default Server ########################################
+####################################################################################################
 
 server {
 	listen 80 default_server;
@@ -58,16 +83,8 @@ server {
 	return 301 https://@SITE_DOMAIN$request_uri;
 }
 
-#### for Certbot only ##
-server {
-    listen 80;
-	listen [::]:80;
-    server_name @SITE_DOMAIN_INCLUDING_WWW @SITE_DOMAIN_EXCLUDING_WWW;
-	return 301 https://@SITE_DOMAIN$request_uri;
-}
-
 ####################################################################################################
-#### B. Server Block (Production): Canonical Domain (Single Website) ###############################
+#### C. Server Block (Production): Port 443 Server (Canonical) #####################################
 ####################################################################################################
 
 ## CloudFlare ignores HTTP/2 from origin server but we enable in case of Lets Encrypt ##
@@ -78,14 +95,9 @@ server {
 	listen [::]:443 ssl http2;
 	server_name @SITE_DOMAIN;
 	root /var/www/html;
-	
-	## redirect any requests that do not match server blocks ##
-	if ($http_host !~ "@SITE_DOMAIN|staging.@SITE_DOMAIN_EXCLUDING_WWW|dev.@SITE_DOMAIN_EXCLUDING_WWW") {
-	return 301        https://@SITE_DOMAIN$request_uri;
-	}
 
 ####################################################################################################
-#### C. Server Block (Production): Error Pages ################################
+#### D. Server Block (Production): Error Pages #####################################################
 ####################################################################################################
 
 error_page 404 /error_404.html;
@@ -101,21 +113,22 @@ error_page 404 /error_404.html;
     }
 	
 ####################################################################################################
-#### C. Server Block (Production): Well-Known (Domain Verification) ################################
+#### E. Server Block (Production): Well-Known (Domain Verification) ################################
 ####################################################################################################
 
 ## the well-known hidden directory is becoming more important for domain verification ##
 ## we implement an abundance of rules to improve functionality and stability ##
 
-location ^~ /.well-known/ {
+location /.well-known/acme-challenge/ {
 	allow all;
 	auth_basic off;
 	default_type "text/plain";
 	try_files $uri =404;
+	root /var/www/html;
 }
     
 ####################################################################################################
-#### D. Server Block (Production): Redirect Any AMP Requests #######################################
+#### F. Server Block (Production): Redirect Any AMP Requests #######################################
 ####################################################################################################
 
 ## this powerful snippet will redirect all the messy URLs created by AMP software ##
@@ -789,9 +802,12 @@ location = /ads.txt {
 ## Ref: https://serverfault.com/questions/411941/nginx-redirect-non-existant-files-on-https-to-http-with-try-files
 ## Ref: https://www.digitalocean.com/community/tutorials/how-to-configure-nginx-to-use-custom-error-pages-on-ubuntu-22-04
 ## Ref: https://stackoverflow.com/questions/50979541/direct-access-to-wp-cron-php
+## Ref: https://serverfault.com/questions/1017545/unable-to-use-letsencrypt-certbot-when-http-to-https-redirect-is-setup
+## Ref: https://serverfault.com/questions/1061262/nginx-lets-encrypt-https-redirect
+## Ref: https://medium.com/@hugodelatte/configuring-an-https-server-with-nginx-and-certbot-d3abe6121af7
+## Ref: https://www.oreilly.com/library/view/nginx-cookbook/9781492078470/ch01.html
 
 ## Ref: https://stackoverflow.com/questions/72516213/how-to-rewrite-wordpress-default-search-url-slug-to-clean-search-nginx
-
 ## ORGANIZE BLOCKS BETTER PER: ##
 ## Ref: https://stackoverflow.com/questions/38911354/nginx-php-file-extension-does-not-work-with-try-files
 

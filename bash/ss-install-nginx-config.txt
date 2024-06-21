@@ -84,7 +84,6 @@ ss_echo "${COLOR_INFO}Running ss-install-nginx-config... ${COLOR_RESET}"
 ## ensures folders exist first ... improve this later? ##
 
 source "${PATH_SS_PERMS_NGINX_CONFIG}"
-source "${PATH_SS_PERMS_NGINX_SSL}"
 
 ####################################################################################################
 #### E. SS-Install-Nginx-Config: Generate DH Parameters (Conditional) ##############################
@@ -104,9 +103,59 @@ fi
 ## here we generate slickstack.crt and slickstack.key as the backup SSL for Nginx ##
 ## this approach is extremely stable and works fantastic with Cloudflare ##
 
-if [[ ! -f "${PATH_THIRDPARTY_CONF}" ]]; then 
-    source "${PATH_SS_ENCRYPT_OPENSSL}"
+source "${PATH_SS_ENCRYPT_OPENSSL}"
+
+if [[ ! -f "${PATH_OPENSSL_CONF}" ]] && [[ ! -f "${PATH_LETSENCRYPT_CONF}" ]] && [[ ! -f "${PATH_THIRDPARTY_CONF}" ]]; then 
+
+    ## retrieve OpenSSL submodule file ##
+    ss_wget "${TMP_OPENSSL_CONF}" "${GITHUB_OPENSSL_CONF}"
+    VALIDATE_TMP_OPENSSL_CONF=$(grep 'SS_EOF' "${TMP_OPENSSL_CONF}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_OPENSSL_CONF}" ]]; then
+        ss_wget "${TMP_OPENSSL_CONF}" "${GITLAB_OPENSSL_CONF}"
+    fi
+
+    ## protocols ##
+    if [[ -z "$SSL_PROTOCOLS" ]]; then 
+        ss_sed "s/@SSL_PROTOCOLS/TLSv1.2 TLSv1.3/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_PROTOCOLS/${SSL_PROTOCOLS}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## ciphers ##
+    if [[ -z "$SSL_CIPHERS" ]]; then 
+        ss_sed "s/@SSL_CIPHERS/ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_CIPHERS/${SSL_CIPHERS}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## session timeout ##
+    if [[ -z "$SSL_SESSION_TIMEOUT" ]]; then 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/1d/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/${SSL_SESSION_TIMEOUT}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## session cache ##
+    if [[ -z "$SSL_SESSION_CACHE" ]]; then 
+        ss_sed "s/@SSL_SESSION_CACHE/shared:SSL:64m/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_CACHE/${SSL_SESSION_CACHE}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## buffer size ##
+    if [[ -z "$SSL_BUFFER_SIZE" ]]; then 
+        ss_sed "s/@SSL_BUFFER_SIZE/16k/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_BUFFER_SIZE/${SSL_BUFFER_SIZE}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## move over and remove conflicting files ##
+    ss_mv "${TMP_OPENSSL_CONF}" "${PATH_OPENSSL_CONF}"
+    ss_rm "${PATH_LETSENCRYPT_CONF}"
+    ss_rm "${PATH_THIRDPARTY_CONF}"
+    
 fi
+
 
 ####################################################################################################
 #### G. SS-Install-Nginx-Config: Generate Htpasswd File ############################################
@@ -520,6 +569,8 @@ fi
     ss_mv "${TMP_NGINX_BLOCK_DEVELOPMENT}" "${PATH_NGINX_BLOCK_DEVELOPMENT}"
     fi
 
+elif [[ "${DEV_SITE}" == "false" ]]; then 
+    ss_rm "${PATH_NGINX_BLOCK_DEVELOPMENT}"
 fi
 
 ####################################################################################################
@@ -577,6 +628,8 @@ fi
     ss_mv "${TMP_NGINX_BLOCK_STAGING}" "${PATH_NGINX_BLOCK_STAGING}"
     fi
 
+elif [[ "${STAGING_SITE}" == "false" ]]; then 
+    ss_rm "${PATH_NGINX_BLOCK_STAGING}"
 fi
 
 ####################################################################################################
@@ -682,23 +735,13 @@ fi
     fi
 
 ####################################################################################################
-####################################################################################################
-
-## done by ss-encrypt-certbot via ss-install-nginx-openssl ##
-
-## run ss-restart-php ##
-# source "${PATH_SS_RESTART_PHP}"
-
-## run ss-restart-nginx ##
-# source "${PATH_SS_RESTART_NGINX}"
-
-####################################################################################################
 #### L. SS-Install-Nginx-Config: Run SS-Encrypt-Certbot ############################################
 ####################################################################################################
 
 ## here we generate slickstack.crt and slickstack.key as the default SSL for Nginx ##
 ## this approach is extremely stable and works fantastic with CloudFlare ##
 
+source "${PATH_SS_RESTART_NGINX}"
 source "${PATH_SS_ENCRYPT_CERTBOT}"
 
 ####################################################################################################
@@ -708,15 +751,278 @@ source "${PATH_SS_ENCRYPT_CERTBOT}"
 ## here we update the Nginx config files to activate either OpenSSL or Lets Encrypt SSL ##
 ## this depends on your ss-config settings (both certs should exist regardless) ##
 
-## MAYBE DELETE THIS SNIPPET and SCRIPT AND PUT INLINE HERE INSTEAD
+## here we update the Nginx config files to activate either OpenSSL or Lets Encrypt SSL ##
+## this depends on your ss-config settings (both certs should exist regardless) ##
 
-source "${PATH_SS_INSTALL_NGINX_SSL}"
+if [[ "${SSL_TYPE}" == "letsencrypt" ]] || [[ "${SSL_TYPE}" == "certbot" ]]; then 
+
+    ## retrieve boilerplate ##
+    ss_wget "${TMP_LETSENCRYPT_CONF}" "${GITHUB_LETSENCRYPT_CONF}"
+    VALIDATE_TMP_LETSENCRYPT_CONF=$(grep 'SS_EOF' "${TMP_LETSENCRYPT_CONF}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_LETSENCRYPT_CONF}" ]]; then
+        ss_wget "${TMP_LETSENCRYPT_CONF}" "${GITLAB_LETSENCRYPT_CONF}"
+    fi
+
+    ## protocols ##
+    if [[ -z "$SSL_PROTOCOLS" ]]; then 
+        ss_sed "s/@SSL_PROTOCOLS/TLSv1.2 TLSv1.3/g" "${TMP_LETSENCRYPT_CONF}"
+    else 
+        ss_sed "s/@SSL_PROTOCOLS/${SSL_PROTOCOLS}/g" "${TMP_LETSENCRYPT_CONF}"
+    fi
+
+    ## ciphers ##
+    if [[ -z "$SSL_CIPHERS" ]]; then 
+        ss_sed "s/@SSL_CIPHERS/ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384/g" "${TMP_LETSENCRYPT_CONF}"
+    else 
+        ss_sed "s/@SSL_CIPHERS/${SSL_CIPHERS}/g" "${TMP_LETSENCRYPT_CONF}"
+    fi
+
+    ## session timeout ##
+    if [[ -z "$SSL_SESSION_TIMEOUT" ]]; then 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/1d/g" "${TMP_LETSENCRYPT_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/${SSL_SESSION_TIMEOUT}/g" "${TMP_LETSENCRYPT_CONF}"
+    fi
+
+    ## session cache ##
+    if [[ -z "$SSL_SESSION_CACHE" ]]; then 
+        ss_sed "s/@SSL_SESSION_CACHE/shared:SSL:64m/g" "${TMP_LETSENCRYPT_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_CACHE/${SSL_SESSION_CACHE}/g" "${TMP_LETSENCRYPT_CONF}"
+    fi
+
+    ## buffer size ##
+    if [[ -z "$SSL_BUFFER_SIZE" ]]; then 
+        ss_sed "s/@SSL_BUFFER_SIZE/16k/g" "${TMP_LETSENCRYPT_CONF}"
+    else 
+        ss_sed "s/@SSL_BUFFER_SIZE/${SSL_BUFFER_SIZE}/g" "${TMP_LETSENCRYPT_CONF}"
+    fi
+    
+    ## move file ##
+
+    if [[ -f "${PATH_LETSENCRYPT_CERT_CERT}" ]]; then
+        ss_mv "${TMP_LETSENCRYPT_CONF}" "${PATH_LETSENCRYPT_CONF}"
+        ss_rm "${PATH_OPENSSL_CONF}"
+        ss_rm "${PATH_THIRDPARTY_CONF}"
+        echo "lets encrypt cert found so installing letsencrypt.conf"
+    elif [[ ! -f "${PATH_LETSENCRYPT_CERT_CERT}" ]]; then
+
+
+## retrieve OpenSSL submodule file ##
+    ss_wget "${TMP_OPENSSL_CONF}" "${GITHUB_OPENSSL_CONF}"
+    VALIDATE_TMP_OPENSSL_CONF=$(grep 'SS_EOF' "${TMP_OPENSSL_CONF}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_OPENSSL_CONF}" ]]; then
+        ss_wget "${TMP_OPENSSL_CONF}" "${GITLAB_OPENSSL_CONF}"
+    fi
+
+    ## protocols ##
+    if [[ -z "$SSL_PROTOCOLS" ]]; then 
+        ss_sed "s/@SSL_PROTOCOLS/TLSv1.2 TLSv1.3/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_PROTOCOLS/${SSL_PROTOCOLS}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## ciphers ##
+    if [[ -z "$SSL_CIPHERS" ]]; then 
+        ss_sed "s/@SSL_CIPHERS/ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_CIPHERS/${SSL_CIPHERS}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## session timeout ##
+    if [[ -z "$SSL_SESSION_TIMEOUT" ]]; then 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/1d/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/${SSL_SESSION_TIMEOUT}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## session cache ##
+    if [[ -z "$SSL_SESSION_CACHE" ]]; then 
+        ss_sed "s/@SSL_SESSION_CACHE/shared:SSL:64m/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_CACHE/${SSL_SESSION_CACHE}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## buffer size ##
+    if [[ -z "$SSL_BUFFER_SIZE" ]]; then 
+        ss_sed "s/@SSL_BUFFER_SIZE/16k/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_BUFFER_SIZE/${SSL_BUFFER_SIZE}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+
+
+        ss_mv "${TMP_OPENSSL_CONF}" "${PATH_OPENSSL_CONF}"
+        ss_rm "${PATH_LETSENCRYPT_CONF}"
+        ss_rm "${PATH_THIRDPARTY_CONF}"
+        echo "SSL_TYPE set to letsencrypt but cert file not found so reverting to openssl.conf instead"
+    fi
+
+fi
+
+
+if [[ "${SSL_TYPE}" == "openssl" ]] || [[ -z "${SSL_TYPE}" ]]; then 
+
+    ## retrieve OpenSSL submodule file ##
+    ss_wget "${TMP_OPENSSL_CONF}" "${GITHUB_OPENSSL_CONF}"
+    VALIDATE_TMP_OPENSSL_CONF=$(grep 'SS_EOF' "${TMP_OPENSSL_CONF}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_OPENSSL_CONF}" ]]; then
+        ss_wget "${TMP_OPENSSL_CONF}" "${GITLAB_OPENSSL_CONF}"
+    fi
+
+    ## protocols ##
+    if [[ -z "$SSL_PROTOCOLS" ]]; then 
+        ss_sed "s/@SSL_PROTOCOLS/TLSv1.2 TLSv1.3/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_PROTOCOLS/${SSL_PROTOCOLS}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## ciphers ##
+    if [[ -z "$SSL_CIPHERS" ]]; then 
+        ss_sed "s/@SSL_CIPHERS/ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_CIPHERS/${SSL_CIPHERS}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## session timeout ##
+    if [[ -z "$SSL_SESSION_TIMEOUT" ]]; then 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/1d/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/${SSL_SESSION_TIMEOUT}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## session cache ##
+    if [[ -z "$SSL_SESSION_CACHE" ]]; then 
+        ss_sed "s/@SSL_SESSION_CACHE/shared:SSL:64m/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_CACHE/${SSL_SESSION_CACHE}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+    ## buffer size ##
+    if [[ -z "$SSL_BUFFER_SIZE" ]]; then 
+        ss_sed "s/@SSL_BUFFER_SIZE/16k/g" "${TMP_OPENSSL_CONF}"
+    else 
+        ss_sed "s/@SSL_BUFFER_SIZE/${SSL_BUFFER_SIZE}/g" "${TMP_OPENSSL_CONF}"
+    fi
+
+
+    ## move over and remove conflicting files ##
+    ss_mv "${TMP_OPENSSL_CONF}" "${PATH_OPENSSL_CONF}"
+    ss_rm "${PATH_LETSENCRYPT_CONF}"
+    ss_rm "${PATH_THIRDPARTY_CONF}"
+    
+fi
+
+
+if [[ "${SSL_TYPE}" == "thirdparty" ]]; then 
+
+    ## retrieve boilerplate ##
+    ss_wget "${TMP_THIRDPARTY_CONF}" "${GITHUB_THIRDPARTY_CONF}"
+    VALIDATE_TMP_THIRDPARTY_CONF=$(grep 'SS_EOF' "${TMP_THIRDPARTY_CONF}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_THIRDPARTY_CONF}" ]]; then
+        ss_wget "${TMP_THIRDPARTY_CONF}" "${GITLAB_THIRDPARTY_CONF}"
+    fi
+
+    ## protocols ##
+    if [[ -z "$SSL_PROTOCOLS" ]]; then 
+        ss_sed "s/@SSL_PROTOCOLS/TLSv1.2 TLSv1.3/g" "${TMP_THIRDPARTY_CONF}"
+    else 
+        ss_sed "s/@SSL_PROTOCOLS/${SSL_PROTOCOLS}/g" "${TMP_THIRDPARTY_CONF}"
+    fi
+
+    ## ciphers ##
+    if [[ -z "$SSL_CIPHERS" ]]; then 
+        ss_sed "s/@SSL_CIPHERS/ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384/g" "${TMP_THIRDPARTY_CONF}"
+    else 
+        ss_sed "s/@SSL_CIPHERS/${SSL_CIPHERS}/g" "${TMP_THIRDPARTY_CONF}"
+    fi
+
+    ## session timeout ##
+    if [[ -z "$SSL_SESSION_TIMEOUT" ]]; then 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/1d/g" "${TMP_THIRDPARTY_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_TIMEOUT/${SSL_SESSION_TIMEOUT}/g" "${TMP_THIRDPARTY_CONF}"
+    fi
+
+    ## session cache ##
+    if [[ -z "$SSL_SESSION_CACHE" ]]; then 
+        ss_sed "s/@SSL_SESSION_CACHE/shared:SSL:64m/g" "${TMP_THIRDPARTY_CONF}"
+    else 
+        ss_sed "s/@SSL_SESSION_CACHE/${SSL_SESSION_CACHE}/g" "${TMP_THIRDPARTY_CONF}"
+    fi
+
+    ## buffer size ##
+    if [[ -z "$SSL_BUFFER_SIZE" ]]; then 
+        ss_sed "s/@SSL_BUFFER_SIZE/16k/g" "${TMP_THIRDPARTY_CONF}"
+    else 
+        ss_sed "s/@SSL_BUFFER_SIZE/${SSL_BUFFER_SIZE}/g" "${TMP_THIRDPARTY_CONF}"
+    fi
+    
+    ## move file ##
+    ss_mv "${TMP_THIRDPARTY_CONF}" "${PATH_THIRDPARTY_CONF}"
+    ss_rm "${PATH_LETSENCRYPT_CONF}"
+    ss_rm "${PATH_OPENSSL_CONF}"
+
+fi
 
 ####################################################################################################
 #### N. SS-Install-Nginx-Config: Install Cloudflare.conf (Conditional) #############################
 ####################################################################################################
 
-source "${PATH_SS_INSTALL_NGINX_CLOUDFLARE_IPS}"
+## if cloudflare ips true ##
+if [[ "${CLOUDFLARE_REAL_IPS}" != "false" ]]; then 
+
+## retrieve cloudflare.conf boilerplate ##
+ss_wget "${TMP_CLOUDFLARE_CONF}" "${GITHUB_CLOUDFLARE_CONF}"
+VALIDATE_TMP_CLOUDFLARE_CONF=$(grep 'SS_EOF' "${TMP_CLOUDFLARE_CONF}" 2> /dev/null)
+if [[ -z "${VALIDATE_TMP_CLOUDFLARE_CONF}" ]]; then
+    ss_wget "${TMP_CLOUDFLARE_CONF}" "${GITLAB_CLOUDFLARE_CONF}"
+fi
+
+ss_touch /tmp/ips-v4.txt
+ss_null /tmp/ips-v4.txt
+
+ss_touch /tmp/ips-v6.txt
+ss_null /tmp/ips-v6.txt
+
+## ipv4 list ##
+CLOUDFLARE_IPV4_LIST=$(for i in `curl -s -L https://www.cloudflare.com/ips-v4`; do
+    echo "set_real_ip_from $i;" >> /tmp/ips-v4.txt;
+done)
+
+sed -i -e '/@CLOUDFLARE_IPV4_LIST/{r /tmp/ips-v4.txt' -e 'd' -e '}' "${TMP_CLOUDFLARE_CONF}"
+
+## ipv6 list ##
+CLOUDFLARE_IPV6_LIST=$(for i in `curl -s -L https://www.cloudflare.com/ips-v6`; do
+    echo "set_real_ip_from $i;" >> /tmp/ips-v6.txt;
+done)
+
+sed -i -e '/@CLOUDFLARE_IPV6_LIST/{r /tmp/ips-v6.txt' -e 'd' -e '}' "${TMP_CLOUDFLARE_CONF}"
+
+## install cloudflare.conf if valid ##
+VALIDATE_TMP_CLOUDFLARE_CONF=$(grep 'set_real_ip_from' "${TMP_CLOUDFLARE_CONF}" 2> /dev/null)
+if [[ -n "${VALIDATE_TMP_CLOUDFLARE_CONF}" ]]; then
+    ss_mv "${TMP_CLOUDFLARE_CONF}" "${PATH_CLOUDFLARE_CONF}"
+    ss_reload nginx
+    ss_echo "${COLOR_INFO}ss-install-nginx-cloudflare-ips: Successfully installed cloudflare.conf and reloaded Nginx... ${COLOR_RESET}"
+elif [[ -z "${VALIDATE_TMP_CLOUDFLARE_CONF}" ]]; then
+    ss_echo "${COLOR_WARN}ss-install-nginx-cloudflare-ips: latest cloudflare.conf boilerplate appears corrupt so skipping install (old version remains installed if exists)... ${COLOR_RESET}"
+fi
+
+
+#### else if cloudflare ips false #####
+elif [[ "${NGINX_CLOUDFLARE_IPS}" == "false" ]]; then
+    ss_rm "${PATH_CLOUDFLARE_CONF}"
+    ## no need to reload nginx here... ##
+    ss_echo "${COLOR_WARN}ss-install-nginx-cloudflare-ips: cloudflare.conf is disabled in your ss-config so installation skipped... ${COLOR_RESET}"
+
+
+## end if parent #####
+fi
+
+ss_rm "${TMP_CLOUDFLARE_CONF}"
+ss_rm /tmp/ips-v4.txt
+ss_rm /tmp/ips-v6.txt
 
 ####################################################################################################
 #### N. SS-Install-Nginx-Config: Install Allowed-IPs.conf (Conditional) ############################
@@ -779,7 +1085,42 @@ ss_rm "${TMP_ALLOWED_IPS_CONF}"
 #### O. SS-Install-Nginx-Config: Install Authenticated-Origin.conf (Optional) ######################
 ####################################################################################################
 
-source "${PATH_SS_INSTALL_NGINX_CLOUDFLARE_AUTHENTICATED_ORIGIN}"
+if [[ "${CLOUDFLARE_AUTHENTICATED_ORIGIN}" == "true" ]]; then 
+
+## retrieve public cloudflare.pem cert ##
+ss_wget "${TMP_CLOUDFLARE_PEM}" "${REMOTE_CLOUDFLARE_PEM}"
+
+## retrieve authenticated-origin.conf boilerplate ##
+ss_wget "${TMP_AUTHENTICATED_ORIGIN_CONF}" "${GITHUB_AUTHENTICATED_ORIGIN_CONF}"
+VALIDATE_TMP_AUTHENTICATED_ORIGIN_CONF=$(grep 'SS_EOF' "${TMP_AUTHENTICATED_ORIGIN_CONF}" 2> /dev/null)
+if [[ -z "${VALIDATE_TMP_AUTHENTICATED_ORIGIN_CONF}" ]]; then
+    ss_wget "${TMP_AUTHENTICATED_ORIGIN_CONF}" "${GITLAB_AUTHENTICATED_ORIGIN_CONF}"
+fi
+
+## install if valid ##
+VALIDATE_TMP_AUTHENTICATED_ORIGIN_CONF=$(grep 'ssl_verify_client' "${TMP_AUTHENTICATED_ORIGIN_CONF}" 2> /dev/null)
+if [[ -n "${VALIDATE_TMP_AUTHENTICATED_ORIGIN_CONF}" ]]; then
+    ss_mv "${TMP_CLOUDFLARE_PEM}" "${PATH_CLOUDFLARE_PEM}"
+    ss_mv "${TMP_AUTHENTICATED_ORIGIN_CONF}" "${PATH_AUTHENTICATED_ORIGIN_CONF}"
+    ss_reload nginx
+    ss_echo "${COLOR_INFO}ss-install-nginx-auth-origin: Successfully installed authenticated-origin.conf and reloaded Nginx... ${COLOR_RESET}"
+elif [[ -z "${VALIDATE_TMP_AUTHENTICATED_ORIGIN_CONF}" ]]; then
+    ss_echo "${COLOR_WARN}ss-install-nginx-auth-origin: latest authenticated-origin.conf boilerplate appears corrupt so skipping install (old version remains installed if exists)... ${COLOR_RESET}"
+fi
+
+#### else if cloudflare auth origin false #####
+elif [[ "${CLOUDFLARE_AUTHENTICATED_ORIGIN}" == "false" ]]; then
+    ss_rm "${PATH_CLOUDFLARE_PEM}"
+    ss_rm "${PATH_CLOUDFLARE_AUTHENTICATED_ORIGIN}"
+    ## no need to reload nginx here... ##
+    ss_echo "${COLOR_WARN}ss-install-nginx-auth-origin: authenticated-origin.conf is disabled in your ss-config so installation skipped... ${COLOR_RESET}"
+
+
+## end if parent #####
+fi
+
+ss_rm "${TMP_CLOUDFLARE_PEM}"
+ss_rm "${TMP_AUTHENTICATED_ORIGIN_CONF}"
 
 ####################################################################################################
 #### P. SS-Install-Nginx-Config: Install Perms-Policy.conf (Optional) ##############################
@@ -798,7 +1139,36 @@ ss_rm /tmp/perms-policy.conf
 #### P. SS-Install-Nginx-Config: Install Adminer.conf (Optional) ###################################
 ####################################################################################################
 
-source "${PATH_SS_INSTALL_NGINX_ADMINER}"
+if [[ "${ADMINER_PUBLIC}" == "true" ]]; then 
+
+ss_wget "${TMP_ADMINER_CONF}" "${GITHUB_ADMINER_CONF}"
+VALIDATE_TMP_ADMINER_CONF=$(grep 'SS_EOF' "${TMP_ADMINER_CONF}" 2> /dev/null)
+if [[ -z "${VALIDATE_TMP_ADMINER_CONF}" ]]; then
+    ss_wget "${TMP_ADMINER_CONF}" "${GITLAB_ADMINER_CONF}"
+fi
+
+## install if valid ##
+VALIDATE_TMP_ADMINER_CONF=$(grep 'SS_EOF' "${TMP_ADMINER_CONF}" 2> /dev/null)
+if [[ -n "${VALIDATE_TMP_ADMINER_CONF}" ]]; then
+    ss_sed "s/@ADMINER_RANDOM_URL/${ADMINER_URL}/g" "${TMP_ADMINER_CONF}"
+    ss_mv "${TMP_ADMINER_CONF}" "${PATH_ADMINER_CONF}"
+    ss_reload nginx
+    ss_echo "${COLOR_INFO}ss-install-nginx-adminer: Successfully installed adminer.conf and reloaded Nginx... ${COLOR_RESET}"
+elif [[ -z "${VALIDATE_TMP_ADMINER_CONF}" ]]; then
+    ss_echo "${COLOR_WARN}ss-install-nginx-adminer: latest adminer.conf boilerplate appears corrupt so skipping install (old version remains installed if exists)... ${COLOR_RESET}"
+fi
+
+#### else if adminer disabled #####
+elif [[ "${ADMINER_PUBLIC}" == "false" ]]; then
+    ss_rm "${PATH_ADMINER_CONF}"
+    ## no need to reload nginx here... ##
+    ss_echo "${COLOR_WARN}ss-install-nginx-adminer: adminer.conf is disabled in your ss-config so installation skipped... ${COLOR_RESET}"
+
+
+## end if parent #####
+fi
+
+ss_rm "${TMP_ADMINER_CONF}"
 
 ####################################################################################################
 #### Q. SS-Install-Nginx-Config: Enable TMPFS Mount (Conditional) ##################################
@@ -889,5 +1259,15 @@ chmod 0700 /var/www/crons/custom/*cron* ## 0700 means only root/sudo can execute
 ## Ref: https://www.openssl.org/docs/manmaster/man1/openssl-passwd.html
 ## Ref: https://github.com/littlebizzy/slickstack/issues/198
 ## Ref: https://github.com/ergin/nginx-cloudflare-real-ip
+## Ref: https://serverfault.com/questions/950857/use-include-in-nginx-server-block-but-where-to-save
+## Ref: https://serverfault.com/questions/1126212/block-bad-bot-based-on-a-query-param-signature
+## Ref: https://developers.cloudflare.com/ssl/origin-configuration/authenticated-origin-pull/set-up/zone-level/
+## Ref: https://github.com/littlebizzy/slickstack/issues/198
+## Ref: https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/
+## Ref: https://www.cloudflare.com/ips/
+## Ref: https://github.com/ergin/nginx-cloudflare-real-ip
+## Ref: https://slickstack.io/forum/topic/when-is-cloudflare-real-ip-actually-needed-for-wordpress
+## Ref: https://stackoverflow.com/questions/36223802/store-for-loop-results-as-a-variable-in-bash
+## Ref: https://stackoverflow.com/questions/6790631/use-the-contents-of-a-file-to-replace-a-string-using-sed
 
 ## SS_EOF

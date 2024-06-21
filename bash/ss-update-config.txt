@@ -44,7 +44,7 @@
 ## this build version ensures compatibility with ss-config boilerplate (from mirrors) ##
 ## it must match the latest ss-config boilerplate otherwise updating will fail ##
 
-SS_UPDATE_CONFIG_BUILD="APR2024FF"
+SS_UPDATE_CONFIG_BUILD="JUN2024H"
 
 ####################################################################################################
 #### B. SS-Update-Config: Source SS-Config + SS-Functions ##########################################
@@ -161,6 +161,19 @@ if [[ -n "${SS_SYNC_STAGING}" ]]; then
 ss_sed "s|\(^SS_SYNC_STAGING=\).*|SS_SYNC_STAGING=\"$SS_SYNC_STAGING\"|g" "${TMP_SS_CONFIG_UPDATE}"
 fi
 
+if [[ -n "${SS_REBOOT_MIN_UPTIME}" ]]; then
+ss_sed "s|\(^SS_REBOOT_MIN_UPTIME=\).*|SS_REBOOT_MIN_UPTIME=\"$SS_REBOOT_MIN_UPTIME\"|g" "${TMP_SS_CONFIG_UPDATE}"
+fi
+
+if [[ -n "${SS_REMOTE_BACKUPS}" ]]; then
+ss_sed "s|\(^SS_REMOTE_BACKUPS=\).*|SS_REMOTE_BACKUPS=\"$SS_REMOTE_BACKUPS\"|g" "${TMP_SS_CONFIG_UPDATE}"
+fi
+
+if [[ -n "${SS_MASSIVE_SITE}" ]]; then
+ss_sed "s|\(^SS_MASSIVE_SITE=\).*|SS_MASSIVE_SITE=\"$SS_MASSIVE_SITE\"|g" "${TMP_SS_CONFIG_UPDATE}"
+fi
+
+
 ## access settings ##
 ss_sed "s|\(^SUDO_USER=\).*|SUDO_USER=\"$SUDO_USER\"|g" "${TMP_SS_CONFIG_UPDATE}"
 ss_sed "s|\(^SUDO_PASSWORD=\).*|SUDO_PASSWORD=\"$SUDO_PASSWORD\"|g" "${TMP_SS_CONFIG_UPDATE}"
@@ -173,6 +186,9 @@ ss_sed "s|\(^SFTP_PASSWORD=\).*|SFTP_PASSWORD=\"$SFTP_PASSWORD\"|g" "${TMP_SS_CO
 ## domain settings ##
 ss_sed "s|\(^SITE_TLD=\).*|SITE_TLD=\"$SITE_TLD\"|g" "${TMP_SS_CONFIG_UPDATE}"
 ss_sed "s|\(^SITE_DOMAIN=\).*|SITE_DOMAIN=\"$SITE_DOMAIN\"|g" "${TMP_SS_CONFIG_UPDATE}"
+
+ss_sed "s|\(^SITE_ROOT_DOMAIN=\).*|SITE_ROOT_DOMAIN=\"$SITE_ROOT_DOMAIN\"|g" "${TMP_SS_CONFIG_UPDATE}"
+ss_sed "s|\(^SITE_FULL_DOMAIN=\).*|SITE_FULL_DOMAIN=\"$SITE_FULL_DOMAIN\"|g" "${TMP_SS_CONFIG_UPDATE}"
 
 ## database settings ##
 
@@ -302,14 +318,7 @@ ss_sed "s|\(^WHITELABEL_BILLING_METHOD=\).*|WHITELABEL_BILLING_METHOD=\"$WHITELA
 fi
 
 
-## more general settings ##
-if [[ -n "${SS_REMOTE_BACKUPS}" ]]; then
-ss_sed "s|\(^SS_REMOTE_BACKUPS=\).*|SS_REMOTE_BACKUPS=\"$SS_REMOTE_BACKUPS\"|g" "${TMP_SS_CONFIG_UPDATE}"
-fi
-
-if [[ -n "${SS_REBOOT_MIN_UPTIME}" ]]; then
-ss_sed "s|\(^SS_REBOOT_MIN_UPTIME=\).*|SS_REBOOT_MIN_UPTIME=\"$SS_REBOOT_MIN_UPTIME\"|g" "${TMP_SS_CONFIG_UPDATE}"
-fi
+## pilot file settings ##
 
 if [[ -n "${SS_PILOT_FILE}" ]]; then
     ss_sed "s|\(^SS_PILOT_FILE=\).*|SS_PILOT_FILE=\"$SS_PILOT_FILE\"|g" "${TMP_SS_CONFIG_UPDATE}"
@@ -810,6 +819,10 @@ if [[ -n "${PHP_MAX_INPUT_VARS}" ]]; then
 ss_sed "s|\(^PHP_MAX_INPUT_VARS=\).*|PHP_MAX_INPUT_VARS=\"$PHP_MAX_INPUT_VARS\"|g" "${TMP_SS_CONFIG_UPDATE}"
 fi
 
+if [[ -n "${PHP_MAX_MULTIPART_BODY_PARTS}" ]]; then
+ss_sed "s|\(^PHP_MAX_MULTIPART_BODY_PARTS=\).*|PHP_MAX_MULTIPART_BODY_PARTS=\"$PHP_MAX_MULTIPART_BODY_PARTS\"|g" "${TMP_SS_CONFIG_UPDATE}"
+fi
+
 if [[ -n "${PHP_MEMORY_LIMIT}" ]]; then
 ss_sed "s|\(^PHP_MEMORY_LIMIT=\).*|PHP_MEMORY_LIMIT=\"$PHP_MEMORY_LIMIT\"|g" "${TMP_SS_CONFIG_UPDATE}"
 fi
@@ -948,6 +961,14 @@ fi
 
 if [[ -n "${OPCACHE_BLACKLIST_FILENAME}" ]]; then
 ss_sed "s|\(^OPCACHE_BLACKLIST_FILENAME=\).*|OPCACHE_BLACKLIST_FILENAME=\"$OPCACHE_BLACKLIST_FILENAME\"|g" "${TMP_SS_CONFIG_UPDATE}"
+fi
+
+if [[ -n "${OPCACHE_JIT_CRTO}" ]]; then
+ss_sed "s|\(^OPCACHE_JIT_CRTO=\).*|OPCACHE_JIT_CRTO=\"$OPCACHE_JIT_CRTO\"|g" "${TMP_SS_CONFIG_UPDATE}"
+fi
+
+if [[ -n "${OPCACHE_JIT_BUFFER_SIZE}" ]]; then
+ss_sed "s|\(^OPCACHE_JIT_BUFFER_SIZE=\).*|OPCACHE_JIT_BUFFER_SIZE=\"$OPCACHE_JIT_BUFFER_SIZE\"|g" "${TMP_SS_CONFIG_UPDATE}"
 fi
 
 

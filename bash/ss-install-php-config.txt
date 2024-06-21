@@ -7,7 +7,7 @@
 #### path: /var/www/ss-install-php-config ##########################################################
 #### destination: n/a (not a boilerplate) ##########################################################
 #### purpose: Reinstalls the PHP-FPM module config files based on ss-config (idempotent) ###########
-#### module version: PHP-FPM 8.1.x #################################################################
+#### module version: PHP-FPM 8.3.x #################################################################
 #### sourced by: ss-install ########################################################################
 #### bash aliases: ss install php config ###########################################################
 ####################################################################################################
@@ -75,6 +75,31 @@ ss_echo "${COLOR_INFO}Running ss-install-php-config... ${COLOR_RESET}"
 
 ## next we optimize the PHP-FPM configuration files based on settings from ss-config ##
 ## several common PHP settings are hardcoded to improve LEMP server stability ##
+
+## ubuntu 24.04 (php 8.3) ##
+if [[ "${SYSTEM_UBUNTU_VERSION}" == "24.04" ]]; then
+
+    ss_wget "${TMP_PHP_FPM_CONF}" "${GITHUB_PHP_FPM_CONF_83}"
+    VALIDATE_TMP_PHP_FPM_CONF=$(grep 'SS_EOF' "${TMP_PHP_FPM_CONF}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_PHP_FPM_CONF}" ]]; then
+        ss_wget "${TMP_PHP_FPM_CONF}" "${GITLAB_PHP_FPM_CONF_83}"
+    fi
+
+    ss_wget "${TMP_PHP_INI}" "${GITHUB_PHP_INI_83}"
+    VALIDATE_TMP_PHP_INI=$(grep 'SS_EOF' "${TMP_PHP_INI}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_PHP_INI}" ]]; then
+        ss_wget "${TMP_PHP_INI}" "${GITLAB_PHP_INI_83}"
+    fi
+
+    ss_wget /tmp/opcache.ini https://raw.githubusercontent.com/littlebizzy/slickstack/master/modules/php-fpm/8.3/opcache-ini.txt
+
+    ss_wget "${TMP_WWW_CONF}" "${GITHUB_WWW_CONF_83}"
+    VALIDATE_TMP_WWW_CONF=$(grep 'SS_EOF' "${TMP_WWW_CONF}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_WWW_CONF}" ]]; then
+        ss_wget "${TMP_WWW_CONF}" "${GITLAB_WWW_CONF_83}"
+    fi
+
+fi
 
 ## ubuntu 22.04 (php 8.1) ##
 if [[ "${SYSTEM_UBUNTU_VERSION}" == "22.04" ]]; then
@@ -175,6 +200,13 @@ if [[ -z "$PHP_MAX_INPUT_VARS" ]]; then
     ss_sed "s/@PHP_MAX_INPUT_VARS/5000/g" "${TMP_PHP_INI}"
 else 
     ss_sed "s/@PHP_MAX_INPUT_VARS/${PHP_MAX_INPUT_VARS}/g" "${TMP_PHP_INI}"
+fi
+
+## max multipart body parts ##
+if [[ -z "$PHP_MAX_MULTIPART_BODY_PARTS" ]]; then 
+    ss_sed "s/@PHP_MAX_MULTIPART_BODY_PARTS/1500/g" "${TMP_PHP_INI}"
+else 
+    ss_sed "s/@PHP_MAX_MULTIPART_BODY_PARTS/${PHP_MAX_MULTIPART_BODY_PARTS}/g" "${TMP_PHP_INI}"
 fi
 
 ## max input nesting level ##
@@ -482,10 +514,37 @@ else
 fi
 
 ####################################################################################################
+#### G. SS-Install-PHP-Config: Configure Opcache.ini Boilerplate ######################################
+####################################################################################################
+
+if [[ -z "${OPCACHE_JIT_CRTO}" ]]; then 
+    ss_sed "s/@OPCACHE_JIT_CRTO/1255/g" /tmp/opcache.ini
+else 
+    ss_sed "s/@OPCACHE_JIT_CRTO/${OPCACHE_JIT_CRTO}/g" /tmp/opcache.ini
+fi
+
+if [[ -z "${OPCACHE_JIT_BUFFER_SIZE}" ]]; then 
+    ss_sed "s/@OPCACHE_JIT_BUFFER_SIZE/0/g" /tmp/opcache.ini
+else 
+    ss_sed "s/@OPCACHE_JIT_BUFFER_SIZE/${OPCACHE_JIT_BUFFER_SIZE}/g" /tmp/opcache.ini
+fi
+
+####################################################################################################
 #### H. SS-Install-PHP-Config: Install PHP Config Files ############################################
 ####################################################################################################
 
 ## note: ss_cp must be used for the ini files because ss_mv not working for some reason ##
+
+## ubuntu 24.04 (php 8.3) ##
+if [[ "${SYSTEM_UBUNTU_VERSION}" == "24.04" ]]; then
+    ss_mv "${TMP_PHP_FPM_CONF}" "${PATH_PHP_FPM_CONF_83}"
+    ss_cp "${TMP_PHP_INI}" "${PATH_PHP_INI_FPM_83}"
+    ss_cp "${TMP_PHP_INI}" "${PATH_PHP_INI_CLI_83}"
+    ss_mv "${TMP_WWW_CONF}" "${PATH_WWW_CONF_83}"
+
+    ss_mv /tmp/opcache.ini /etc/php/8.3/mods-available/opcache.ini
+
+fi
 
 ## ubuntu 22.04 (php 8.1) ##
 if [[ "${SYSTEM_UBUNTU_VERSION}" == "22.04" ]]; then

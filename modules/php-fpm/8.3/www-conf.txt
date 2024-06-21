@@ -1,11 +1,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; author: SlickStack ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; link: https://slickstack.io ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; mirror: littlebizzy/slickstack/blob/master/modules/php-fpm/8.1/www-conf.txt ;;;;;;;;;;;;;;;;;;;
+;;;; mirror: littlebizzy/slickstack/blob/master/modules/php-fpm/8.3/www-conf.txt ;;;;;;;;;;;;;;;;;;;
 ;;;; path: n/a (boilerplate) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; destination: /etc/php/8.1/fpm/pool.d/www.conf (after install) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; destination: /etc/php/8.3/fpm/pool.d/www.conf (after install) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; purpose: WWW pool configuration file boilerplate optimized for SlickStack servers ;;;;;;;;;;;;;
-;;;; module version: PHP-FPM 8.1.x ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; module version: PHP-FPM 8.3.x ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; sourced by: php-fpm.conf ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bash aliases: n/a (ss-install-php-config) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41,6 +41,8 @@ pm.max_requests = @WWW_PM_MAX_REQUESTS ;; ss = 500
 ;; ping.response = pong
 ;; access.log = log/$pool.access.log
 ;; access.format = "%R - %u %t \"%m %r%Q%q\" %s %f %{mili}d %{kilo}M %C%%"
+;access.suppress_path[] = /ping ;; PHP 8.2+
+;access.suppress_path[] = /health_check.php ;; PHP 8.2+
 ;; slowlog = log/$pool.log.slow
 ;; request_slowlog_timeout = 0
 ;; request_slowlog_trace_depth = 20
@@ -93,5 +95,7 @@ php_admin_flag[log_errors] = on
 ;; Ref: https://community.centminmod.com/threads/add-pm-max_spawn_rate-for-php-8-1-only-in-123-09beta01.22227/
 ;; Ref: https://webdock.io/en/docs/perfect-server-stacks/stacks
 ;; Ref: https://www.php.net/manual/en/migration80.new-features.php
+;; Ref: https://www.php.net/ChangeLog-8.php
+;; Ref: https://github.com/php/php-src/issues/10116
 
 ;; SS_EOF

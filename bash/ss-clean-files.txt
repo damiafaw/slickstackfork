@@ -7,9 +7,9 @@
 #### path: /var/www/ss-clean-files #################################################################
 #### destination: n/a (not a boilerplate) ##########################################################
 #### purpose: Cleans up various unsafe and unnecessary files on the SlickStack server ##############
-#### module version: Ubuntu 22.04 LTS ##############################################################
+#### module version: Ubuntu 24.04 LTS ##############################################################
 #### sourced by: n/a ###############################################################################
-#### bash aliases: ss clean|cleanup files ##########################################################
+#### bash aliases: ss clean files ##################################################################
 ####################################################################################################
 
 ## CERTAIN UNSAFE FILES WILL BE FORCE DELETED REGARDLESS OF YOUR SLICKSTACK SETTINGS ##
@@ -228,10 +228,11 @@ ss_rm /var/www/13-cron-sometimes
 ss_rm /var/www/ss-install-adminer
 ss_rm /var/www/ss-install-craft-config
 ss_rm /var/www/ss-install-craft-packages
+ss_rm /var/www/ss-delete-database
+ss_rm /var/www/ss-delete-files
 ss_rm /var/www/ss-install-postfix
 ss_rm /var/www/ss-install-redis
 ss_rm /var/www/ss-install-php-core
-ss_rm /var/www/ss-install-nginx-core
 ss_rm /var/www/ss-install-magento-config
 ss_rm /var/www/ss-install-magento-core 
 ss_rm /var/www/ss-install-mediawiki-config
@@ -239,6 +240,13 @@ ss_rm /var/www/ss-install-mediawiki-packages
 ss_rm /var/www/ss-install-moodle-config
 ss_rm /var/www/ss-install-moodle-packages
 ss_rm /var/www/ss-install-mysql-core
+ss_rm /var/www/ss-install-nginx-adminer
+ss_rm /var/www/ss-install-nginx-cloudflare-authenticated-origin
+ss_rm /var/www/ss-install-nginx-cloudflare-ips
+ss_rm /var/www/ss-install-nginx-core
+ss_rm /var/www/ss-install-nginx-letsencrypt
+ss_rm /var/www/ss-install-nginx-openssl
+ss_rm /var/www/ss-install-nginx-ssl
 ss_rm /var/www/ss-install-opencart-config
 ss_rm /var/www/ss-install-opencart-packages
 ss_rm /var/www/ss-install-prestashop-config
@@ -259,6 +267,7 @@ ss_rm /var/www/ss-perms-mediawiki-packages
 ss_rm /var/www/ss-perms-moodle-config
 ss_rm /var/www/ss-perms-moodle-packages
 ss_rm /var/www/ss-perms-mysql
+ss_rm /var/www/ss-perms-nginx-ssl
 ss_rm /var/www/ss-perms-opencart-config
 ss_rm /var/www/ss-perms-opencart-packages
 ss_rm /var/www/ss-perms-prestashop-config

@@ -1,11 +1,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; author: SlickStack ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; link: https://slickstack.io ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; mirror: littlebizzy/slickstack/blob/master/modules/php-fpm/8.1/php-fpm-conf.txt ;;;;;;;;;;;;;;;
+;;;; mirror: littlebizzy/slickstack/blob/master/modules/php-fpm/8.3/php-fpm-conf.txt ;;;;;;;;;;;;;;;
 ;;;; path: n/a (boilerplate) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; destination: /etc/php/8.1/fpm/php-fpm.conf (after install) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; destination: /etc/php/8.3/fpm/php-fpm.conf (after install) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; purpose: PHP-FPM configuration file boilerplate optimized for SlickStack servers ;;;;;;;;;;;;;;
-;;;; module version: PHP-FPM 8.1.x ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; module version: PHP-FPM 8.3.x ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; sourced by: n/a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bash aliases: n/a (ss-install-php-config) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19,7 +19,7 @@
 ;; hardcoding error log settings reduces potential conflicts and server resource usage ;;
 ;; take extreme caution when modifying any of below settings in your ss-config ;;
 
-pid = /run/php/php8.1-fpm.pid
+pid = /run/php/php8.3-fpm.pid
 error_log = /var/www/logs/php-error.log
 syslog.facility = daemon
 syslog.ident = php-fpm
@@ -41,7 +41,7 @@ systemd_interval = @FPM_SYSTEMD_INTERVAL ;; ss = 10s
 ;;;; PHP-FPM.conf: Pool Definitions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-include=/etc/php/8.1/fpm/pool.d/*.conf
+include=/etc/php/8.3/fpm/pool.d/*.conf
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; SlickStack: External References Used To Improve This Script (Thanks, Interwebz) ;;;;;;;;;;;;;;;
