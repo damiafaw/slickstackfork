@@ -65,7 +65,7 @@
 ## this build version ensures compatibility with the currently active ss-config file ##
 ## it must match the localhost ss-config otherwise installation will fail ##
 
-SS_INSTALL_BUILD="JUN2024H"
+SS_INSTALL_BUILD="JUN2024N"
 
 ####################################################################################################
 #### B. SS-Install: Validate (Repair) SS-Functions #################################################
@@ -147,6 +147,11 @@ fi
 ## verify supported ubuntu version ##
 if [[ "${SYSTEM_UBUNTU_VERSION}" != @(24.04|22.04|20.04|18.04) ]]; then
     ss_echo "${COLOR_WARN}Exiting ss-install: SlickStack is designed for Ubuntu LTS only (but this VPS is running ${SYSTEM_UBUNTU_VERSION})... ${COLOR_RESET}"
+    exit 1
+fi
+
+if [[ "${SITE_ROOT_DOMAIN}" -le 7 || "${SITE_ROOT_DOMAIN}" != *.* ]]; then
+    ss_echo "${COLOR_ERROR}WARNING: Please fix SITE_ROOT_DOMAIN in your ss-config... it looks like recent updates make have broken that value... ${COLOR_RESET}"
     exit 1
 fi
 
@@ -254,7 +259,9 @@ if [[ "${SYSTEM_UBUNTU_VERSION}" == @(24.04) ]]; then
     ss_echo "${COLOR_WARN}SlickStack is currently testing Ubuntu 24.04 and PHP 8.3 and bugs are expected... you might want to use Ubuntu 22.04 for now! ${COLOR_RESET}"
     ss_echo ""
 fi
-    
+
+
+
 ss_echo "${COLOR_WARN}Welcome to SlickStack! It appears your /var/www/ss-config file has not been ${COLOR_RESET}"
 ss_echo "${COLOR_WARN}setup yet and/or this is a new installation. Before proceeding, please ensure ${COLOR_RESET}"
 ss_echo "${COLOR_WARN}that your domain is active in Cloudflare, with proxying and Full SSL enabled, ${COLOR_RESET}"
@@ -293,8 +300,6 @@ ss_sed "s|@SFTP_USER|sftp-$(openssl rand -hex 3)|g" /tmp/ss-config-wizard
 ss_sed "s|@DB_USER|mysql-$(openssl rand -hex 3)|g" /tmp/ss-config-wizard
 ss_sed "s|@GUEST_USER|guest-$(openssl rand -hex 3)|g" /tmp/ss-config-wizard
 ss_sed "s|@RANDOM_STRING_ADMINER_URL|$(openssl rand -hex 12)|g" /tmp/ss-config-wizard
-ss_sed "s|@SITE_TLD|${SYSTEM_HOSTNAME_TLD}|g" /tmp/ss-config-wizard
-ss_sed "s|@SITE_DOMAIN|${SYSTEM_HOSTNAME}|g" /tmp/ss-config-wizard
 ss_sed "s|@SITE_ROOT_DOMAIN|${SYSTEM_HOSTNAME_TLD}|g" /tmp/ss-config-wizard
 ss_sed "s|@SITE_FULL_DOMAIN|${SYSTEM_HOSTNAME}|g" /tmp/ss-config-wizard
 
@@ -768,7 +773,7 @@ ss_echo "${COLOR_WARN}Lastly, be sure to reboot your server, esp. on Ubuntu 22.0
 ss_echo "${COLOR_WARN}known issues with the Linux kernel requiring a reboot after updating. To do ${COLOR_RESET}"
 ss_echo "${COLOR_WARN}this simply run sudo reboot now. Cheers! ${COLOR_RESET}"
 ss_echo ""
-ss_echo "${COLOR_INFO}Ctrl/Cmd + click to open --> ${LIGHTGREEN}https://${SITE_DOMAIN}/wp-login.php ${COLOR_RESET}"
+ss_echo "${COLOR_INFO}Ctrl/Cmd + click to open --> ${LIGHTGREEN}https://${SITE_FULL_DOMAIN}/wp-login.php ${COLOR_RESET}"
 ss_echo ""
 
 ####################################################################################################
