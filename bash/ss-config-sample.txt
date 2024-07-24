@@ -19,9 +19,9 @@
 ####################################################################################################
 
 ## run ss-update-config if outdated (check the public mirror link for current build) ##
-## lockdown option prevents automatic updates of SlickStack scripts and config ##
+## builds merely prevent conflicts as SlickStack scripts auto-update regardless ##
 
-SS_BUILD="JUN2024N"
+SS_BUILD="JUN2024V"
 
 ## SS_LOCKDOWN = [false|true] stops dev site from being overwritten... and more soon ##
 ## SS_APP = [wordpress|etc] only wordpress is supported currently (feedback welcome) ##
@@ -44,17 +44,6 @@ SS_SYNC_STAGING="true"
 SS_REBOOT_MIN_UPTIME="1 hour"
 SS_REMOTE_BACKUPS="none"
 SS_MASSIVE_SITE="false"
-
-####################################################################################################
-#### SS-Config: Pilot File Settings ################################################################
-####################################################################################################
-
-## use the pilot file to control ss-config settings across unlimited SlickStack servers ##
-## find supported variables in ss-worker (which will update ss-config on every run) ##
-
-## SS_PILOT_FILE = [*must be unique*] full raw URL to your secret Gist file with variables ##
-
-SS_PILOT_FILE=""
 
 ####################################################################################################
 #### SS-Config: Access Settings ####################################################################
@@ -81,7 +70,7 @@ SSH_RESTRICT_IP="false"
 SSH_IPV4="192.0.2.1"
 
 ## SFTP user is jailed to the /var/www/ directory e.g. for your client to safely access ##
-## you can also use the SFTP user for remote backups (safer than sudo user) ##
+## you can also use SFTP user for remote backups like CodeGuard (safer than sudo) ##
 
 ## SFTP_USER = [*must be unique*] username that your client can login as via SFTP ##
 ## SFTP_PASSWORD = [*must be unique*] something very strong (for your client) ##
@@ -90,31 +79,57 @@ SFTP_USER="@SFTP_USER"
 SFTP_PASSWORD="@SFTP_PASSWORD"
 
 ####################################################################################################
+#### SS-Config: Pilot File Settings ################################################################
+####################################################################################################
+
+## use the pilot file to control ss-config settings across unlimited SlickStack servers ##
+## find supported variables in ss-worker (which will update ss-config on every run) ##
+
+## SS_PILOT_FILE = [*must be unique*] full raw URL to secret Gist file with variables ##
+
+SS_PILOT_FILE=""
+
+####################################################################################################
 #### SS-Config: Domain Settings ####################################################################
 ####################################################################################################
 
 ## below domain values are used in order to hardcode Nginx and WordPress configuration ##
-## changing domain settings in the database will not override these settings ##
+## these values will override any domain settings that may exist in the database ##
 
-## SITE_ROOT_DOMAIN = [example.com|etc] the root domain without any prefixes or subdomains ##
+## SITE_ROOT_DOMAIN = [example.com|etc] root domain without any prefixes or subdomains ##
 ## SITE_FULL_DOMAIN = [example.com|www.example.com|blog.example.com|etc] no subdirectories ##
 
 SITE_ROOT_DOMAIN="@SITE_ROOT_DOMAIN"
 SITE_FULL_DOMAIN="@SITE_FULL_DOMAIN"
 
 ####################################################################################################
+#### SS-Config: Cloudflare Settings ################################################################
+####################################################################################################
+
+## SlickStack generally expects you to be using Cloudflare for many different reasons ##
+## authenticated origin needs to also be activated within the Cloudflare panel ##
+
+## CLOUDFLARE_REAL_IPS = [true|false] allows your server logs to see the real client IPs ##
+## CLOUDFLARE_AUTH_ORIGIN = [false|true] allows only Cloudflare TLS to connect (secure) ##
+## CLOUDFLARE_IPS_ONLY = [false|true] allows only Cloudflare IP addresses to connect ##
+
+CLOUDFLARE_REAL_IPS="true"
+CLOUDFLARE_AUTHENTICATED_ORIGIN="false"
+CLOUDFLARE_IPS_ONLY="false"
+
+####################################################################################################
 #### SS-Config: Database Settings ##################################################################
 ####################################################################################################
 
 ## remote MySQL databases are supported along with whatever port number is required ##
-## for security reasons choose a unique password for MySQL admin (root) user ##
+## for security reasons the password for DB_PASSWORD_ROOT should be different ##
 
-## DB_REMOTE = [false|true] skips MySQL install if true (remote database) ##
-## DB_NAME = [production] active production database (staging/development hardcoded) ##
-## DB_USER = [example|etc] for easier management it can be the same as SFTP_USER ##
-## DB_PASSWORD = [*must be unique*] something strong but not too complex or confusing ##
-## DB_PASSWORD_ROOT = [*must be unique*] now only used for admin@127.0.0.1 ##
-## DB_HOST = [127.0.0.1|etc] enter remote database hostname here otherwise use loopback ##
+## DB_REMOTE = [false|true] skips local MySQL install if true (remote database) ##
+## DB_NAME = [production|etc] active production database (staging/development hardcoded) ##
+## DB_USER = [example|etc] the user that WordPress and remote backups should use ##
+## DB_PASSWORD = [*must be unique*] strong as you probably will not need to remember it ##
+## DB_PASSWORD_ROOT = [*must be unique*] for admin@127.0.0.1 or root in older stacks ##
+## DB_HOST = [127.0.0.1|etc] enter remote database hostname here otherwise use 127.0.0.1 ##
 ## DB_PORT = [3306|25060|etc] some remote database providers require a specific port ##
 ## DB_PREFIX = [wp_|etc] for easier management the default wp_ prefix is recommended ##
 ## DB_CHARSET = [utf8mb4|etc] most databases these days should be using utf8mb4 ##
@@ -131,8 +146,11 @@ DB_PREFIX="wp_"
 DB_CHARSET="utf8mb4"
 DB_COLLATE=""
 
+## adminer is a lightweight alternative to phpmyadmin used for database management ##
+## your freelancers or team members might want to use adminer occassionally ##
+
 ## ADMINER_PUBLIC = [true|false] if you want a randomized link accessible on frontend ##
-## ADMINER_URL = [*must be unique*] best to keep this long and random for security ##
+## ADMINER_URL = [*must be unique*] should be long and very random for security ##
 
 ADMINER_PUBLIC="true"
 ADMINER_URL="@RANDOM_STRING_ADMINER_URL"
@@ -141,23 +159,23 @@ ADMINER_URL="@RANDOM_STRING_ADMINER_URL"
 #### SS-Config: Staging/Dev Settings ###############################################################
 ####################################################################################################
 
-## dev sites are standalone subdomain sites you can use to create brand new designs ##
-## enabling creates development database and Nginx block during ss-install ##
-
-## DEV_SITE = [true|false] enables dev subdomain and WP Admin toolbar switcher ##
-## DEV_SITE_PROTECT = [false|true] password protects dev site using guest ##
-
-DEV_SITE="false"
-DEV_SITE_PROTECT="false"
-
 ## staging site subdomains are auto-synced from production to briefly test features ##
-## enabling creates staging database and Nginx block during ss-install ##
+## enabling creates the staging database and Nginx block during ss-install ##
 
 ## STAGING_SITE = [true|false] enables staging subdomain and WP Admin toolbar switcher ##
-## STAGING_SITE_PROTECT = [false|true] password protects staging site using guest ##
+## STAGING_SITE_PROTECT = [false|true] password protects subdomain using guest user ##
 
 STAGING_SITE="false"
 STAGING_SITE_PROTECT="false"
+
+## dev sites are standalone subdomain sites you can use to create brand new designs ##
+## enabling creates the development database and Nginx block during ss-install ##
+
+## DEV_SITE = [true|false] enables dev subdomain and WP Admin toolbar switcher ##
+## DEV_SITE_PROTECT = [false|true] password protects subdomain using guest user ##
+
+DEV_SITE="false"
+DEV_SITE_PROTECT="false"
 
 ## the guest user can be provided to clients for viewing the staging/dev subdomains ##
 ## to password protect production site please use a WordPress plugin instead ##
@@ -169,26 +187,11 @@ GUEST_USER="@GUEST_USER"
 GUEST_PASSWORD="@GUEST_PASSWORD"
 
 ####################################################################################################
-#### SS-Config: Cloudflare Settings ################################################################
-####################################################################################################
-
-## SlickStack generally expects you to be using Cloudflare for many different reasons ##
-## authenticated pulls requires you to also activate it in the Cloudflare panel ##
-
-## CLOUDFLARE_REAL_IPS = [true|false] allows your server logs to see the real client IPs ##
-## CLOUDFLARE_AUTHENTICATED_ORIGIN = [false|true] allows only Cloudflare TLS to connect ##
-## CLOUDFLARE_IPS_ONLY = [false|true] allows only Cloudflare IP addresses to connect ##
-
-CLOUDFLARE_REAL_IPS="true"
-CLOUDFLARE_AUTHENTICATED_ORIGIN="false"
-CLOUDFLARE_IPS_ONLY="false"
-
-####################################################################################################
 #### SS-Config: WordPress Settings #################################################################
 ####################################################################################################
 
-## by default wp-cron will be managed entirely by WordPress unless you modify it here ##
-## if set to server then SlickStack cron jobs will take over wp-cron management ##
+## by default WP-Cron will be managed entirely by WP-CLI on the interval set below ##
+## for best performance SlickStack no longer supports WordPress triggering it ##
 
 ## WP_CRON_METHOD = [wpcli|server] wpcli strongly recommended (required for WP Multisite) ##
 ## WP_CRON_INTERVAL = [minutely|often|regular|quarter-hourly|half-hourly|hourly] ##
@@ -201,14 +204,14 @@ WP_CRON_INTERVAL="often"
 
 ## WP_MULTISITE = [false|true] enables Multisite network (staging/dev sites not supported) ##
 ## WP_MULTISITE_SUBDOMAINS = [true|false] subdomains approach highly recommended ##
-## WP_MULTISITE_DOMAIN_MAPPING = [true|false] now works much more reliably than in past ##
+## WP_MULTISITE_DOMAIN_MAPPING = [true|false] enable if using multiple domain names ##
 
 WP_MULTISITE="false"
 WP_MULTISITE_SUBDOMAINS="true" ## subdirs not supported yet
 WP_MULTISITE_DOMAIN_MAPPING="true"
 
 ## for stability reasons several WP defined constants are hardcoded in wp-config.php ##
-## you can define additional constants inside the /wp-content/functions.php ##
+## you can define additional constants in the /wp-content/functions.php file ##
 
 ## WP_POST_REVISIONS = [3|5|10|etc] the smaller the better but >1 to avoid data loss ##
 ## WP_AUTOSAVE_INTERVAL = [15|30|60|120|etc] less often saves resources but risks data loss ##
@@ -231,10 +234,10 @@ WP_OBJECT_CACHE="true"
 WP_MU_PLUGINS="default"
 
 ## the WordPress plugin blacklist can be disabled entirely or custom blacklist used ##
-## to use a custom blacklist simply replace source with your Gist file or etc ##
+## to use a custom blacklist simply replace source with your Gist raw URL or etc ##
 
 ## WP_PLUGIN_BLACKLIST = [true|false] enable or disable the WordPress plugin blacklist ##
-## WP_PLUGIN_BLACKLIST_SOURCE = [*must be unique*] URL to your custom blacklist.txt ##
+## WP_PLUGIN_BLACKLIST_SOURCE = [*must be unique*] URL to custom blacklist.txt file ##
 
 WP_PLUGIN_BLACKLIST="true"
 WP_PLUGIN_BLACKLIST_SOURCE="https://raw.githubusercontent.com/littlebizzy/slickstack/master/modules/wordpress/blacklist.txt"
@@ -243,7 +246,7 @@ WP_PLUGIN_BLACKLIST_SOURCE="https://raw.githubusercontent.com/littlebizzy/slicks
 #### SS-Config: Whitelabel Settings ################################################################
 ####################################################################################################
 
-## whitelabeling allows agencies to replace some LittleBizzy branding with their own ##
+## whitelabeling allows agencies to replace some generic branding with their own ##
 ## this is useful for running your own web hosting business or otherwise ##
 
 ## WHITELABEL_BRAND = [*must be unique*] the agency name you want customers to see ##
@@ -453,16 +456,16 @@ LIMIT_REQUESTS_ADMINER_MINUTE="5000"
 #### SS-Config: Fail2ban Settings ##################################################################
 ####################################################################################################
 
-FAIL2BAN_GET_DOS_FINDTIME="300"
+FAIL2BAN_GET_DOS_FINDTIME="60"
 FAIL2BAN_GET_DOS_MAXRETRY="100"
 FAIL2BAN_GET_DOS_BANTIME="3600"
 
-FAIL2BAN_POST_DOS_FINDTIME="300"
-FAIL2BAN_POST_DOS_MAXRETRY="100"
+FAIL2BAN_POST_DOS_FINDTIME="30"
+FAIL2BAN_POST_DOS_MAXRETRY="10"
 FAIL2BAN_POST_DOS_BANTIME="3600"
 
-FAIL2BAN_4XX_FINDTIME="300"
-FAIL2BAN_4XX_MAXRETRY="100"
+FAIL2BAN_4XX_FINDTIME="60"
+FAIL2BAN_4XX_MAXRETRY="10"
 FAIL2BAN_4XX_BANTIME="3600"
 
 FAIL2BAN_5XX_FINDTIME="600"
