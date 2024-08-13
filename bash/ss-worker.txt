@@ -23,21 +23,21 @@
 ## each section should be commented so you understand what is being accomplished ##
 
 ## A. Source SS-Config + SS-Functions
+## B. Touch Timestamp File
+## C. Message (Begin Script)
+## D. Backup SS-Config
+## E. Backup Custom Cron Jobs
+## F. Update SS-Check
+## G. Update Blacklist.txt
 
-## C. Touch Timestamp File
-## D. Message (Begin Script)
-## E. Backup Active SS-Config
-## F. Backup Custom Cron Jobs
-## G. Update SS-Check
 ## H. Transfer Pilot File Settings (If Exists)
 ## I. Install SS-Constants.php
-## J. Update Blacklist.txt
 ## K. Install Default Robots.txt (If Not Exists)
 ## L. Install SS-Icon.svg (If Not Exists)
-## M. Install Nginx Error Pages (If Not Exists)
-## N. Delete Object Cache Files (Conditional)
-## O. Temporary Tasks (Urgent Patches)
 
+## M. Install Nginx Error Pages (If Not Exists)
+## N. Delete Object-Cache.php (Conditional)
+## O. Urgent SlickStack Patches
 ## P. Reset Permissions (SlickStack)
 
 ####################################################################################################
@@ -56,7 +56,7 @@ source /var/www/ss-functions
 ## BELOW THIS RELIES ON SS-CONFIG AND SS-FUNCTIONS
 
 ####################################################################################################
-#### C. SS-Worker: Touch Timestamp File ############################################################
+#### B. SS-Worker: Touch Timestamp File ############################################################
 ####################################################################################################
 
 ## this is a dummy timestamp file that will remember the last time this script was run ##
@@ -65,7 +65,7 @@ source /var/www/ss-functions
 ss_touch "${TIMESTAMP_SS_WORKER}"
 
 ####################################################################################################
-#### D. SS-Worker: Message (Begin Script) ##########################################################
+#### C. SS-Worker: Message (Begin Script) ##########################################################
 ####################################################################################################
 
 ## this is a simple message that announces to the shell the purpose of this bash script ##
@@ -74,7 +74,7 @@ ss_touch "${TIMESTAMP_SS_WORKER}"
 ss_echo "${COLOR_INFO}Running ss-worker... ${COLOR_RESET}"
 
 ####################################################################################################
-#### E. SS-Worker: Backup Active SS-Config #########################################################
+#### D. SS-Worker: Backup SS-Config ################################################################
 ####################################################################################################
 
 ## this will replicate your current ss-config file (and settings) to the backups dir ##
@@ -86,7 +86,7 @@ ss_echo "${COLOR_INFO}Running ss-worker... ${COLOR_RESET}"
 ss_cp "${PATH_SS_CONFIG}" /var/www/backups/config/ss-config.bak.${SYSTEM_CURRENT_TIME}
 
 ####################################################################################################
-#### F. SS-Worker: Backup Custom Cron Jobs #########################################################
+#### E. SS-Worker: Backup Custom Cron Jobs #########################################################
 ####################################################################################################
 
 ## this will backup and overwrite all your custom cron job files to the backups dir ##
@@ -95,7 +95,7 @@ ss_cp "${PATH_SS_CONFIG}" /var/www/backups/config/ss-config.bak.${SYSTEM_CURRENT
 ss_rsync /var/www/crons/custom/ /var/www/backups/crons
 
 ####################################################################################################
-#### G. SS-Worker: Update SS-Check #################################################################
+#### F. SS-Worker: Update SS-Check #################################################################
 ####################################################################################################
 
 ## here we retrieve the latest ss-check bash script to improve SlickStack redundancy ##
@@ -112,6 +112,41 @@ fi
 VALIDATE2_TMP_SS_CHECK=$(grep 'SS_EOF' "${TMP_SS_CHECK}" 2> /dev/null)
 if [[ -n "${VALIDATE2_TMP_SS_CHECK}" ]]; then
     ss_mv "${TMP_SS_CHECK}" "${PATH_SS_CHECK}"
+fi
+
+####################################################################################################
+#### G. SS-Worker: Update Blacklist.txt ############################################################
+####################################################################################################
+
+## here we retrieve the latest plugin blacklist file which might contain urgent changes ##
+## maintaining a thoughtful blacklist vastly improves WP performance and security ##
+
+## download latest blacklist (or custom blacklist) ##
+if [[ -z "${WP_PLUGIN_BLACKLIST_SOURCE}" ]]; then 
+    ss_wget "${TMP_BLACKLIST_TXT}" "${GITHUB_BLACKLIST_TXT}"
+else
+    ss_wget "${TMP_BLACKLIST_TXT}" "${WP_PLUGIN_BLACKLIST_SOURCE}"
+fi
+
+## copy file to wp-content directory ##
+ss_mkdir /var/www/html/wp-content/
+ss_cp "${TMP_BLACKLIST_TXT}" "${PATH_BLACKLIST_TXT}"
+
+## reset permissions ##
+chown www-data:slickstack "${PATH_BLACKLIST_TXT}" ## change to www-data:www-data when ss-perms fixed
+chmod 0440 "${PATH_BLACKLIST_TXT}"
+
+## NULL blacklist.txt if ss-config false (allows default SS MU plugin to be installed while still being able to disable plugin blacklist) ##
+if [[ "${WP_PLUGIN_BLACKLIST}" == "false" ]]; then 
+cat /dev/null > "${PATH_BLACKLIST_TXT}"
+    if [[ "${DEV_SITE}" != "false" ]]; then 
+        ss_touch /var/www/html/dev/wp-content/blacklist.txt
+        cat /dev/null > /var/www/html/dev/wp-content/blacklist.txt
+    fi
+    if [[ "${STAGING_SITE}" != "false" ]]; then 
+        ss_touch /var/www/html/staging/wp-content/blacklist.txt
+        cat /dev/null > /var/www/html/staging/wp-content/blacklist.txt
+    fi
 fi
 
 ####################################################################################################
@@ -288,41 +323,6 @@ if [[ -n "${VALIDATE2_TMP_SS_CONSTANTS_PHP}" ]]; then
     ss_mv "${TMP_SS_CONSTANTS_PHP}" "${PATH_SS_CONSTANTS_PHP}"
     chown www-data:www-data "${PATH_SS_CONSTANTS_PHP}"
     chmod 0440 "${PATH_SS_CONSTANTS_PHP}" ## should be 0440 (read-only)
-fi 
-
-####################################################################################################
-#### J. SS-Worker: Update Blacklist.txt ############################################################
-####################################################################################################
-
-## here we retrieve the latest plugin blacklist file which might contain urgent changes ##
-## maintaining a thoughtful blacklist vastly improves WP performance and security ##
-
-## download latest blacklist (or custom blacklist) ##
-if [[ -z "${WP_PLUGIN_BLACKLIST_SOURCE}" ]]; then 
-    ss_wget "${TMP_BLACKLIST_TXT}" "${GITHUB_BLACKLIST_TXT}"
-else
-    ss_wget "${TMP_BLACKLIST_TXT}" "${WP_PLUGIN_BLACKLIST_SOURCE}"
-fi
-
-## copy file to wp-content directory ##
-ss_mkdir /var/www/html/wp-content/
-ss_cp "${TMP_BLACKLIST_TXT}" /var/www/html/wp-content/blacklist.txt
-
-## reset permissions ##
-chown www-data:slickstack /var/www/html/wp-content/blacklist.txt ## change to www-data:www-data when ss-perms fixed
-chmod 0440 /var/www/html/wp-content/blacklist.txt
-
-## NULL blacklist.txt if ss-config false (allows default SS MU plugin to be installed while still being able to disable plugin blacklist) ##
-if [[ "${WP_PLUGIN_BLACKLIST}" == "false" ]]; then 
-cat /dev/null > /var/www/html/wp-content/blacklist.txt
-    if [[ "${DEV_SITE}" != "false" ]]; then 
-        ss_touch /var/www/html/dev/wp-content/blacklist.txt
-        cat /dev/null > /var/www/html/dev/wp-content/blacklist.txt
-    fi
-    if [[ "${STAGING_SITE}" != "false" ]]; then 
-        ss_touch /var/www/html/staging/wp-content/blacklist.txt
-        cat /dev/null > /var/www/html/staging/wp-content/blacklist.txt
-    fi
 fi
 
 ####################################################################################################
@@ -349,42 +349,73 @@ if [[ ! -f "${PATH_SS_ICON_SVG}" ]]; then
 fi
 
 ####################################################################################################
-#### M. SS-Worker: Install Nginx Error Pages (If Not Exists) ##########################################################
+#### M. SS-Worker: Install Nginx Error Pages (If Not Exists) #######################################
 ####################################################################################################
 
+## error_404.html ##
 if [[ ! -f "${PATH_ERROR_404_HTML}" ]]; then 
-    ss_wget "${TMP_ERROR_404_HTML}" https://raw.githubusercontent.com/littlebizzy/slickstack/master/modules/nginx/error_pages/error_404.html
-    ss_cp "${TMP_ERROR_404_HTML}" "${PATH_ERROR_404_HTML}"
-    ss_chown root:root "${PATH_ERROR_404_HTML}"
-    chmod 0644 "${PATH_ERROR_404_HTML}"
+
+    ## retrieve error_404.html ##
+    ss_wget "${TMP_ERROR_404_HTML}" "${GITHUB_ERROR_404_HTML}"
+    VALIDATE_TMP_ERROR_404_HTML=$(grep 'h1' "${TMP_ERROR_404_HTML}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_ERROR_404_HTML}" ]]; then
+        ss_wget "${TMP_ERROR_404_HTML}" "${GITLAB_ERROR_404_HTML}"
+    fi
+
+    ## install error_404.html ##
+    VALIDATE2_TMP_ERROR_404_HTML=$(grep 'h1' "${TMP_ERROR_404_HTML}" 2> /dev/null)
+    if [[ -n "${VALIDATE2_TMP_ERROR_404_HTML}" ]]; then
+        ss_cp "${TMP_ERROR_404_HTML}" "${PATH_ERROR_404_HTML}"
+        ss_chown root:root "${PATH_ERROR_404_HTML}"
+        chmod 0644 "${PATH_ERROR_404_HTML}"
+    fi
+
 fi
 
+## error_50x.html ##
 if [[ ! -f "${PATH_ERROR_50X_HTML}" ]]; then 
-    ss_wget "${TMP_ERROR_50X_HTML}" https://raw.githubusercontent.com/littlebizzy/slickstack/master/modules/nginx/error_pages/error_50x.html
-    ss_cp "${TMP_ERROR_50X_HTML}" "${PATH_ERROR_50X_HTML}"
-    ss_chown root:root "${PATH_ERROR_50X_HTML}"
-    chmod 0644 "${PATH_ERROR_50X_HTML}"
+
+    ## retrieve error_50x.html ##
+    ss_wget "${TMP_ERROR_50X_HTML}" "${GITHUB_ERROR_50X_HTML}"
+    VALIDATE_TMP_ERROR_50X_HTML=$(grep 'h1' "${TMP_ERROR_50X_HTML}" 2> /dev/null)
+    if [[ -z "${VALIDATE_TMP_ERROR_50X_HTML}" ]]; then
+        ss_wget "${TMP_ERROR_50X_HTML}" "${GITLAB_ERROR_50X_HTML}"
+    fi
+
+    ## install error_50x.html ##
+    VALIDATE2_TMP_ERROR_50X_HTML=$(grep 'h1' "${TMP_ERROR_50X_HTML}" 2> /dev/null)
+    if [[ -n "${VALIDATE2_TMP_ERROR_50X_HTML}" ]]; then
+        ss_cp "${TMP_ERROR_50X_HTML}" "${PATH_ERROR_50X_HTML}"
+        ss_chown root:root "${PATH_ERROR_50X_HTML}"
+        chmod 0644 "${PATH_ERROR_50X_HTML}"
+    fi
+
 fi
 
 ####################################################################################################
-#### N. SS-Worker: Delete Object Cache Files (Conditional) #########################################
+#### N. SS-Worker: Delete Object-Cache.php (Conditional) ###########################################
 ####################################################################################################
 
-## SINCE THIS IS STACK CONFIGURATION PROBABLY SHOULD NOT EXIST IN ss-clean ##
 ## in case the object cache is disabled in ss-config settings we delete that file here ##
+## you can also reinstall SlickStack to achieve this but here for redundancy ##
 
-## delete from staging/dev (always) ##
-ss_rm /var/www/html/staging/wp-content/object-cache.php
-ss_rm /var/www/html/dev/wp-content/object-cache.php
+## delete from dev (always) ##
+if [[ "${DEV_SITE}" == "true" ]]; then 
+    ss_rm /var/www/html/dev/wp-content/object-cache.php
+fi
 
-## not sure if we should keep this here... ##
+## delete from staging (always) ##
+if [[ "${STAGING_SITE}" == "true" ]]; then 
+    ss_rm /var/www/html/staging/wp-content/object-cache.php
+fi
+
 ## delete from production (conditional) ##
 if [[ "${WP_OBJECT_CACHE}" == "false" ]]; then
     ss_rm /var/www/html/wp-content/object-cache.php
 fi
 
 ####################################################################################################
-#### O. SS-Worker: Temporary Tasks (Urgent Patches) ################################################
+#### O. SS-Worker: Urgent SlickStack Patches #######################################################
 ####################################################################################################
 
 ## our team uses the below space to occassionally add urgent patches to SlickStack ##

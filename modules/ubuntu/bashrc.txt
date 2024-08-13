@@ -122,9 +122,6 @@ function ss {
         command sudo sed -i "s|\(^STAGING_SITE=\).*|STAGING_SITE=\"false\"|g" /var/www/ss-config
     elif [[ $@ == "config staging enable" ]]; then
         command sudo sed -i "s|\(^STAGING_SITE=\).*|STAGING_SITE=\"true\"|g" /var/www/ss-config
-    elif [[ $@ == "clean" ]]; then
-        command sudo bash /var/www/ss-clean-files
-        command sudo bash /var/www/ss-clean-database
     elif [[ $@ == "clean database" ]]; then
         command sudo bash /var/www/ss-clean-database
     elif [[ $@ == "clean db" ]]; then
@@ -255,9 +252,6 @@ function ss {
     elif [[ $@ == "delete html" ]]; then
         command sudo bash /var/www/ss-delete-files
     ## ss dump ... ##
-    elif [[ $@ == "dump" ]]; then
-        command sudo bash /var/www/ss-dump-database
-        command sudo bash /var/www/ss-dump-files
     elif [[ $@ == "dump database" ]]; then
         command sudo bash /var/www/ss-dump-database
     elif [[ $@ == "dump db" ]]; then
@@ -283,9 +277,6 @@ function ss {
     # elif [[ $@ == "grep" ]]; then
     #    command sudo /usr/bin/grep -rnw '/var/www/' -e "$@"
     ## ss import ... ##
-    elif [[ $@ == "import" ]]; then
-        command sudo bash /var/www/ss-import-files
-        command sudo bash /var/www/ss-import-database
     elif [[ $@ == "import database" ]]; then
         command sudo bash /var/www/ss-import-database
     elif [[ $@ == "import db" ]]; then
