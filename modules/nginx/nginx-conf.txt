@@ -40,6 +40,8 @@ user www-data;
 worker_processes auto;
 worker_rlimit_nofile @NGINX_WORKER_RLIMIT_NOFILE;
 worker_priority @NGINX_WORKER_PRIORITY;
+worker_shutdown_timeout 10s;
+worker_cpu_affinity auto;
 timer_resolution 100ms;
 pid /run/nginx.pid;
 
@@ -75,6 +77,8 @@ server_name_in_redirect off;
 server_names_hash_bucket_size @NGINX_SERVER_NAMES_HASH_BUCKET_SIZE;
 server_names_hash_max_size @NGINX_SERVER_NAMES_MAX_HASH_SIZE;
 types_hash_max_size @NGINX_TYPES_MAX_HASH_SIZE;
+variables_hash_max_size @NGINX_VARIABLES_HASH_MAX_SIZE;
+variables_hash_bucket_size @NGINX_VARIABLES_HASH_BUCKET_SIZE;
 
 ####################################################################################################
 #### D. Nginx.conf: FastCGI Cache Settings #########################################################
@@ -87,12 +91,17 @@ types_hash_max_size @NGINX_TYPES_MAX_HASH_SIZE;
 ## https://serverfault.com/questions/545009/nginx-ignore-query-string-for-caching-certain-files
 ## https://alexsmith.org/making-nginx-ignore-query-string-parameters/
 ## https://community.easyengine.io/t/fastcgi-cache-bypass-when-testing-for-query-string/3999
+
+## make it optional in ss-config ##
 map $request_uri $request_path { 
 	~(?<captured_path>[^?]*) $captured_path; 
 }
 
 fastcgi_cache_path /var/www/cache/nginx levels=1:2 keys_zone=WORDPRESS:@FCGI_CACHE_MEMORY inactive=@FCGI_CACHE_INACTIVE max_size=@FCGI_CACHE_MAX_SIZE;
+
 fastcgi_cache_key "$scheme$request_method$host$request_uri$ss_session"; ## $ss_session exists in server blocks
+## fastcgi_cache_key "$scheme$request_method$host$request_path$ss_session"; ## $ss_session exists in server blocks
+
 fastcgi_cache_lock on;
 fastcgi_cache_use_stale error timeout invalid_header updating http_500;
 fastcgi_cache_background_update on; ## requires fastcgi_cache_use_stale updating
@@ -164,6 +173,7 @@ add_header X-Frame-Options SAMEORIGIN always;
 add_header X-Content-Type-Options nosniff always;
 add_header X-XSS-Protection "1; mode=block" always;
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+# add_header X-Download-Options noopen always; ## IE only
 
 ## Permissions Policy (can be customized) ##
 include /var/www/sites/includes/perms-policy[.]conf;
@@ -221,7 +231,7 @@ default_type application/octet-stream;
 ## despite claims that access_log can hurt scaling we have not seen any issues ##
 
 access_log /var/www/logs/nginx-access.log;
-error_log /var/www/logs/nginx-error.log crit;
+error_log /var/www/logs/nginx-error.log error;
 log_not_found off;
 
 ####################################################################################################
@@ -477,5 +487,7 @@ include /var/www/sites/development[.]conf;
 ## Ref: https://serverfault.com/questions/763401/cloudflare-nginx-with-limit-req-and-limit-conn
 ## Ref: https://github.com/openresty/openresty/issues/278
 ## Ref: https://www.ruby-forum.com/t/request-limit-calculation/242388
+## Ref: https://medium.com/statuscode/nginxs-new-worker-shutdown-timeout-directive-d60f9c1142f8
+## Ref: https://github.com/linuxserver/docker-swag/issues/280
 
 ## SS_EOF

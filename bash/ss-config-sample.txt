@@ -21,7 +21,7 @@
 ## run ss-update-config if outdated (check the public mirror link for current build) ##
 ## builds merely prevent conflicts as SlickStack scripts auto-update regardless ##
 
-SS_BUILD="SEP2024P"
+SS_BUILD="SEP2024X"
 
 ## SS_LOCKDOWN = [false|true] stops dev site from being overwritten... and more soon ##
 ## SS_APP = [wordpress|etc] only wordpress is supported currently (feedback welcome) ##
@@ -374,43 +374,51 @@ CSR_DEPT="DevOps"
 
 ## NGINX_WORKER_RLIMIT_NOFILE = [655535] our default is the max limit for nofile ##
 ## NGINX_WORKER_PRIORITY = [-10|-5|0|etc] negative values can help with high loads ##
-## NGINX_WORKER_CONNECTIONS = [8192|etc] be careful changing in relation to other settings ##
+## NGINX_WORKER_CONNECTIONS = [1024|4096|8192|etc] change with regard to server resources ##
 ## NGINX_SERVER_NAMES_HASH_BUCKET_SIZE = [64|128|etc] only for experts ##
 ## NGINX_SERVER_NAMES_MAX_HASH_SIZE = [512|etc] only for experts ##
 ## NGINX_TYPES_MAX_HASH_SIZE = [2048|etc] only for experts ##
-## NGINX_CLIENT_MAX_BODY_SIZE = [512M|etc] decreasing this might produce fatal errors ##
-## NGINX_CLIENT_BODY_BUFFER_SIZE = [16k|etc] be a good boy dont mess with buffers ##
-## NGINX_CLIENT_HEADER_BUFFER_SIZE = [4k|etc] be a good boy dont mess with buffers ##
-## NGINX_LARGE_CLIENT_HEADER_BUFFERS = [4 64k|etc] yes that space is required ##
+## NGINX_CLIENT_MAX_BODY_SIZE = [64m|etc] decreasing this might produce fatal errors ##
+## NGINX_CLIENT_BODY_BUFFER_SIZE = [64k|128k|etc] be a good boy dont mess with buffers ##
+## NGINX_CLIENT_HEADER_BUFFER_SIZE = [2k|4k|etc] be a good boy dont mess with buffers ##
+## NGINX_LARGE_CLIENT_HEADER_BUFFERS = [4 8k|etc] yes that space is required ##
 ## NGINX_CLIENT_BODY_TIMEOUT = [10s|30s|60s|etc] be a good boy dont mess with timeouts ##
 ## NGINX_CLIENT_HEADER_TIMEOUT = [5s|10s|15s|etc] be a good boy dont mess with timeouts ##
 ## NGINX_KEEPALIVE_TIMEOUT = [10s|30s|60s|90s|etc] be a good boy dont mess with timeouts ##
 ## NGINX_KEEPALIVE_REQUESTS = [100|500|65535] our default is the max limit for requests ##
 ## NGINX_SEND_TIMEOUT = [10s|30s|60s|120s|etc] might not do what you think it does ##
+## NGINX_VARIABLES_HASH_MAX_SIZE = [1024|2048|etc] usually 2048 avoids warnings ##
+## NGINX_VARIABLES_HASH_BUCKET_SIZE = [64|etc] not many reasons to not use 64 ##
 
 NGINX_WORKER_RLIMIT_NOFILE="65535"
 NGINX_WORKER_PRIORITY="-5"
-NGINX_WORKER_CONNECTIONS="8192"
+NGINX_WORKER_CONNECTIONS="4096"
 NGINX_SERVER_NAMES_HASH_BUCKET_SIZE="128"
 NGINX_SERVER_NAMES_MAX_HASH_SIZE="512"
 NGINX_TYPES_MAX_HASH_SIZE="2048"
-NGINX_CLIENT_MAX_BODY_SIZE="512M"
-NGINX_CLIENT_BODY_BUFFER_SIZE="16k"
-NGINX_CLIENT_HEADER_BUFFER_SIZE="4k"
-NGINX_LARGE_CLIENT_HEADER_BUFFERS="4 64k"
+
+NGINX_CLIENT_MAX_BODY_SIZE="64m"
+NGINX_CLIENT_BODY_BUFFER_SIZE="128k"
+NGINX_CLIENT_HEADER_BUFFER_SIZE="2k"
+NGINX_LARGE_CLIENT_HEADER_BUFFERS="4 8k"
+
 NGINX_CLIENT_BODY_TIMEOUT="30s"
 NGINX_CLIENT_HEADER_TIMEOUT="10s"
-NGINX_KEEPALIVE_TIMEOUT="30s"
-NGINX_KEEPALIVE_REQUESTS="1000"
-NGINX_SEND_TIMEOUT="30s"
+NGINX_KEEPALIVE_TIMEOUT="15s"
+NGINX_KEEPALIVE_REQUESTS="100"
+NGINX_SEND_TIMEOUT="10s"
 
-## OPEN_FILE_CACHE_MAX = [200000|etc] total number of file caches to allow (uses space) ##
+## new ##
+NGINX_VARIABLES_HASH_MAX_SIZE="2048"
+NGINX_VARIABLES_HASH_BUCKET_SIZE="64"
+
+## OPEN_FILE_CACHE_MAX = [10000|etc] total number of file caches to allow (uses space) ##
 ## OPEN_FILE_CACHE_INACTIVE = [20s|etc] period that controls min_uses window ##
 ## OPEN_FILE_CACHE_MIN_USES = [2|etc] minimum amount of requests during active period ##
 ## OPEN_FILE_CACHE_VALID = [30s|etc] how long before cached versions revalidated ##
 ## OPEN_FILE_CACHE_ERRORS = [on] caching errors helps your server to scale smoothly ##
 
-OPEN_FILE_CACHE_MAX="200000"
+OPEN_FILE_CACHE_MAX="10000"
 OPEN_FILE_CACHE_INACTIVE="20s"
 OPEN_FILE_CACHE_MIN_USES="2"
 OPEN_FILE_CACHE_VALID="30s"
@@ -487,8 +495,9 @@ FAIL2BAN_5XX_BANTIME="21600"
 ## FCGI_CACHE_QUERIES =
 ## FCGI_CACHE_QUERIES_SEARCH = 
 ## FCGI_CACHE_TMPFS = [false|true] mount as TMPFS (not recommended) ##
+
 ## FCGI_CONNECT_TIMEOUT = [60s|etc] usually these timeouts can be about the same ##
-## FCGI_READ_TIMEOUT = [60s|etc] should usually match PHP_MAX_EXECUTION_TIME ##
+## FCGI_READ_TIMEOUT = [60s|120s|etc] should usually match PHP_MAX_EXECUTION_TIME ##
 ## FCGI_SEND_TIMEOUT = [60s|etc] usually these timeouts can be about the same ##
 ## FCGI_BUFFERS = [32 32k] warning: 16 16k not compatible with 256k busy buffers ##
 ## FCGI_BUFFER_SIZE = [32k|etc] in most cases 32k is all you need ##
@@ -503,13 +512,14 @@ FCGI_CACHE_MAX_SIZE="4096m"
 # FCGI_CACHE_QUERIES="true"
 # FCGI_CACHE_QUERIES_SEARCH="true"
 FCGI_CACHE_TMPFS="false"
+
 FCGI_CONNECT_TIMEOUT="60s"
-FCGI_READ_TIMEOUT="60s"
+FCGI_READ_TIMEOUT="120s"
 FCGI_SEND_TIMEOUT="60s"
-FCGI_BUFFERS="32 32k"
-FCGI_BUFFER_SIZE="32k"
-FCGI_BUSY_BUFFERS_SIZE="256k"
-FCGI_TEMP_FILE_WRITE_SIZE="256k"
+FCGI_BUFFERS="8 32k"
+FCGI_BUFFER_SIZE="16k"
+FCGI_BUSY_BUFFERS_SIZE="128k"
+FCGI_TEMP_FILE_WRITE_SIZE="128k"
 
 ####################################################################################################
 #### SS-Config: MySQL + InnoDB Settings (Applies To Localhost Database Only) #######################
@@ -764,5 +774,8 @@ MU_PLUGIN_05_DIR="force-https"
 
 MU_PLUGIN_06_SOURCE="https://github.com/littlebizzy/slickstack/raw/master/modules/wordpress/mu-plugins/plugin-blacklist.zip"
 MU_PLUGIN_06_DIR="plugin-blacklist"
+
+MU_PLUGIN_07_SOURCE="https://github.com/littlebizzy/slickstack/raw/master/modules/wordpress/mu-plugins/repo-man.zip"
+MU_PLUGIN_07_DIR="repo-man"
 
 ## SS_EOF
