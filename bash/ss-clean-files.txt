@@ -915,9 +915,9 @@ ss_rm /var/www/html/wp-content/temp-write-test* ## junk files
 ss_rm /var/www/html/wp-content/w3tc-config* ## ss conflicts
 ss_rm /var/www/html/wp-content/wcfe* ## ss conflicts (by WP Config File Editor)
 #ss_rm /var/www/html/wp-content/wflogs* ## ss conflicts (by WordFence)
-ss_rm /var/www/html/wp-content/wp-cache-config.php* ## ss conflicts
-ss_rm /var/www/html/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
-ss_rm /var/www/html/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
+#ss_rm /var/www/html/wp-content/wp-cache-config.php* ## ss conflicts
+#ss_rm /var/www/html/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
+#ss_rm /var/www/html/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
 ss_rm /var/www/html/wp-content/wp-performance-score-booster* ## ss conflicts (by WP Performance Score Booster)
 ss_rm /var/www/html/wp-content/wpo-cache* ## ss conflicts (by WP-Optimize)
 ss_rm /var/www/html/wp-content/wphb-cache* ## ss conflicts (by Hummingbird)
@@ -939,9 +939,9 @@ ss_rm /var/www/html/staging/wp-content/temp-write-test* ## junk files
 ss_rm /var/www/html/staging/wp-content/w3tc-config* ## ss conflicts
 ss_rm /var/www/html/staging/wp-content/wcfe* ## ss conflicts (by WP Config File Editor)
 #ss_rm /var/www/html/staging/wp-content/wflogs* ## ss conflicts (by WordFence)
-ss_rm /var/www/html/staging/wp-content/wp-cache-config.php* ## ss conflicts
-ss_rm /var/www/html/staging/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
-ss_rm /var/www/html/staging/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
+#ss_rm /var/www/html/staging/wp-content/wp-cache-config.php* ## ss conflicts
+#ss_rm /var/www/html/staging/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
+#ss_rm /var/www/html/staging/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
 ss_rm /var/www/html/staging/wp-content/wp-performance-score-booster* ## ss conflicts (by WP Performance Score Booster)
 ss_rm /var/www/html/staging/wp-content/wpo-cache* ## ss conflicts (by WP-Optimize)
 ss_rm /var/www/html/staging/wp-content/wphb-cache* ## ss conflicts (by Hummingbird)
@@ -964,9 +964,9 @@ ss_rm /var/www/html/dev/wp-content/temp-write-test* ## junk files
 ss_rm /var/www/html/dev/wp-content/w3tc-config* ## ss conflicts
 ss_rm /var/www/html/dev/wp-content/wcfe* ## ss conflicts (by WP Config File Editor)
 #ss_rm /var/www/html/dev/wp-content/wflogs* ## ss conflicts (by WordFence)
-ss_rm /var/www/html/dev/wp-content/wp-cache-config.php* ## ss conflicts
-ss_rm /var/www/html/dev/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
-ss_rm /var/www/html/dev/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
+#ss_rm /var/www/html/dev/wp-content/wp-cache-config.php* ## ss conflicts
+#ss_rm /var/www/html/dev/wp-content/wp-rocket* ## ss conflicts (by WP Rocket)
+#ss_rm /var/www/html/dev/wp-content/wp-rocket-config* ## ss conflicts (by WP Rocket)
 ss_rm /var/www/html/dev/wp-content/wp-performance-score-booster* ## ss conflicts (by WP Performance Score Booster)
 ss_rm /var/www/html/dev/wp-content/wpo-cache* ## ss conflicts (by WP-Optimize)
 ss_rm /var/www/html/dev/wp-content/wphb-cache* ## ss conflicts (by Hummingbird)
@@ -1117,8 +1117,8 @@ ss_rm /var/www/html/wp-content/plugins/wp-performance-score-booster* ## ss confl
 ss_rm /var/www/html/wp-content/plugins/wp-phpmyadmin-extension* ## ss conflicts
 ss_rm /var/www/html/wp-content/plugins/wp-postviews* ## database thrashing
 ss_rm /var/www/html/wp-content/plugins/wp-redis* ## ss conflicts
-ss_rm /var/www/html/wp-content/plugins/wp-rocket* ## ss conflicts
-ss_rm /var/www/html/wp-content/plugins/wp-rocket-static-exclude-defer-js* ## ss conflicts
+#ss_rm /var/www/html/wp-content/plugins/wp-rocket* ## ss conflicts
+#ss_rm /var/www/html/wp-content/plugins/wp-rocket-static-exclude-defer-js* ## ss conflicts
 ss_rm /var/www/html/wp-content/plugins/wp-roilbacks* ## malware
 ss_rm /var/www/html/wp-content/plugins/wp-security ## malware (reported by Sucuri) no wildcard to avoid wp-security-audit-log
 ss_rm /var/www/html/wp-content/plugins/wp-site-migrate* ## vendor specific (WP Engine)
@@ -1259,8 +1259,8 @@ ss_rm /var/www/html/staging/wp-content/plugins/wp-performance-score-booster* ## 
 ss_rm /var/www/html/staging/wp-content/plugins/wp-phpmyadmin-extension* ## ss conflicts
 ss_rm /var/www/html/staging/wp-content/plugins/wp-postviews* ## database thrashing
 ss_rm /var/www/html/staging/wp-content/plugins/wp-redis* ## ss conflicts
-ss_rm /var/www/html/staging/wp-content/plugins/wp-rocket* ## ss conflicts
-ss_rm /var/www/html/staging/wp-content/plugins/wp-rocket-static-exclude-defer-js* ## ss conflicts
+#ss_rm /var/www/html/staging/wp-content/plugins/wp-rocket* ## ss conflicts
+#ss_rm /var/www/html/staging/wp-content/plugins/wp-rocket-static-exclude-defer-js* ## ss conflicts
 ss_rm /var/www/html/staging/wp-content/plugins/wp-roilbacks* ## malware
 ss_rm /var/www/html/staging/wp-content/plugins/wp-security ## malware (reported by Sucuri) no wildcard to avoid wp-security-audit-log
 ss_rm /var/www/html/staging/wp-content/plugins/wp-site-migrate* ## vendor specific (WP Engine)
@@ -1400,8 +1400,8 @@ ss_rm /var/www/html/dev/wp-content/plugins/wp-performance-score-booster* ## ss c
 ss_rm /var/www/html/dev/wp-content/plugins/wp-phpmyadmin-extension* ## ss conflicts
 ss_rm /var/www/html/dev/wp-content/plugins/wp-postviews* ## database thrashing
 ss_rm /var/www/html/dev/wp-content/plugins/wp-redis* ## ss conflicts
-ss_rm /var/www/html/dev/wp-content/plugins/wp-rocket* ## ss conflicts
-ss_rm /var/www/html/dev/wp-content/plugins/wp-rocket-static-exclude-defer-js* ## ss conflicts
+#ss_rm /var/www/html/dev/wp-content/plugins/wp-rocket* ## ss conflicts
+#ss_rm /var/www/html/dev/wp-content/plugins/wp-rocket-static-exclude-defer-js* ## ss conflicts
 ss_rm /var/www/html/dev/wp-content/plugins/wp-roilbacks* ## malware
 ss_rm /var/www/html/dev/wp-content/plugins/wp-security ## malware (reported by Sucuri) no wildcard to avoid wp-security-audit-log
 ss_rm /var/www/html/dev/wp-content/plugins/wp-site-migrate* ## vendor specific (WP Engine)
