@@ -1,0 +1,458 @@
+# Query: https://raw.githubusercontent.com/littlebizzy/slickstack/master
+# ContextLines: 1
+
+110 results - 34 files
+
+bash/ss-config-sample.txt:
+  242  WP_PLUGIN_BLACKLIST="true"
+  243: WP_PLUGIN_BLACKLIST_SOURCE="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/wordpress/blacklist.txt"
+  244  
+
+bash/ss-functions.txt:
+  58  
+  59: GITHUB_PREFIX="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master"
+  60  GITLAB_PREFIX="https://gitlab.com/littlebizzy/slickstack/-/raw/master"
+
+bash/ss-install-fail2ban-config.txt:
+  71  
+  72: ss_wget /etc/fail2ban/jail.local https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/fail2ban/jail-local.txt
+  73: ss_wget /etc/fail2ban/filter.d/nginx-get-dos.conf https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/fail2ban/filters/nginx-get-dos-conf.txt
+  74: ss_wget /etc/fail2ban/filter.d/nginx-post-dos.conf https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/fail2ban/filters/nginx-post-dos-conf.txt
+  75: ss_wget /etc/fail2ban/filter.d/nginx-4xx.conf https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/fail2ban/filters/nginx-4xx-conf.txt
+  76  
+  77: # ss_wget /etc/fail2ban/filter.d/nginx-5xx.conf https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/fail2ban/filters/nginx-5xx-conf.txt
+  78  
+
+bash/ss-install-nginx-config.txt:
+  1144  if [[ -z "${VALIDATE_ACTIVE_PERMS_POLICY_CONF}" ]]; then
+  1145:     ss_wget /tmp/perms-policy.conf https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/nginx/includes/perms-policy-conf.txt
+  1146      ss_cp_if_not_exists /tmp/perms-policy.conf /var/www/sites/includes/perms-policy.conf
+
+bash/ss-install.txt:
+  83  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+  84:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+  85      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+bash/ss-update-config.txt:
+  1405  ss_sed 's|WP_PLUGIN_BLACKLIST=""|WP_PLUGIN_BLACKLIST="true"|g' /var/www/ss-config
+  1406: ss_sed 's|WP_PLUGIN_BLACKLIST_SOURCE=""|WP_PLUGIN_BLACKLIST_SOURCE="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/wordpress/blacklist.txt"|g' /var/www/ss-config
+  1407  
+
+crons/01-cron-minutely.txt:
+   76  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   77:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   78      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  116  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  117:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  118      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  135  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  136:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  137      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/02-cron-often.txt:
+   75  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   76:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   77      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/03-cron-regular.txt:
+   75  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   76:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   77      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/04-cron-quarter-hourly.txt:
+   75  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   76:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   77      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/05-cron-half-hourly.txt:
+   75  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   76:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   77      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/06-cron-hourly.txt:
+   75  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   76:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   77      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/07-cron-quarter-daily.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  133  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  134:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  135      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/08-cron-half-daily.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  133  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  134:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  135      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/09-cron-daily.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  133  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  134:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  135      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/10-cron-half-weekly.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  133  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  134:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  135      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/11-cron-weekly.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  133  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  134:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  135      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/12-cron-half-monthly.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  133  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  134:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  135      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/13-cron-monthly.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  133  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  134:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  135      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/14-cron-sometimes.txt:
+   75  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   76:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   77      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115  if [[ -z "${VALIDATE_SS_CHECK}" ]] || [[ -n "${OUTDATED_SS_CHECK}" ]]; then
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134  if [[ -z "${VALIDATE_SS_WORKER}" ]] || [[ -n "${OUTDATED_SS_WORKER}" ]]; then
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/01-cron-often.txt:
+   75  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   76:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   77      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  116      rm -rf /tmp/ss-check
+  117:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  118      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  136      rm -rf /tmp/ss-worker
+  137:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  138      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/02-cron-regular.txt:
+   73  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   74:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   75      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114      rm -rf /tmp/ss-check
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134      rm -rf /tmp/ss-worker
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/03-cron-quarter-hourly.txt:
+   73  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   74:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   75      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114      rm -rf /tmp/ss-check
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134      rm -rf /tmp/ss-worker
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/04-cron-half-hourly.txt:
+   73  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   74:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   75      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114      rm -rf /tmp/ss-check
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134      rm -rf /tmp/ss-worker
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/05-cron-hourly.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115      rm -rf /tmp/ss-check
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  135      rm -rf /tmp/ss-worker
+  136:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  137      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/06-cron-quarter-daily.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115      rm -rf /tmp/ss-check
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  135      rm -rf /tmp/ss-worker
+  136:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  137      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/07-cron-half-daily.txt:
+   73  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   74:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   75      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114      rm -rf /tmp/ss-check
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134      rm -rf /tmp/ss-worker
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/08-cron-daily.txt:
+   74  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   75:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   76      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  115      rm -rf /tmp/ss-check
+  116:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  117      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  135      rm -rf /tmp/ss-worker
+  136:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  137      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/09-cron-half-weekly.txt:
+   73  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   74:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   75      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114      rm -rf /tmp/ss-check
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134      rm -rf /tmp/ss-worker
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/10-cron-weekly.txt:
+   73  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   74:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   75      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114      rm -rf /tmp/ss-check
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134      rm -rf /tmp/ss-worker
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/11-cron-half-monthly.txt:
+   73  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   74:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   75      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114      rm -rf /tmp/ss-check
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134      rm -rf /tmp/ss-worker
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/12-cron-monthly.txt:
+   73  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   74:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   75      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  114      rm -rf /tmp/ss-check
+  115:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  116      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  134      rm -rf /tmp/ss-worker
+  135:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  136      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+crons/archive/13-cron-sometimes.txt:
+   75  if [[ -z "${VALIDATE_SS_FUNCTIONS}" ]] || [[ -n "${OUTDATED_SS_FUNCTIONS}" ]]; then
+   76:     wget --no-check-certificate --no-cache --no-cookies --quiet --inet4-only --tries=30 --timeout=300 --waitretry=15 -O /tmp/ss-functions https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-functions.txt
+   77      VALIDATE_TMP_SS_FUNCTIONS=$(grep 'SS_EOF' /tmp/ss-functions 2> /dev/null)
+
+  116      rm -rf /tmp/ss-check
+  117:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-check https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-check.txt
+  118      VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' /tmp/ss-check)
+
+  136      rm -rf /tmp/ss-worker
+  137:     wget --no-check-certificate -q -4 -t 1 -T 15 -O /tmp/ss-worker https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/bash/ss-worker.txt
+  138      VALIDATE_TMP_SS_WORKER=$(grep 'SS_EOF' /tmp/ss-worker)
+
+modules/wordpress/mu-plugins/000-common.txt:
+   413  			<h3>Security Headers
+   414: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/securityheaders.png" class="plugin-icon" alt="">
+   415  			</h3>
+
+   431  			<h3>GTMetrix
+   432: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/gtmetrix.png" class="plugin-icon" alt="">
+   433  			</h3>
+
+   449  			<h3>SSL Labs
+   450: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/qualys.png" class="plugin-icon" alt="">
+   451  			</h3>
+
+   467  			<h3>DNSSEC Analyzer
+   468: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/verisign.png" class="plugin-icon" alt="">
+   469  			</h3>
+
+   485  			<h3>Mobile-Friendly
+   486: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/google.png" class="plugin-icon" alt="">
+   487  			</h3>
+
+   503  			<h3>Blacklist Check
+   504: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/mxtoolbox.png" class="plugin-icon" alt="">
+   505  			</h3>
+
+   521  			<h3>PageSpeed
+   522: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/google.png" class="plugin-icon" alt="">
+   523  			</h3>
+
+   539  			<h3>VirusTotal Scan
+   540: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/chronicle.png" class="plugin-icon" alt="">
+   541  			</h3>
+
+   557  			<h3>Web Security
+   558: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/immuniweb.png" class="plugin-icon" alt="">
+   559  			</h3>
+
+   575  			<h3>DNS Records
+   576: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/nslookup.png" class="plugin-icon" alt="">
+   577  			</h3>
+
+   593  			<h3>MX Lookup
+   594: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/mxtoolbox.png" class="plugin-icon" alt="">
+   595  			</h3>
+
+   611  			<h3>Email Security
+   612: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/easydmarc.png" class="plugin-icon" alt="">
+   613  			</h3>
+
+   629  			<h3>IPv6 Health
+   630: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/mythicbeasts.png" class="plugin-icon" alt="">
+   631  			</h3>
+
+   647  			<h3>Transparency
+   648: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/google.png" class="plugin-icon" alt="">
+   649  			</h3>
+
+   665  			<h3>Legal Complaints
+   666: 			<img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/lumendatabase.png" class="plugin-icon" alt="">
+   667  			</h3>
+
+  1135          <p>
+  1136:             <a href="https://www.g2.com/products/slickstack/reviews"><img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/g2crowd.svg" height="30px" style="margin-right: 20px;" class="reviews-icon" alt=""></a>
+  1137:             <a href="https://www.capterra.com/p/211436/SlickStack"><img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/capterra.svg" height="30px" style="margin-right: 20px;" class="reviews-icon" alt=""></a>
+  1138:             <a href="https://sourceforge.net/software/product/SlickStack/"><img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/sourceforge.svg" height="30px" style="margin-right: 20px;" class="reviews-icon" alt=""></a>
+  1139:             <a href="https://www.producthunt.com/posts/slickstack"><img src="https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/assets/images/producthunt.svg" height="30px" style="margin-right: 20px;" class="reviews-icon" alt=""></a>
+  1140          </p>
