@@ -209,6 +209,7 @@ add-expires-headers ; ss conflicts, bad practice (By Passionate Brains)
 add-index-to-autoload ; ss conflicts, feature exists in WP Core 5.3+ already
 add-social-share ; not maintained
 /add-to-any/ ; adware, spyware, bloated
+addon-elements-for-elementor-page-builder ; hacks third-party design products
 addons-for-beaver-builder ; hacks other vendor products, creates instability, bad practice (buy the Pro version)
 addons-for-elementor ; hacks third-party design products (By Livemesh)
 addfreestats ; excessive logging
@@ -902,6 +903,7 @@ mywebtonet-performancestats ; resource intensive
 native-lazyload ; serious errors, creates instability, experimental software (By Google)
 native-emoji ; bloated
 nazy-load ; creates instability (overwrites paths), ss conflicts (By Gijo Varghese)
+nc-extendify-lc ; vendor specific
 new-google-plus-badge ; deprecated
 new-google-plus-badge-widget ; deprecated
 news-ticker-tj ; not maintained, serious errors
@@ -1232,6 +1234,7 @@ statify ; excessive logging
 statpress ; deprecated, excessive logging
 statpress-reloaded ; deprecated, excessive logging
 statpress-visitors ; deprecated, excessive logging
+sticky-header-effects-for-elementor ; hacks third-party design products
 /stock-ticker/ ; pointless, resource intensive
 stop-user-enumeration ; ss conflicts
 storefront-header-picker ; bad practice, hacks third-party design products, poor coding
@@ -1392,6 +1395,7 @@ wordpress-mu-domain-mapping ; ss conflicts
 wordpress-popular-posts ; resource intensive
 woo-confirmation-email ; exploitable, poor coding
 woo-gutenberg-products-block ; ss conflicts, serious errors
+; woo-permalink-manager ; bad practice
 woodojo ; deprecated
 woocommerce-abandoned-cart ; exploitable, poorly coded, serious errors
 woocommerce-admin ; resource intensive, poor coding, serious conflicts with other scripts, not yet stable
