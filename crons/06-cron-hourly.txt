@@ -28,8 +28,8 @@
 ## D. Source SS-Config + SS-Functions (After Validated)
 ## E. Run SS-Check + SS-Worker In Case Overdue
 ## F. Touch Timestamp File
-## G. Run Custom Tasks (EDIT SOURCED FILES)
-## H. Run WP-Cron (Conditional)
+## G. Run WP-Cron (Conditional)
+## H. Run Custom Tasks (EDIT SOURCED FILES)
 ## I. Run Scheduled Tasks (DO NOT EDIT)
 ## J. Delete Lock File
 
@@ -251,16 +251,7 @@ fi
 ss_touch "${TIMESTAMP_06_CRON_HOURLY}"
 
 ####################################################################################################
-#### G. 06-Cron-Hourly: Run Custom Tasks (EDIT SOURCED FILES) ######################################
-####################################################################################################
-
-## this will run custom shell commands that you can save in a reserved filename below ##
-## carefully consider server resources and best practices before customizing ##
-
-source "${PATH_06_CRON_HOURLY_CUSTOM}"
-
-####################################################################################################
-#### H. 06-Cron-Hourly: Run WP-Cron (Conditional) ##################################################
+#### G. 06-Cron-Hourly: Run WP-Cron (Conditional) ##################################################
 ####################################################################################################
 
 ## this snippet will run WP-Cron via the server if changed in your ss-config settings ##
@@ -287,6 +278,15 @@ if [[ "${WP_CRON_INTERVAL}" == "hourly" ]]; then
 fi
 
 ####################################################################################################
+#### H. 06-Cron-Hourly: Run Custom Tasks (EDIT SOURCED FILES) ######################################
+####################################################################################################
+
+## this will run custom shell commands that you can save in a reserved filename below ##
+## carefully consider server resources and best practices before customizing ##
+
+source "${PATH_06_CRON_HOURLY_CUSTOM}"
+
+####################################################################################################
 #### I. 06-Cron-Hourly: Run Scheduled Tasks (DO NOT EDIT) ##########################################
 ####################################################################################################
 
@@ -299,7 +299,7 @@ if [[ "${INTERVAL_SS_CLEAN_DATABASE}" == "hourly" ]]; then
 fi
 
 ## run ss-dump-database if set to hourly (default) or not properly defined ##
-if [[ "${INTERVAL_SS_DUMP_DATABASE}" == "hourly" ]] || [[ "${INTERVAL_SS_DUMP_DATABASE}" != @(often|regular|quarter-hourly|half-hourly|hourly|quarter-daily|half-daily|daily) ]]; then
+if [[ "${INTERVAL_SS_DUMP_DATABASE}" == "hourly" ]] || [[ "${INTERVAL_SS_DUMP_DATABASE}" != @(regular|quarter-hourly|half-hourly|hourly|quarter-daily|half-daily|daily) ]]; then
     source "${PATH_SS_DUMP_DATABASE}"
 fi
 
