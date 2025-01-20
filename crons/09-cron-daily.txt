@@ -270,11 +270,6 @@ if [[ "${INTERVAL_SS_CLEAN_DATABASE}" == "daily" ]]; then
     source "${PATH_SS_CLEAN_DATABASE}"
 fi
 
-## run ss-optimize-database if set to daily ##
-if [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" == "daily" ]]; then 
-    source "${PATH_SS_OPTIMIZE_DATABASE}"
-fi
-
 ## run ss-dump-database if set to daily ##
 if [[ "${INTERVAL_SS_DUMP_DATABASE}" == "daily" ]]; then 
     source "${PATH_SS_DUMP_DATABASE}"
@@ -313,16 +308,6 @@ fi
 ## run ss-perms if set to daily ##
 if [[ "${INTERVAL_SS_PERMS}" == "daily" ]]; then 
     source "${PATH_SS_PERMS}"
-fi
-
-## run ss-install-ubuntu-bash if set to daily ##
-if [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" == "daily" ]]; then 
-    source "${PATH_SS_INSTALL_UBUNTU_BASH}"
-fi
-
-## run ss-install-nginx-cloudflare-ips if set to daily ##
-if [[ "${INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS}" == "daily" ]]; then 
-    source "${PATH_SS_INSTALL_NGINX_CLOUDFLARE_IPS}"
 fi
 
 ## run ss-remote-backup if set to daily ##

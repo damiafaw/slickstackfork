@@ -275,9 +275,9 @@ if [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" == "half-monthly" ]]; then
     source "${PATH_SS_OPTIMIZE_DATABASE}"
 fi
 
-## run ss-optimize-files if set to half-monthly ##
-if [[ "${INTERVAL_SS_OPTIMIZE_FILES}" == "half-monthly" ]]; then 
-    source "${PATH_SS_OPTIMIZE_FILES}"
+## run ss-install-nginx-cloudflare-ips if set to half-monthly ##
+if [[ "${INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS}" == "half-monthly" ]]; then
+    source "${PATH_SS_INSTALL_NGINX_CLOUDFLARE_IPS}"
 fi
 
 ## run ss-install-wordpress-config if set to half-monthly ##
@@ -290,8 +290,8 @@ if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_PACKAGES}" == "half-monthly" ]]; then
     source "${PATH_SS_INSTALL_WORDPRESS_PACKAGES}"
 fi
 
-## run ss-install-wordpress-cli if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CLI}" == "half-monthly" ]]; then 
+## run ss-install-wordpress-cli if set to half-monthly (default) or not properly defined ##
+if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CLI}" == "half-monthly" ]] || [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CLI}" != @(weekly|half-monthly|monthly) ]]; then
     source "${PATH_SS_INSTALL_WORDPRESS_CLI}"
 fi
 
@@ -353,6 +353,16 @@ fi
 ## run ss-install-ubuntu-bash if set to half-monthly ##
 if [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" == "half-monthly" ]]; then 
     source "${PATH_SS_INSTALL_UBUNTU_BASH}"
+fi
+
+## run ss-empty-logs if set to half-monthly ##
+if [[ "${INTERVAL_SS_EMPTY_LOGS}" == "half-monthly" ]]; then 
+    source "${PATH_SS_EMPTY_LOGS}"
+fi
+
+## run ss-update-modules if set to half-monthly ##
+if [[ "${INTERVAL_SS_UPDATE_MODULES}" == "half-monthly}" ]]; then 
+    source "${PATH_SS_UPDATE_MODULES}"
 fi
 
 ## run ss-reboot-machine if set to half-monthly ##

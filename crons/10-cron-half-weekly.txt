@@ -276,13 +276,8 @@ if [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" == "half-weekly" ]]; then
 fi
 
 ## run ss-optimize-files if set to half-weekly (default) or not properly defined ##
-if [[ "${INTERVAL_SS_OPTIMIZE_FILES}" == "half-weekly" ]] || [[ "${INTERVAL_SS_OPTIMIZE_FILES}" != @(half-daily|daily|half-weekly|weekly|half-monthly) ]]; then
+if [[ "${INTERVAL_SS_OPTIMIZE_FILES}" == "half-weekly" ]] || [[ "${INTERVAL_SS_OPTIMIZE_FILES}" != @(half-daily|daily|half-weekly|weekly) ]]; then
     source "${PATH_SS_OPTIMIZE_FILES}"
-fi
-
-## run ss-dump-files if set to half-weekly ##
-if [[ "${INTERVAL_SS_DUMP_FILES}" == "half-weekly" ]]; then 
-    source "${PATH_SS_DUMP_FILES}"
 fi
 
 ## run ss-install-wordpress-config if set to half-weekly ##
@@ -291,23 +286,23 @@ if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CONFIG}" == "half-weekly" ]]; then
 fi
 
 ## run ss-install-wordpress-mu-plugins if set to half-weekly (default) or not properly defined ##
-if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS}" == "half-weekly" ]] || [[ "${INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS}" != @(half-daily|daily|half-weekly) ]]; then
+if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS}" == "half-weekly" ]] || [[ "${INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS}" != @(daily|half-weekly|weekly) ]]; then
     source "${PATH_SS_INSTALL_WORDPRESS_MU_PLUGINS}"
 fi
 
-## run ss-sync-staging if set to half-weekly ##
-if [[ "${INTERVAL_SS_SYNC_STAGING}" == "half-weekly" ]]; then 
-    source "${PATH_SS_SYNC_STAGING}"
-fi
-
 ## run ss-install-ubuntu-bash if set to half-weekly (default) or not properly defined ##
-if [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" == "half-weekly" ]] || [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" != @(daily|half-weekly|weekly|half-monthly) ]]; then
+if [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" == "half-weekly" ]] || [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" != @(half-weekly|weekly|half-monthly) ]]; then
     source "${PATH_SS_INSTALL_UBUNTU_BASH}"
 fi
 
 ## run ss-install-nginx-cloudflare-ips if set to half-weekly (default) or not properly defined ##
-if [[ "${INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS}" == "half-weekly" ]] || [[ "${INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS}" != @(daily|half-weekly|weekly) ]]; then
+if [[ "${INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS}" == "half-weekly" ]] || [[ "${INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS}" != @(half-weekly|weekly|half-monthly) ]]; then
     source "${PATH_SS_INSTALL_NGINX_CLOUDFLARE_IPS}"
+fi
+
+## run ss-perms if set to half-weekly ##
+if [[ "${INTERVAL_SS_PERMS}" == "half-weekly" ]]; then 
+    source "${PATH_SS_PERMS}"
 fi
 
 ## run ss-remote-backup if set to half-weekly ##

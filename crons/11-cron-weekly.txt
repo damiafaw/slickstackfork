@@ -265,13 +265,18 @@ source "${PATH_11_CRON_WEEKLY_CUSTOM}"
 ## the below tasks will be called if configured to run at this interval in ss-config ##
 ## certain tasks are automatically called if the relevant interval is missing ##
 
+## run ss-update-config if set to weekly ##
+if [[ "${INTERVAL_SS_UPDATE_CONFIG}" == "weekly" ]]; then 
+    source "${PATH_SS_UPDATE_CONFIG}"
+fi
+
 ## run ss-clean-database if set to weekly ##
 if [[ "${INTERVAL_SS_CLEAN_DATABASE}" == "weekly" ]]; then 
     source "${PATH_SS_CLEAN_DATABASE}"
 fi
 
 ## run ss-optimize-database if set to weekly (default) or not properly defined ##
-if [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" == "weekly" ]] || [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" != @(daily|half-weekly|weekly|half-monthly) ]]; then
+if [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" == "weekly" ]] || [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" != @(half-weekly|weekly|half-monthly) ]]; then
     source "${PATH_SS_OPTIMIZE_DATABASE}"
 fi
 
@@ -280,9 +285,14 @@ if [[ "${INTERVAL_SS_OPTIMIZE_FILES}" == "weekly" ]]; then
     source "${PATH_SS_OPTIMIZE_FILES}"
 fi
 
-## run ss-install-wordpress-config if set to weekly ##
-if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CONFIG}" == "weekly" ]]; then 
+## run ss-install-wordpress-config if set to weekly (default) or not properly defined ##
+if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CONFIG}" == "weekly" ]] || [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CONFIG}" != @(daily|half-weekly|weekly|half-monthly) ]]; then
     source "${PATH_SS_INSTALL_WORDPRESS_CONFIG}"
+fi
+
+## run ss-install-wordpress-mu-plugins if set to daily ##
+if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS}" == "weekly" ]]; then
+    source "${PATH_SS_INSTALL_WORDPRESS_MU_PLUGINS}"
 fi
 
 ## run ss-install-wordpress-packages if set to weekly ##
