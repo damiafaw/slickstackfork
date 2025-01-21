@@ -84,7 +84,7 @@ ss_echo "${COLOR_INFO}Running ss-clean-files... ${COLOR_RESET}"
 
 ss_null /home/"${SFTP_USER}"/.bash_history
 ss_null /home/"${SUDO_USER}"/.bash_history
-ss_null /root/.bash_history
+#ss_null /root/.bash_history
 
 ####################################################################################################
 #### E. SS-Clean-Files: Delete SSH Private Key (If Exists) #########################################
