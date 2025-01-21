@@ -30,7 +30,8 @@
 ## F. Touch Timestamp File
 ## G. Run Custom Tasks (EDIT SOURCED FILES)
 ## H. Run Scheduled Tasks (DO NOT EDIT)
-## I. Delete Lock File
+## I. Scheduled Reboot (Conditional)
+## J. Delete Lock File
 
 ####################################################################################################
 #### A. 12-Cron-Half-Monthly: Validate (Restore) SS-Config #########################################
@@ -265,14 +266,24 @@ source "${PATH_12_CRON_HALF_MONTHLY_CUSTOM}"
 ## the below tasks will be called if configured to run at this interval in ss-config ##
 ## certain tasks are automatically called if the relevant interval is missing ##
 
+## run ss-encrypt-openssl if set to half-monthly ##
+if [[ "${INTERVAL_SS_ENCRYPT_OPENSSL}" == "half-monthly" ]]; then 
+    source "${PATH_SS_ENCRYPT_OPENSSL}"
+fi
+
+## run ss-encrypt-certbot if set to half-monthly ##
+if [[ "${INTERVAL_SS_ENCRYPT_CERTBOT}" == "half-monthly" ]]; then
+    source "${PATH_SS_ENCRYPT_CERTBOT}"
+fi
+
 ## run ss-update-config if set to half-monthly ##
 if [[ "${INTERVAL_SS_UPDATE_CONFIG}" == "half-monthly" ]]; then 
     source "${PATH_SS_UPDATE_CONFIG}"
 fi
 
-## run ss-optimize-database if set to half-monthly ##
-if [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" == "half-monthly" ]]; then 
-    source "${PATH_SS_OPTIMIZE_DATABASE}"
+## run ss-install-ubuntu-bash if set to half-monthly ##
+if [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" == "half-monthly" ]]; then 
+    source "${PATH_SS_INSTALL_UBUNTU_BASH}"
 fi
 
 ## run ss-install-nginx-cloudflare-ips if set to half-monthly ##
@@ -295,64 +306,24 @@ if [[ "${INTERVAL_SS_INSTALL_WORDPRESS_CLI}" == "half-monthly" ]] || [[ "${INTER
     source "${PATH_SS_INSTALL_WORDPRESS_CLI}"
 fi
 
-## run ss-install-php-packages if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_PHP_PACKAGES}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_PHP_PACKAGES}"
+## run ss-update-modules if set to half-monthly ##
+if [[ "${INTERVAL_SS_UPDATE_MODULES}" == "half-monthly" ]]; then 
+    source "${PATH_SS_UPDATE_MODULES}"
 fi
 
-## run ss-install-php-config if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_PHP_CONFIG}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_PHP_CONFIG}"
+## run ss-optimize-database if set to half-monthly ##
+if [[ "${INTERVAL_SS_OPTIMIZE_DATABASE}" == "half-monthly" ]]; then 
+    source "${PATH_SS_OPTIMIZE_DATABASE}"
 fi
 
-## run ss-install-memcached-packages if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_MEMCACHED_PACKAGES}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_MEMCACHED_PAKAGES}"
+## run ss-purge-memcached if set to half-monthly ##
+if [[ "${INTERVAL_SS_PURGE_MEMCACHED}" == "half-monthly" ]]; then 
+    source "${PATH_SS_PURGE_MEMCACHED}"
 fi
 
-## run ss-install-memcached-config if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_MEMCACHED_CONFIG}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_MEMCACHED_CONFIG}"
-fi
-
-## run ss-install-mysql-packages if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_MYSQL_PACKAGES}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_MYSQL_PACKAGES}"
-fi
-
-## run ss-install-mysql-config if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_MYSQL_CONFIG}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_MYSQL_CONFIG}"
-fi
-
-## run ss-install-nginx-packages if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_NGINX_PACKAGES}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_NGINX_PACKAGES}"
-fi
-
-## run ss-install-nginx-config if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_NGINX_CONFIG}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_NGINX_CONFIG}"
-fi
-
-## run ss-encrypt-openssl if set to half-monthly ##
-if [[ "${INTERVAL_SS_ENCRYPT_OPENSSL}" == "half-monthly" ]]; then 
-    source "${PATH_SS_ENCRYPT_OPENSSL}"
-fi
-
-## run ss-encrypt-certbot if set to half-monthly ##
-if [[ "${INTERVAL_SS_ENCRYPT_CERTBOT}" == "half-monthly" ]]; then
-    source "${PATH_SS_ENCRYPT_CERTBOT}"
-fi
-
-## run ss-install-clamav if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_CLAMAV}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_CLAMAV}"
-fi
-
-## run ss-install-ubuntu-bash if set to half-monthly ##
-if [[ "${INTERVAL_SS_INSTALL_UBUNTU_BASH}" == "half-monthly" ]]; then 
-    source "${PATH_SS_INSTALL_UBUNTU_BASH}"
+## run ss-purge-transients if set to half-monthly ##
+if [[ "${INTERVAL_SS_PURGE_TRANSIENTS}" == "half-monthly" ]]; then 
+    source "${PATH_SS_PURGE_TRANSIENTS}"
 fi
 
 ## run ss-empty-logs if set to half-monthly ##
@@ -360,10 +331,12 @@ if [[ "${INTERVAL_SS_EMPTY_LOGS}" == "half-monthly" ]]; then
     source "${PATH_SS_EMPTY_LOGS}"
 fi
 
-## run ss-update-modules if set to half-monthly ##
-if [[ "${INTERVAL_SS_UPDATE_MODULES}" == "half-monthly}" ]]; then 
-    source "${PATH_SS_UPDATE_MODULES}"
-fi
+####################################################################################################
+#### I. 12-Cron-Half-Monthly: Scheduled Reboot (Conditional) #######################################
+####################################################################################################
+
+## reboot task must come last in this cron job to avoid skipping other scheduled tasks ##
+## we also force delete the cron lock file to ensure removal before rebooting ##
 
 ## run ss-reboot-machine if set to half-monthly ##
 if [[ "${INTERVAL_SS_REBOOT_MACHINE}" == "half-monthly" ]]; then 
@@ -371,7 +344,7 @@ if [[ "${INTERVAL_SS_REBOOT_MACHINE}" == "half-monthly" ]]; then
 fi
 
 ####################################################################################################
-#### I. 12-Cron-Half-Monthly: Delete Lock File #####################################################
+#### J. 12-Cron-Half-Monthly: Delete Lock File #####################################################
 ####################################################################################################
 
 ## here we delete the lock file associated with this cron job to clear the cron queue ##
