@@ -513,7 +513,7 @@ fi
 
 ## connections ##
 if [[ -z "${LIMIT_CONNECTIONS_PER_IP}" ]]; then 
-    ss_sed "s/@LIMIT_CONNECTIONS_PER_IP/10/g" "${TMP_NGINX_CONF}"
+    ss_sed "s/@LIMIT_CONNECTIONS_PER_IP/50/g" "${TMP_NGINX_CONF}"
 else 
     ss_sed "s/@LIMIT_CONNECTIONS_PER_IP/${LIMIT_CONNECTIONS_PER_IP}/g" "${TMP_NGINX_CONF}"
 fi
