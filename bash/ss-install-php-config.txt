@@ -179,14 +179,14 @@ fi
 
 ## max execution time ##
 if [[ -z "${PHP_MAX_EXECUTION_TIME}" ]]; then 
-    ss_sed "s/@PHP_MAX_EXECUTION_TIME/60/g" "${TMP_PHP_INI}"
+    ss_sed "s/@PHP_MAX_EXECUTION_TIME/300/g" "${TMP_PHP_INI}"
 else 
     ss_sed "s/@PHP_MAX_EXECUTION_TIME/${PHP_MAX_EXECUTION_TIME}/g" "${TMP_PHP_INI}"
 fi
 
 ## max input time ##
 if [[ -z "${PHP_MAX_INPUT_TIME}" ]]; then 
-    ss_sed "s/@PHP_MAX_INPUT_TIME/60/g" "${TMP_PHP_INI}"
+    ss_sed "s/@PHP_MAX_INPUT_TIME/300/g" "${TMP_PHP_INI}"
 else 
     ss_sed "s/@PHP_MAX_INPUT_TIME/${PHP_MAX_INPUT_TIME}/g" "${TMP_PHP_INI}"
 fi
