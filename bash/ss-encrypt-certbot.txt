@@ -26,10 +26,12 @@
 ## B. Touch Timestamp File
 ## C. Message (Begin Script)
 ## D. Run SS-Perms-Nginx-Config
-## E. Temporarily Activate OpenSSL.conf (Conditional)
-## F. Request Certs From Lets Encrypt Servers
-## G. Configure Lets Encrypt Symlinks
-## H. Run SS-Perms-Nginx-Config
+## E. Generate Cloudflare.ini (Conditional)
+## F. Temporarily Activate OpenSSL.conf (Conditional)
+## G. Request Certs From Lets Encrypt Servers
+## H. Configure Lets Encrypt Symlinks
+## I. Run SS-Perms-Nginx-Config
+## J. Reload Nginx
 
 ####################################################################################################
 #### A. SS-Encrypt-Certbot: Source SS-Config + SS-Functions ########################################
@@ -71,7 +73,27 @@ ss_echo "${COLOR_INFO}Running ss-encrypt-certbot... ${COLOR_RESET}"
 source "${PATH_SS_PERMS_NGINX_CONFIG}"
 
 ####################################################################################################
-#### E. SS-Encrypt-Certbot: Temporarily Activate OpenSSL.conf (Conditional) ########################
+#### E. SS-Encrypt-Certbot: Generate Cloudflare.ini (Conditional) ##################################
+####################################################################################################
+
+## check if Cloudflare creds are set in ss-config and force regenerate cloudflare.ini ##
+
+if [[ -n "${CLOUDFLARE_EMAIL}" && -n "${CLOUDFLARE_API_KEY}" ]]; then
+    cat <<EOF > /var/www/meta/cloudflare.ini
+dns_cloudflare_email = ${CLOUDFLARE_EMAIL}
+dns_cloudflare_api_key = ${CLOUDFLARE_API_KEY}
+EOF
+    ## set required perms (must be exactly 600) ##
+    chmod 600 /var/www/meta/cloudflare.ini
+    chown root:root /var/www/meta/cloudflare.ini
+
+    ss_echo "${COLOR_INFO}Cloudflare credentials file created successfully at /var/www/meta/cloudflare.ini${COLOR_RESET}"
+else
+    ss_echo "${COLOR_WARNING}Cloudflare credentials are missing in ss-config. Please ensure CLOUDFLARE_EMAIL and CLOUDFLARE_API_KEY are set.${COLOR_RESET}"
+fi
+
+####################################################################################################
+#### F. SS-Encrypt-Certbot: Temporarily Activate OpenSSL.conf (Conditional) ########################
 ####################################################################################################
 
 ## here we must temporarily activate OpenSSL in order to avoid fatal errors in Nginx ##
@@ -138,7 +160,7 @@ ss_echo "lets encrypt cert file not found during ss-encrypt-certbot so installin
 fi
 
 ####################################################################################################
-#### F. SS-Encrypt-Certbot: Request Certs From Lets Encrypt Servers ################################
+#### G. SS-Encrypt-Certbot: Request Certs From Lets Encrypt Servers ################################
 ####################################################################################################
 
 ## NOTICE: SLICKSTACK DOES NOT SUPPORT SUB-SUBDOMAINS LIKE WWW.BLOG.EXAMPLE.COM ##
@@ -206,10 +228,14 @@ elif [[ "${WP_MULTISITE}" != "true" ]] && [[ "${SITE_FULL_DOMAIN}" != www.* ]] &
     ss_certbot -d ${SITE_FULL_DOMAIN}
 
 
-## MULTISITE SUBDOMAINS + EITHER STAGING/DEV ENABLED (PART OF WILDCARD) ##
+## MULTISITE SUBDOMAINS + STAGING/DEV NOT SUPPORTED (WILDCARD CERTIFICATE) ##
 
 elif [[ "${WP_MULTISITE}" == "true" ]] && [[ "${WP_MULTISITE_SUBDOMAINS}" != "false" ]]; then
-    certbot certonly --manual --agree-tos --register-unsafely-without-email --cert-name slickstack --preferred-challenges=dns -d ${SITE_DOMAIN_EXCLUDING_WWW} -d *.${SITE_DOMAIN_EXCLUDING_WWW}
+    if [[ -f "/var/www/meta/cloudflare.ini" ]]; then
+        ss_certbot_dns -d "${SITE_DOMAIN_EXCLUDING_WWW}" -d "*.${SITE_DOMAIN_EXCLUDING_WWW}"
+    else
+        ss_echo "${COLOR_WARNING}Cloudflare credentials file is missing. Cannot issue wildcard SSL...${COLOR_RESET}"
+    fi
 
 
 ## MULTISITE SUBDOMAINS + BOTH STAGING/DEV DISABLED (STILL REQUIRES WILDCARD) ##
@@ -284,7 +310,7 @@ else
 fi
 
 ####################################################################################################
-#### G. SS-Encrypt-Certbot: Configure Lets Encrypt Symlinks ########################################
+#### H. SS-Encrypt-Certbot: Configure Lets Encrypt Symlinks ########################################
 ####################################################################################################
 
 ## here we create symlinks in the /var/www/certs/ directory that point to Lets Encrypt ##
@@ -298,10 +324,19 @@ ss_ln "${PATH_LETSENCRYPT_CERT_FULLCHAIN}" "${SYMLINK_LETSENCRYPT_FULLCHAIN}"
 ss_ln "${PATH_LETSENCRYPT_CERT_PRIVKEY}" "${SYMLINK_LETSENCRYPT_PRIVKEY}"
 
 ####################################################################################################
-#### H. SS-Encrypt-Certbot: Run SS-Perms-Nginx-Config ##############################################
+#### I. SS-Encrypt-Certbot: Run SS-Perms-Nginx-Config ##############################################
 ####################################################################################################
 
 source "${PATH_SS_PERMS_NGINX_CONFIG}"
+
+####################################################################################################
+#### J. SS-Encrypt-Certbot: Reload Nginx ###########################################################
+####################################################################################################
+
+## this is required because SlickStack cron jobs call ss-encrypt-certbot for renewals ##
+## therefore we cannot use ss-install-nginx-config to restart Nginx as needed ##
+
+ss_reload nginx
 
 ####################################################################################################
 #### SlickStack: Reset Permissions (SlickStack Scripts) ############################################
@@ -325,6 +360,8 @@ chmod 0700 /var/www/crons/custom/*cron* ## 0700 means only root/sudo can execute
 #### SlickStack: External References Used To Improve This Script (Thanks, Interwebz) ###############
 ####################################################################################################
 
+## Ref: ChatGPT
+## Ref: https://certbot-dns-cloudflare.readthedocs.io/en/stable/
 ## Ref: https://linuxize.com/post/secure-apache-with-let-s-encrypt-on-ubuntu-18-04/
 ## Ref: https://stackoverflow.com/questions/49172841/install-certbot-letsencrypt-without-interaction/57019299#57019299
 ## Ref: https://matthewlehner.net/lets-encrypt-with-nginx

@@ -44,7 +44,7 @@
 ## this build version ensures compatibility with ss-config boilerplate (from mirrors) ##
 ## it must match the latest ss-config boilerplate otherwise updating will fail ##
 
-SS_UPDATE_CONFIG_BUILD="NOV2024A"
+SS_UPDATE_CONFIG_BUILD="FEB2025F"
 
 ####################################################################################################
 #### B. SS-Update-Config: Source SS-Config + SS-Functions ##########################################
@@ -196,6 +196,14 @@ ss_sed "s|\(^SITE_FULL_DOMAIN=\).*|SITE_FULL_DOMAIN=\"$SITE_FULL_DOMAIN\"|g" "${
 
 
 ## cloudflare stuff ##
+if [[ -n "${CLOUDFLARE_EMAIL}" ]]; then
+ss_sed "s|\(^CLOUDFLARE_EMAIL=\).*|CLOUDFLARE_EMAIL=\"$CLOUDFLARE_EMAIL\"|g" "${TMP_SS_CONFIG_UPDATE}"
+fi
+
+if [[ -n "${CLOUDFLARE_API_KEY}" ]]; then
+ss_sed "s|\(^CLOUDFLARE_API_KEY=\).*|CLOUDFLARE_API_KEY=\"$CLOUDFLARE_API_KEY\"|g" "${TMP_SS_CONFIG_UPDATE}"
+fi
+
 if [[ -n "${CLOUDFLARE_REAL_IPS}" ]]; then
 ss_sed "s|\(^CLOUDFLARE_REAL_IPS=\).*|CLOUDFLARE_REAL_IPS=\"$CLOUDFLARE_REAL_IPS\"|g" "${TMP_SS_CONFIG_UPDATE}"
 fi
@@ -317,13 +325,13 @@ if [[ -n "${WP_OBJECT_CACHE}" ]]; then
 ss_sed "s|\(^WP_OBJECT_CACHE=\).*|WP_OBJECT_CACHE=\"$WP_OBJECT_CACHE\"|g" "${TMP_SS_CONFIG_UPDATE}"
 fi
 
-if [[ -n "${WP_PLUGIN_BLACKLIST}" ]]; then
-ss_sed "s|\(^WP_PLUGIN_BLACKLIST=\).*|WP_PLUGIN_BLACKLIST=\"$WP_PLUGIN_BLACKLIST\"|g" "${TMP_SS_CONFIG_UPDATE}"
-fi
+#if [[ -n "${WP_PLUGIN_BLACKLIST}" ]]; then
+#ss_sed "s|\(^WP_PLUGIN_BLACKLIST=\).*|WP_PLUGIN_BLACKLIST=\"$WP_PLUGIN_BLACKLIST\"|g" "${TMP_SS_CONFIG_UPDATE}"
+#fi
 
-if [[ -n "${WP_PLUGIN_BLACKLIST_SOURCE}" ]]; then
-ss_sed "s|\(^WP_PLUGIN_BLACKLIST_SOURCE=\).*|WP_PLUGIN_BLACKLIST_SOURCE=\"$WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${TMP_SS_CONFIG_UPDATE}"
-fi
+#if [[ -n "${WP_PLUGIN_BLACKLIST_SOURCE}" ]]; then
+#ss_sed "s|\(^WP_PLUGIN_BLACKLIST_SOURCE=\).*|WP_PLUGIN_BLACKLIST_SOURCE=\"$WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${TMP_SS_CONFIG_UPDATE}"
+#fi
 
 
 
@@ -1437,6 +1445,7 @@ chmod 0700 /var/www/crons/custom/*cron* ## 0700 means only root/sudo can execute
 #### SlickStack: External References Used To Improve This Script (Thanks, Interwebz) ###############
 ####################################################################################################
 
+## Ref: ChatGPT
 ## Ref: https://linux.die.net/man/8/apt-get
 ## Ref: https://askubuntu.com/questions/1112555/is-apt-dist-upgrade-not-necessary-anymore
 ## Ref: https://unix.stackexchange.com/questions/467552/reboot-over-ssh/467996#467996

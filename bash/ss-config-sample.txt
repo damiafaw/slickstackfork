@@ -21,7 +21,7 @@
 ## run ss-update-config if outdated (check the public mirror link for current build) ##
 ## builds merely prevent conflicts as SlickStack scripts auto-update regardless ##
 
-SS_BUILD="NOV2024A"
+SS_BUILD="FEB2025F"
 
 ## SS_LOCKDOWN = [false|true] stops dev site from being overwritten... and more soon ##
 ## SS_APP = [wordpress|etc] only wordpress is supported currently (feedback welcome) ##
@@ -107,15 +107,21 @@ SITE_FULL_DOMAIN="@SITE_FULL_DOMAIN"
 ####################################################################################################
 
 ## SlickStack generally expects you to be using Cloudflare for many different reasons ##
-## authenticated origin needs to also be activated within the Cloudflare panel ##
+## authenticated origin must be activated in the Cloudflare dashboard if enabled ##
 
-## CLOUDFLARE_REAL_IPS = [true|false] allows your server logs to see the real client IPs ##
-## CLOUDFLARE_AUTH_ORIGIN = [false|true] allows only Cloudflare TLS to connect (secure) ##
-## CLOUDFLARE_IPS_ONLY = [false|true] allows only Cloudflare IP addresses to connect ##
+## CLOUDFLARE_EMAIL = [*must be unique*] the email address on your Cloudflare account ##
+## CLOUDFLARE_API_KEY = [*must be unique*] global API key or token (requires v2.3.1 of python cloudflare module) ##
+## CLOUDFLARE_REAL_IPS = [true|false] ensures your server logs see the real client IPs ##
+## CLOUDFLARE_AUTH_ORIGIN = [false|true] allows only Cloudflare TLS connections (secure) ##
+## CLOUDFLARE_IPS_ONLY = [false|true] restricts access to Cloudflare IP addresses only ##
 
 CLOUDFLARE_REAL_IPS="true"
 CLOUDFLARE_AUTHENTICATED_ORIGIN="false"
 CLOUDFLARE_IPS_ONLY="false"
+
+## new ##
+CLOUDFLARE_EMAIL=""
+CLOUDFLARE_API_KEY=""
 
 ####################################################################################################
 #### SS-Config: Database Settings ##################################################################
@@ -152,7 +158,7 @@ DB_COLLATE=""
 ## ADMINER_PUBLIC = [true|false] if you want a randomized link accessible on frontend ##
 ## ADMINER_URL = [*must be unique*] should be long and very random for security ##
 
-ADMINER_PUBLIC="true"
+ADMINER_PUBLIC="false"
 ADMINER_URL="@RANDOM_STRING_ADMINER_URL"
 
 ####################################################################################################
@@ -434,32 +440,54 @@ OPEN_FILE_CACHE_ERRORS="on"
 ## rate-limiting Nginx can be very powerful but these settings are often misunderstood ##
 ## research carefully and keep in mind requests are not the same as page loads ##
 
-## LIMIT_CONNECTIONS_PER_IP = [10|15|etc] usually a device needs at least 5+ connections ##
-## LIMIT_CONNECTIONS_SERVER = [100|500|etc] total number of connections Nginx should maintain ##
+## LIMIT_CONNECTIONS_PER_IP = [10|15|20|25] usually a device needs at least 5+ connections ##
+## LIMIT_CONNECTIONS_SERVER = [100|200|300|400] total number of connections Nginx should maintain ##
+## LIMIT_REQUESTS_SERVER_SECOND = [100|200|300|400] max requests per second per IP ##
+## LIMIT_REQUESTS_SERVER_SECOND_BURST = [300|600|900|1200] short burst capacity for requests per second ##
+## LIMIT_REQUESTS_SERVER_MINUTE = [3000|5000|8000|10000] max requests per minute per IP ##
+## LIMIT_REQUESTS_SERVER_MINUTE_BURST = [9000|15000|24000|30000] short burst capacity for requests per minute ##
+## LIMIT_REQUESTS_PHP_SECOND = [100|120|150|200] max PHP requests per second per IP ##
+## LIMIT_REQUESTS_PHP_SECOND_BURST = [300|360|450|600] short burst capacity for PHP requests per second ##
+## LIMIT_REQUESTS_PHP_MINUTE = [3000|3600|4500|6000] max PHP requests per minute per IP ##
+## LIMIT_REQUESTS_PHP_MINUTE_BURST = [9000|10800|13500|18000] short burst capacity for PHP requests per minute ##
+## LIMIT_REQUESTS_WPLOGIN_SECOND = [1|2|3|4] max login attempts per second per IP ##
+## LIMIT_REQUESTS_WPLOGIN_SECOND_BURST = [2|3|5|7] short burst capacity for login attempts per second ##
+## LIMIT_REQUESTS_WPLOGIN_MINUTE = [30|40|60|90] max login attempts per minute per IP ##
+## LIMIT_REQUESTS_WPLOGIN_MINUTE_BURST = [5|10|15|20] short burst capacity for login attempts per minute ##
+## LIMIT_REQUESTS_WPSEARCH_SECOND = [50|100|120|150] max search requests per second per IP ##
+## LIMIT_REQUESTS_WPSEARCH_SECOND_BURST = [150|300|360|450] short burst capacity for search requests per second ##
+## LIMIT_REQUESTS_WPSEARCH_MINUTE = [1500|3000|3600|4500] max search requests per minute per IP ##
+## LIMIT_REQUESTS_WPSEARCH_MINUTE_BURST = [4500|9000|10000|12000] short burst capacity for search requests per minute ##
 
-LIMIT_CONNECTIONS_PER_IP="10"
-LIMIT_CONNECTIONS_SERVER="100"
+## connection limits ##
+LIMIT_CONNECTIONS_PER_IP="20"
+LIMIT_CONNECTIONS_SERVER="300"
 
-## limit requests ##
-LIMIT_REQUESTS_SERVER_SECOND="100"
-LIMIT_REQUESTS_SERVER_SECOND_BURST="300"
-LIMIT_REQUESTS_SERVER_MINUTE="3000"
-LIMIT_REQUESTS_SERVER_MINUTE_BURST="9000"
-LIMIT_REQUESTS_PHP_SECOND="100"
-LIMIT_REQUESTS_PHP_SECOND_BURST="300"
-LIMIT_REQUESTS_PHP_MINUTE="3000"
-LIMIT_REQUESTS_PHP_MINUTE_BURST="9000"
-LIMIT_REQUESTS_WPLOGIN_SECOND="1"
-LIMIT_REQUESTS_WPLOGIN_SECOND_BURST="1"
-LIMIT_REQUESTS_WPLOGIN_MINUTE="60"
-LIMIT_REQUESTS_WPLOGIN_MINUTE_BURST="2"
+## server request limits ##
+LIMIT_REQUESTS_SERVER_SECOND="300"
+LIMIT_REQUESTS_SERVER_SECOND_BURST="900"
+LIMIT_REQUESTS_SERVER_MINUTE="8000"
+LIMIT_REQUESTS_SERVER_MINUTE_BURST="24000"
 
+## php request limits ##
+LIMIT_REQUESTS_PHP_SECOND="150"
+LIMIT_REQUESTS_PHP_SECOND_BURST="450"
+LIMIT_REQUESTS_PHP_MINUTE="4500"
+LIMIT_REQUESTS_PHP_MINUTE_BURST="13500"
+
+## wordpress login request limits ##
+LIMIT_REQUESTS_WPLOGIN_SECOND="2"
+LIMIT_REQUESTS_WPLOGIN_SECOND_BURST="5"
+LIMIT_REQUESTS_WPLOGIN_MINUTE="40"
+LIMIT_REQUESTS_WPLOGIN_MINUTE_BURST="20"
+
+## wordpress search request limits ##
 LIMIT_REQUESTS_WPSEARCH_SECOND="100"
 LIMIT_REQUESTS_WPSEARCH_SECOND_BURST="300"
 LIMIT_REQUESTS_WPSEARCH_MINUTE="3000"
-LIMIT_REQUESTS_WPSEARCH_MINUTE_BURST="9000"
+LIMIT_REQUESTS_WPSEARCH_MINUTE_BURST="10000"
 
-## soon ##
+## soon (not yet supported) ##
 LIMIT_REQUESTS_ADMINER_SECOND="300"
 LIMIT_REQUESTS_ADMINER_MINUTE="5000"
 
@@ -490,39 +518,39 @@ FAIL2BAN_5XX_BANTIME="21600"
 ## nearly every WordPress site should be using FastCGI Cache at least for micro-caching ##
 ## it is pre-configured to skip cache on critical pages like cart, checkout, etc ##
 
-## FCGI_CACHE = [true|false] recommended for nearly every WordPress site ##
-## FCGI_CACHE_VALID = [30m|1440m|etc] longer is better (but dynamic sites need less) ##
-## FCGI_CACHE_INACTIVE = [60m|2880m|etc] longer is better to improve stale requests ##
-## FCGI_CACHE_MEMORY = [64m|128m|256m|512m|etc] for 512M|1GB|2GB|4GB RAM VPS ##
-## FCGI_CACHE_MAX_SIZE = [2048m|4096m|8192m|16384m|etc] allocate space on disk ##
+## FCGI_CACHE = [true|false] recommended for virtually all WordPress sites ##
+## FCGI_CACHE_VALID = [30m|360m|1440m] longer is better but dynamic sites need less ##
+## FCGI_CACHE_INACTIVE = [60m|1440m|2880m] longer generally better but uses space ##
+## FCGI_CACHE_MEMORY = [64m|128m|256m|512m] for 512MB|1GB|2GB|4GB RAM servers ##
+## FCGI_CACHE_MAX_SIZE = [1024m|4096m|8192m] for 10GB|20GB|40GB disk space ##
+## FCGI_CACHE_TMPFS = [false|true] mount cache in RAM (not recommended) ##
+## FCGI_CONNECT_TIMEOUT = [10s|30s|60s] lower is better for high traffic servers ##
+## FCGI_READ_TIMEOUT = [60s|90s|120s] should match PHP_MAX_EXECUTION_TIME when possible ##
+## FCGI_SEND_TIMEOUT = [10s|30s|60s] lower is better for high traffic servers ##
+## FCGI_BUFFERS = [16 32k|32 64k] too small of buffers can cause temp file writes ##
+## FCGI_BUFFER_SIZE = [32k|64k] 32k enough for most sites (increase for large responses) ##
+## FCGI_BUSY_BUFFERS_SIZE = [256k|512k] 256k enough for most sites (increase for high traffic) ##
+## FCGI_TEMP_FILE_WRITE_SIZE = [256k|512k] 256k enough for most sites (increase if needed) ##
+
 ## FCGI_CACHE_QUERIES =
 ## FCGI_CACHE_QUERIES_SEARCH = 
-## FCGI_CACHE_TMPFS = [false|true] mount as TMPFS (not recommended) ##
-
-## FCGI_CONNECT_TIMEOUT = [60s|etc] usually these timeouts can be about the same ##
-## FCGI_READ_TIMEOUT = [60s|120s|etc] should usually match PHP_MAX_EXECUTION_TIME ##
-## FCGI_SEND_TIMEOUT = [60s|etc] usually these timeouts can be about the same ##
-## FCGI_BUFFERS = [32 32k] warning: 16 16k not compatible with 256k busy buffers ##
-## FCGI_BUFFER_SIZE = [32k|etc] in most cases 32k is all you need ##
-## FCGI_BUSY_BUFFERS_SIZE = [256k|etc] in most cases 256k is all you need ##
-## FCGI_TEMP_FILE_WRITE_SIZE = [256k|etc] in most cases 256k is all you need ##
 
 FCGI_CACHE="true"
-FCGI_CACHE_VALID="1440m"
-FCGI_CACHE_INACTIVE="2880m"
+FCGI_CACHE_VALID="360m"
+FCGI_CACHE_INACTIVE="1440m"
 FCGI_CACHE_MEMORY="256m"
 FCGI_CACHE_MAX_SIZE="4096m"
+FCGI_CACHE_TMPFS="false"
+FCGI_CONNECT_TIMEOUT="30s"
+FCGI_READ_TIMEOUT="90s"
+FCGI_SEND_TIMEOUT="30s"
+FCGI_BUFFERS="16 32k"
+FCGI_BUFFER_SIZE="32k"
+FCGI_BUSY_BUFFERS_SIZE="256k"
+FCGI_TEMP_FILE_WRITE_SIZE="256k"
+
 # FCGI_CACHE_QUERIES="true"
 # FCGI_CACHE_QUERIES_SEARCH="true"
-FCGI_CACHE_TMPFS="false"
-
-FCGI_CONNECT_TIMEOUT="60s"
-FCGI_READ_TIMEOUT="120s"
-FCGI_SEND_TIMEOUT="60s"
-FCGI_BUFFERS="8 32k"
-FCGI_BUFFER_SIZE="16k"
-FCGI_BUSY_BUFFERS_SIZE="128k"
-FCGI_TEMP_FILE_WRITE_SIZE="128k"
 
 ####################################################################################################
 #### SS-Config: MySQL + InnoDB Settings (Applies To Localhost Database Only) #######################
@@ -698,56 +726,53 @@ OPCACHE_JIT_BUFFER_SIZE=""
 ####################################################################################################
 
 ## modifying the below SlickStack intervals could affect server stability and updates ##
-## disable any given task by setting interval to random string (e.g. never) ##
+## disable any given task (unless required) by setting interval value to never ##
 
-## [often|regular|quarter-hourly|half-hourly|hourly|quarter-daily|half-daily|daily|half-weekly|weekly|half-monthly|monthly|sometimes] ##
-## often = 2min, regular = 5min, sometimes = 2months
-
-## INTERVAL_SS_CLEAN_DATABASE = [hourly|quarter-daily|half-daily|daily|half-weekly|weekly] ##
-## INTERVAL_SS_CLEAN_FILES = [hourly|quarter-daily|half-daily|daily] ##
-## INTERVAL_SS_DUMP_DATABASE = [often|regular|quarter-hourly|half-hourly|hourly|quarter-daily|half-daily|daily] ##
-## INTERVAL_SS_DUMP_FILES = [half-hourly|hourly|quarter-daily|half-daily|daily|half-weekly] ##
-## INTERVAL_SS_EMPTY_LOGS = [quarter-daily|half-daily|daily|half-weekly|weekly] ##
+## INTERVAL_SS_CLEAN_DATABASE = [half-daily|daily|half-weekly|weekly] ##
+## INTERVAL_SS_CLEAN_FILES = [quarter-daily|half-daily|daily] ##
+## INTERVAL_SS_DUMP_DATABASE = [half-hourly|hourly|quarter-daily|half-daily|daily] ##
+## INTERVAL_SS_DUMP_FILES = [hourly|quarter-daily|half-daily|daily] ##
+## INTERVAL_SS_EMPTY_LOGS = [half-daily|daily|half-weekly|weekly|half-monthly] ##
 ## INTERVAL_SS_ENCRYPT_CERTBOT = [weekly|half-monthly|monthly] ##
 ## INTERVAL_SS_ENCRYPT_OPENSSL = [weekly|half-monthly|monthly|sometimes] ##
-## INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS = [daily|half-weekly|weekly] ##
-## INTERVAL_SS_INSTALL_UBUNTU_BASH = [daily|half-weekly|weekly|half-monthly] ##
-## INTERVAL_SS_INSTALL_UFW_CONFIG = [monthly|sometimes] ##
-## INTERVAL_SS_INSTALL_UFW_PACKAGES = [monthly|sometimes] ##
-## INTERVAL_SS_INSTALL_WORDPRESS_CLI = [weekly|half-monthly|monthly|sometimes] ##
-## INTERVAL_SS_INSTALL_WORDPRESS_CONFIG = [quarter-daily|half-daily|daily|half-weekly|weekly|half-monthly|monthly] ##
+## INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS = [half-weekly|weekly|half-monthly] ##
+## INTERVAL_SS_INSTALL_UBUNTU_BASH = [half-weekly|weekly|half-monthly] ##
+## INTERVAL_SS_INSTALL_WORDPRESS_CLI = [weekly|half-monthly|monthly] ##
+## INTERVAL_SS_INSTALL_WORDPRESS_CONFIG = [daily|half-weekly|weekly|half-monthly] ##
+## INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS = [daily|half-weekly|weekly] ##
 ## INTERVAL_SS_INSTALL_WORDPRESS_PACKAGES = [weekly|half-monthly|monthly] ##
-## INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS = [half-daily|daily|half-weekly] ##
-## INTERVAL_SS_OPTIMIZE_DATABASE = [daily|half-weekly|weekly|half-monthly] ##
-## INTERVAL_SS_OPTIMIZE_FILES = [half-daily|daily|half-weekly|weekly|half-monthly] ##
-## INTERVAL_SS_PERMS = [hourly|quarter-daily|half-daily|daily] ##
-## INTERVAL_SS_REBOOT_MACHINE = [weekly|half-monthly|monthly|sometimes] ##
+## INTERVAL_SS_OPTIMIZE_DATABASE = [half-weekly|weekly|half-monthly] ##
+## INTERVAL_SS_OPTIMIZE_FILES = [half-daily|daily|half-weekly|weekly] ##
+## INTERVAL_SS_PERMS = [quarter-daily|half-daily|daily|half-weekly] ##
+## INTERVAL_SS_PURGE_MEMCACHED = [half-weekly|weekly|half-monthly|monthly] ##
+## INTERVAL_SS_PURGE_TRANSIENTS = [weekly|half-monthly|monthly|sometimes] ##
+## INTERVAL_SS_REBOOT_MACHINE = [half-monthly|monthly|sometimes] ##
 ## INTERVAL_SS_REMOTE_BACKUP = [half-daily|daily|half-weekly|weekly] ##
-## INTERVAL_SS_SYNC_STAGING = [hourly|quarter-daily|half-daily|daily|half-weekly] ##
-## INTERVAL_SS_UPDATE_CONFIG = [half-monthly|monthly|sometimes] ##
-## INTERVAL_SS_UPDATE_MODULES = [monthly|sometimes] ##
+## INTERVAL_SS_SYNC_STAGING = [hourly|quarter-daily|half-daily|daily] ##
+## INTERVAL_SS_UPDATE_CONFIG = [weekly|half-monthly|monthly|sometimes] ##
+## INTERVAL_SS_UPDATE_MODULES = [half-monthly|monthly|sometimes] ##
 
 INTERVAL_SS_CLEAN_DATABASE="never" ## ss default = never (not functional yet)
-INTERVAL_SS_CLEAN_FILES="half-daily" ## ss default = half-daily
-INTERVAL_SS_DUMP_DATABASE="hourly" ## ss default = hourly
+INTERVAL_SS_CLEAN_FILES="half-daily" ## ss default = half-daily (required)
+INTERVAL_SS_DUMP_DATABASE="hourly" ## ss default = hourly (required)
 INTERVAL_SS_DUMP_FILES="never" ## ss default = never
 INTERVAL_SS_EMPTY_LOGS="never" ## ss default = never
 INTERVAL_SS_ENCRYPT_CERTBOT="weekly" ## ss default = weekly
 INTERVAL_SS_ENCRYPT_OPENSSL="never" ## ss default = never
-INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS="half-weekly" ## ss default = half-weekly
-INTERVAL_SS_INSTALL_UBUNTU_BASH="half-weekly" ## ss default = half-weekly
-INTERVAL_SS_INSTALL_UFW_CONFIG="never" ## ss default = never
-INTERVAL_SS_INSTALL_UFW_PACKAGES="never" ## ss default = never
-INTERVAL_SS_INSTALL_WORDPRESS_CLI="never" ## ss default = never
-INTERVAL_SS_INSTALL_WORDPRESS_CONFIG="never" ## ss default = never
+INTERVAL_SS_INSTALL_NGINX_CLOUDFLARE_IPS="half-weekly" ## ss default = half-weekly (required)
+INTERVAL_SS_INSTALL_UBUNTU_BASH="half-weekly" ## ss default = half-weekly (required)
+INTERVAL_SS_INSTALL_WORDPRESS_CLI="half-monthly" ## ss default = half-monthly (required)
+INTERVAL_SS_INSTALL_WORDPRESS_CONFIG="weekly" ## ss default = weekly
+INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS="half-weekly" ## ss default = half-weekly (required)
 INTERVAL_SS_INSTALL_WORDPRESS_PACKAGES="never" ## ss default = never
-INTERVAL_SS_INSTALL_WORDPRESS_MU_PLUGINS="half-weekly" ## ss default = half-weekly
 INTERVAL_SS_OPTIMIZE_DATABASE="weekly" ## ss default = weekly
-INTERVAL_SS_OPTIMIZE_FILES="half-weekly" ## ss default = half-weekly
-INTERVAL_SS_PERMS="quarter-daily" ## ss default = quarter-daily
+INTERVAL_SS_OPTIMIZE_FILES="half-weekly" ## ss default = half-weekly (required)
+INTERVAL_SS_PERMS="half-daily" ## ss default = half-daily (required)
+INTERVAL_SS_PURGE_MEMCACHED="half-monthly" ## ss default = half-monthly
+INTERVAL_SS_PURGE_TRANSIENTS="monthly" ## ss default = monthly
 INTERVAL_SS_REBOOT_MACHINE="never" ## ss default = never
 INTERVAL_SS_REMOTE_BACKUP="never" ## ss default = never
-INTERVAL_SS_SYNC_STAGING="half-daily" ## ss default = half-daily
+INTERVAL_SS_SYNC_STAGING="half-daily" ## ss default = half-daily (required)
 INTERVAL_SS_UPDATE_CONFIG="never" ## ss default = never
 INTERVAL_SS_UPDATE_MODULES="never" ## ss default = never
 

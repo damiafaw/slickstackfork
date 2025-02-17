@@ -5,7 +5,7 @@
 ;;;; path: /var/www/html/wp-content/blacklist.txt ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; destination: n/a (not a boilerplate) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; purpose: Plugin Blacklist configuration file (with related comments by LittleBizzy) ;;;;;;;;;;;
-;;;; module version: Plugin Blacklist 2.0.x + WordPress 6.6.x ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; module version: Plugin Blacklist 2.0.x + WordPress 6.7.x ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; sourced by: n/a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bash aliases: n/a ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -82,6 +82,7 @@
 
 ;; Alex Panagis ;; consumer fraud, harassment, slander ;;
 ;; Astra Theme (Brainstorm Force) ;;
+;; Awesome Motive ;; dmca fraud, WP Admin spam, cronyism, breaks the rules of WP.org without consequences, too many reasons to list
 ;; BeSquares ;; brand abandoned ;;
 ;; Bhanu Ahluwalia ;; consumer fraud, spyware, ransomware ;;
 ;; Brainstorm Force ;; bloated, creates instability, hacks third-party design products, lock-in issues ;;
@@ -130,14 +131,13 @@
 ;;;; 2. Short-Term Disallowed Vendors (Resolvable Critical Issues) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Rymera Web ;; WP-Cron abuse, database thrashing ;;
-;; Josh Kohlbach (Rymera Web) ;; blames SlickStack for his poor code instead of fixing it ;;
+;; Rymera Web ;; WP-Cron abuse, database thrashing
+;; Josh Kohlbach (Rymera Web) ;; blames SlickStack for his poor code instead of fixing it
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; 3. Not Recommended Vendors (Possibly Long-Term Disallowed In The Future) ;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Awesome Motive ;; dmca fraud, WP Admin spam, cronyism, breaks the rules of WP.org without consequences, too many reasons to list
 ;; BestWebSoft ;;
 ;; Bootstrapped Ventures ;; conflicts with Nginx caching, overuse of REST API, etc
 ;; Contempo Themes (Chris Robinson) ;; exploitable, poor coding, poor maintenance, many plugins are theme-specific, no public changelogs
@@ -209,6 +209,7 @@ add-expires-headers ; ss conflicts, bad practice (By Passionate Brains)
 add-index-to-autoload ; ss conflicts, feature exists in WP Core 5.3+ already
 add-social-share ; not maintained
 /add-to-any/ ; adware, spyware, bloated
+addon-elements-for-elementor-page-builder ; hacks third-party design products
 addons-for-beaver-builder ; hacks other vendor products, creates instability, bad practice (buy the Pro version)
 addons-for-elementor ; hacks third-party design products (By Livemesh)
 addfreestats ; excessive logging
@@ -255,6 +256,7 @@ anywhere-elementor ; database thrashing, hacks third-party design products (By W
 anywhere-elementor-pro ; database thrashing, hacks third-party design products (By WP Vibes)
 apex-digital-toolbox ; bloated, bizarre code, not maintained
 /apikey/ ; known malware
+app-for-cf ; bad practice these days
 aqua-page-builder ; not maintained (By Syamil MJ)
 ari-adminer ; serious errors, potential data loss (adminer better used as standalone script)
 artbees-captcha ; not maintained, no public changelog, better options exist (By José Rodríguez) a.k.a. Cool PHP Captcha
@@ -277,6 +279,7 @@ authentication-and-xmlrpc-log-writer ; not maintained, bad practice, pointless
 authorizenet-payment-gateway-for-woocommerce ; serious errors, poor coding, better options exist
 authorsure ; deprecated
 auto-clean-url-seo ; pointless, many conflicts, not maintained
+auto-install-free-ssl ; ss conflicts
 /auto-link/ ; not maintained, creates instability
 auto-link-genius ; not maintained, creates instability
 auto-tag-links ; not maintained, creates instability
@@ -363,6 +366,7 @@ car-repair-services-core ; theme-specific custom post types (By SmartDataSoft)
 casals-online-seo ; not maintained
 category-color ; bad practice (not a good way to adjust CSS colors) By Zayed Baloch
 category-for-pages ; not maintained, creates instability
+cf-image-resizing ; bad practice
 cf-littlebizzy ; ss included
 cf-post-formats ; deprecated (a.k.a. WP Post Formats by Crowd Favorite)
 change-table-prefix ; ss conflicts, bad practice, creates instability
@@ -537,6 +541,7 @@ ebor-framework ; deprecated, poor maintenance, no public changelog (By Tom Rhode
 eborframework ; deprecated, poor maintenance, no public changelog (By Tom Rhodes)
 ebor-page-builder ; deprecated (By TommusRhodus) based on aqua-page-builder
 echbay-admin-security ; ss conflicts, pointless
+ecommerce-store-optimizer ; vendor specific (By StudioPress / WP Engine)
 edgemesh ; ss conflicts, bloated, pointless, bad practice (tries to overrule server cache rules)
 /edit-flow/ ; abandoned (by Automattic)
 ele-custom-skin ; hacks third-party design products (By Dudaster.com)
@@ -695,6 +700,7 @@ gzip-ninja-speed-compression ; deprecated
 hc-custom-wp-admin-url ; not maintained, ss conflicts, poor coding, serious errors
 header-and-footer-scripts ; poor maintenance, poor code, better options exist
 header-footer-elementor ; hacks third-party design products
+headers-security-advanced-hsts-wp ; ss conflicts, also better to manipulate headers via Cloudflare
 health-check ; pointless, creates instability, history of poor coding, potential data loss, now included in wp core
 heartbeat-control ; ss conflicts
 hello-dolly ; pointless
@@ -902,6 +908,7 @@ mywebtonet-performancestats ; resource intensive
 native-lazyload ; serious errors, creates instability, experimental software (By Google)
 native-emoji ; bloated
 nazy-load ; creates instability (overwrites paths), ss conflicts (By Gijo Varghese)
+nc-extendify-lc ; vendor specific
 new-google-plus-badge ; deprecated
 new-google-plus-badge-widget ; deprecated
 news-ticker-tj ; not maintained, serious errors
@@ -912,6 +919,7 @@ nginx-compatibility ; ss conflicts, not maintained
 nginx-helper ; ss conflicts
 nginx-mobile-theme ; ss conflicts
 nifty-backups ; unsafe local archives, resource intensive, not maintained (By NickDuncan)
+nitropack ;; ss conflicts, bloated
 nm404 ; creates instability
 no-external-links ; pointless
 no-revisions ; not maintained, pointless (after WP 4.x)
@@ -1020,6 +1028,7 @@ powerpack-elements ; hacks third-party design products (By IdeaBox)
 premium-addons-for-elementor ; hacks third-party design products (By Leap13)
 pre-publish-checklist ; pointless (by Brainstorm Force)
 pressbackup ; deprecated, resource intensive, ss conflicts
+pro-elements ; hacks third-party design products (By proelements.org)
 propellerads-official ; serious errors, possible malware/spyware
 publishvault ; remote managers, creates instability, generates database junk
 purge-cache-for-cloudflare ; not maintained, ss conflicts
@@ -1178,6 +1187,7 @@ simple-taxonomy-ordering ; potential data loss, bad practice (By YIKES, Inc)
 simple-wp-sitemap ; bad practice (HTML sitemaps unnecessary)
 single-author-g-meta ; deprecated
 single-category-permalink ; not maintained, creates instability
+site-mailer ; bloated, requires third party SSO, better options exist (by Elementor)
 sis-social-share ; not maintained
 site-speed-monitor ; pointless
 siteground-migrator ; vendor specific
@@ -1221,6 +1231,7 @@ solid-code-theme-editor ; deprecated, feature exists in WP Core (by Dagan Lev)
 sosh-icons ; not maintained
 speed-booster-pack ; ss conflicts
 speed-up-optimize-css-delivery ; creates instability, bad practice (do not async CSS, use Inline Styles free plugin instead)
+speedycache ; ss conflicts
 spider_blocker ; no public docs, blackhat seo
 squirrly-seo ; bloated, excessive logging, excessive api calls
 sr-wp-minify-html ; ss conflicts, not maintained
@@ -1232,6 +1243,7 @@ statify ; excessive logging
 statpress ; deprecated, excessive logging
 statpress-reloaded ; deprecated, excessive logging
 statpress-visitors ; deprecated, excessive logging
+sticky-header-effects-for-elementor ; hacks third-party design products
 /stock-ticker/ ; pointless, resource intensive
 stop-user-enumeration ; ss conflicts
 storefront-header-picker ; bad practice, hacks third-party design products, poor coding
@@ -1392,6 +1404,7 @@ wordpress-mu-domain-mapping ; ss conflicts
 wordpress-popular-posts ; resource intensive
 woo-confirmation-email ; exploitable, poor coding
 woo-gutenberg-products-block ; ss conflicts, serious errors
+; woo-permalink-manager ; bad practice
 woodojo ; deprecated
 woocommerce-abandoned-cart ; exploitable, poorly coded, serious errors
 woocommerce-admin ; resource intensive, poor coding, serious conflicts with other scripts, not yet stable
@@ -1451,6 +1464,7 @@ wp-backup-bank ; ss conflicts
 wp-browser-update ; pointless
 wp-cam-tester ; php hacks, ss conflicts, pointless
 wp-category-posts-list ; not maintained (by Swashata)
+wp-central ; remote dashboards, exploitable (By Softaculous)
 wp-cerber ; bloated, creates instability, ss conflicts, excessive logging
 wp-clean-up-optimizer ; ss conflicts, bloated, resource intensive, database junk, excessive logging
 wp-cleanfix ; serious errors, ss conflicts
@@ -1607,6 +1621,7 @@ wp-social-networks-widget ; not maintained
 wp-socialshareprivacy ; not maintained
 wp-spam-fighter ; not maintained (by Henri Benoit)
 wp-speed-404 ; excessive logging
+wp-speed-of-light ; ss conflicts
 wp-ssl-redirect ; better options exist
 wp-statistics ; excessive logging
 wp-stats ; excessive logging
@@ -1628,7 +1643,7 @@ wp-yahoo-smtp ; blacklist risk (smtp)
 /wp1/ ; deprecated
 wpa-seo-auto-linker ; serious errors, creates instability
 wpb-elementor-addons ; hacks third-party design products (By wpbean)
-wp-central ; remote dashboards, exploitable (By Softaculous)
+wpe-configuration ; vendor specific (WP Engine)
 wpcf7-redirect ; bad practice
 wpcloaker ; blackhat seo, bad idea
 wpdbspringclean ; not maintained
