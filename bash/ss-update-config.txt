@@ -237,8 +237,8 @@ fi
 [[ -n "$WP_ALLOW_UNFILTERED_UPLOADS" ]] && ss_sed "s|\(^WP_ALLOW_UNFILTERED_UPLOADS=\).*|WP_ALLOW_UNFILTERED_UPLOADS=\"$WP_ALLOW_UNFILTERED_UPLOADS\"|g" "${TMP_SS_CONFIG_UPDATE}"
 [[ -n "$WP_MU_PLUGINS" ]] && ss_sed "s|\(^WP_MU_PLUGINS=\).*|WP_MU_PLUGINS=\"$WP_MU_PLUGINS\"|g" "${TMP_SS_CONFIG_UPDATE}"
 [[ -n "$WP_OBJECT_CACHE" ]] && ss_sed "s|\(^WP_OBJECT_CACHE=\).*|WP_OBJECT_CACHE=\"$WP_OBJECT_CACHE\"|g" "${TMP_SS_CONFIG_UPDATE}"
-[[ -n "$WP_PLUGIN_BLACKLIST" ]] && ss_sed "s|\(^WP_PLUGIN_BLACKLIST=\).*|WP_PLUGIN_BLACKLIST=\"$WP_PLUGIN_BLACKLIST\"|g" "${TMP_SS_CONFIG_UPDATE}"
-[[ -n "$WP_PLUGIN_BLACKLIST_SOURCE" ]] && ss_sed "s|\(^WP_PLUGIN_BLACKLIST_SOURCE=\).*|WP_PLUGIN_BLACKLIST_SOURCE=\"$WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${TMP_SS_CONFIG_UPDATE}"
+#[[ -n "$WP_PLUGIN_BLACKLIST" ]] && ss_sed "s|\(^WP_PLUGIN_BLACKLIST=\).*|WP_PLUGIN_BLACKLIST=\"$WP_PLUGIN_BLACKLIST\"|g" "${TMP_SS_CONFIG_UPDATE}"
+#[[ -n "$WP_PLUGIN_BLACKLIST_SOURCE" ]] && ss_sed "s|\(^WP_PLUGIN_BLACKLIST_SOURCE=\).*|WP_PLUGIN_BLACKLIST_SOURCE=\"$WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${TMP_SS_CONFIG_UPDATE}"
 
 ## whitelabel settings ##
 [[ -n "$WHITELABEL_BRAND" ]] && ss_sed "s|\(^WHITELABEL_BRAND=\).*|WHITELABEL_BRAND=\"$WHITELABEL_BRAND\"|g" "${TMP_SS_CONFIG_UPDATE}"
@@ -655,8 +655,8 @@ ss_sed 's|WP_POST_REVISIONS=""|WP_POST_REVISIONS="3"|g' /var/www/ss-config
 ss_sed 's|WP_DISALLOW_FILE_EDIT=""|WP_DISALLOW_FILE_EDIT="false"|g' /var/www/ss-config
 ss_sed 's|WP_DISALLOW_FILE_MODS=""|WP_DISALLOW_FILE_MODS="false"|g' /var/www/ss-config
 ss_sed 's|WP_ALLOW_UNFILTERED_UPLOADS=""|WP_ALLOW_UNFILTERED_UPLOADS="true"|g' /var/www/ss-config
-ss_sed 's|WP_PLUGIN_BLACKLIST=""|WP_PLUGIN_BLACKLIST="true"|g' /var/www/ss-config
-ss_sed 's|WP_PLUGIN_BLACKLIST_SOURCE=""|WP_PLUGIN_BLACKLIST_SOURCE="https://raw.githubusercontent.com/littlebizzy/slickstack/master/modules/wordpress/blacklist.txt"|g' /var/www/ss-config
+#ss_sed 's|WP_PLUGIN_BLACKLIST=""|WP_PLUGIN_BLACKLIST="true"|g' /var/www/ss-config
+#ss_sed 's|WP_PLUGIN_BLACKLIST_SOURCE=""|WP_PLUGIN_BLACKLIST_SOURCE="https://raw.githubusercontent.com/littlebizzy/slickstack/master/modules/wordpress/blacklist.txt"|g' /var/www/ss-config
 
 ####################################################################################################
 #### N. SS-Update-Config: End If (Validate SS-Config) ##############################################
