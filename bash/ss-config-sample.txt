@@ -145,7 +145,7 @@ DB_COLLATE=""
 ## ADMINER_PUBLIC = [true|false] enables a randomized link accessible from the frontend ##
 ## ADMINER_URL = [*must be unique*] should be long and completely random for security ##
 
-ADMINER_PUBLIC="true"
+ADMINER_PUBLIC="false"
 ADMINER_URL="@RANDOM_STRING_ADMINER_URL"
 
 ####################################################################################################
