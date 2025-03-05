@@ -180,8 +180,8 @@ fi
 #### E. SS-Install-PHP-Config: Configure PHP.ini Boilerplate #######################################
 ####################################################################################################
 
-ss_sed "s/@PHP_MAX_EXECUTION_TIME/${PHP_MAX_EXECUTION_TIME:-60}/g" "${TMP_PHP_INI}"
-ss_sed "s/@PHP_MAX_INPUT_TIME/${PHP_MAX_INPUT_TIME:-60}/g" "${TMP_PHP_INI}"
+ss_sed "s/@PHP_MAX_EXECUTION_TIME/${PHP_MAX_EXECUTION_TIME:-300}/g" "${TMP_PHP_INI}"
+ss_sed "s/@PHP_MAX_INPUT_TIME/${PHP_MAX_INPUT_TIME:-300}/g" "${TMP_PHP_INI}"
 ss_sed "s/@PHP_MEMORY_LIMIT/${PHP_MEMORY_LIMIT:-512M}/g" "${TMP_PHP_INI}"
 ss_sed "s/@PHP_MAX_INPUT_VARS/${PHP_MAX_INPUT_VARS:-5000}/g" "${TMP_PHP_INI}"
 ss_sed "s/@PHP_MAX_MULTIPART_BODY_PARTS/${PHP_MAX_MULTIPART_BODY_PARTS:-1500}/g" "${TMP_PHP_INI}"
