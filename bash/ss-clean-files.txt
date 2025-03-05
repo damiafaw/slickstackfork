@@ -778,7 +778,7 @@ find /var/www/html/ -name ".htaccess*" -type f -delete ## Apache files (not supp
 # find /var/www/html/ -name "*.ini" -type f -delete ## PHP hacks ## DISABLED BECAUSE CERTAIN WP PLUGINS CRASH IF FILE MISSING
 find /var/www/html/ -name "*.ini.php" -type f -delete ## PHP hacks
 find /var/www/html/ -name "nginx.conf" -type f -delete ## Nginx hacks
-find /var/www/html/ -name "*.user.ini" -type f -delete ## PHP hacks
+#find /var/www/html/ -name "*.user.ini" -type f -delete ## PHP hacks
 
 ## MAYBE QUARANTINE THESE into /backups/quarantine/
 ## delete unsafe database dumps ##
