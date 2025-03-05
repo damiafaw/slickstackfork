@@ -766,7 +766,7 @@ GITHUB_DISABLE_IMAGE_COMPRESSION_ZIP="${GITHUB_PREFIX}/modules/wordpress/mu-plug
 GITHUB_DISABLE_POST_VIA_EMAIL_ZIP="${GITHUB_PREFIX}/modules/wordpress/mu-plugins/disable-post-via-email.zip"
 GITHUB_DISABLE_XML_RPC_ZIP="${GITHUB_PREFIX}/modules/wordpress/mu-plugins/disable-xml-rpc.zip"
 GITHUB_FORCE_HTTPS_ZIP="${GITHUB_PREFIX}/modules/wordpress/mu-plugins/force-https.zip"
-GITHUB_PLUGIN_BLACKLIST_ZIP="${GITHUB_PREFIX}/modules/wordpress/mu-plugins/plugin-blacklist.zip"
+#GITHUB_PLUGIN_BLACKLIST_ZIP="${GITHUB_PREFIX}/modules/wordpress/mu-plugins/plugin-blacklist.zip"
 GITHUB_REPOMAN_ZIP="${GITHUB_PREFIX}/modules/wordpress/mu-plugins/repoman.zip"
 
 ## new approach but unreliable due to GitHub API rate-limits ##
