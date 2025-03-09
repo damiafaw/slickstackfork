@@ -7,7 +7,7 @@
 #### path: /var/www/ss-check #######################################################################
 #### destination: n/a (not a boilerplate) ##########################################################
 #### purpose: Retrieves all SlickStack bash scripts and cron jobs (except for ss-check) ############
-#### module version: Ubuntu 24.04 LTS ##############################################################
+#### module version: Ubuntu 18.04 to 24.04 LTS #####################################################
 #### sourced by: ss-install, ss-update-modules #####################################################
 #### bash aliases: ss check ########################################################################
 ####################################################################################################
@@ -391,6 +391,20 @@ if [[ -z "${VALIDATE_TMP_SS_INSTALL_FAIL2BAN_PACKAGES}" ]]; then
     ss_wget "${TMP_SS_INSTALL_FAIL2BAN_PACKAGES}" "${GITLAB_SS_INSTALL_FAIL2BAN_PACKAGES}"
 fi
 
+## ss-install-iptables-config ##
+ss_wget "${TMP_SS_INSTALL_IPTABLES_CONFIG}" "${GITHUB_SS_INSTALL_IPTABLES_CONFIG}"
+VALIDATE_TMP_SS_INSTALL_IPTABLES_CONFIG=$(grep 'SS_EOF' "${TMP_SS_INSTALL_IPTABLES_CONFIG}" 2> /dev/null)
+if [[ -z "${VALIDATE_TMP_SS_INSTALL_IPTABLES_CONFIG}" ]]; then
+    ss_wget "${TMP_SS_INSTALL_IPTABLES_CONFIG}" "${GITLAB_SS_INSTALL_IPTABLES_CONFIG}"
+fi
+
+## ss-install-iptables-packages ##
+ss_wget "${TMP_SS_INSTALL_IPTABLES_PACKAGES}" "${GITHUB_SS_INSTALL_IPTABLES_PACKAGES}"
+VALIDATE_TMP_SS_INSTALL_IPTABLES_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_INSTALL_IPTABLES_PACKAGES}" 2> /dev/null)
+if [[ -z "${VALIDATE_TMP_SS_INSTALL_IPTABLES_PACKAGES}" ]]; then
+    ss_wget "${TMP_SS_INSTALL_IPTABLES_PACKAGES}" "${GITLAB_SS_INSTALL_IPTABLES_PACKAGES}"
+fi
+
 ## ss-install-memcached-config ##
 ss_wget "${TMP_SS_INSTALL_MEMCACHED_CONFIG}" "${GITHUB_SS_INSTALL_MEMCACHED_CONFIG}"
 VALIDATE_TMP_SS_INSTALL_MEMCACHED_CONFIG=$(grep 'SS_EOF' "${TMP_SS_INSTALL_MEMCACHED_CONFIG}" 2> /dev/null)
@@ -517,20 +531,6 @@ if [[ -z "${VALIDATE_TMP_SS_INSTALL_UBUNTU_UTILS}" ]]; then
     ss_wget "${TMP_SS_INSTALL_UBUNTU_UTILS}" "${GITLAB_SS_INSTALL_UBUNTU_UTILS}"
 fi
 
-## ss-install-ufw-config ##
-ss_wget "${TMP_SS_INSTALL_UFW_CONFIG}" "${GITHUB_SS_INSTALL_UFW_CONFIG}"
-VALIDATE_TMP_SS_INSTALL_UFW_CONFIG=$(grep 'SS_EOF' "${TMP_SS_INSTALL_UFW_CONFIG}" 2> /dev/null)
-if [[ -z "${VALIDATE_TMP_SS_INSTALL_UFW_CONFIG}" ]]; then
-    ss_wget "${TMP_SS_INSTALL_UFW_CONFIG}" "${GITLAB_SS_INSTALL_UFW_CONFIG}"
-fi
-
-## ss-install-ufw-packages ##
-ss_wget "${TMP_SS_INSTALL_UFW_PACKAGES}" "${GITHUB_SS_INSTALL_UFW_PACKAGES}"
-VALIDATE_TMP_SS_INSTALL_UFW_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_INSTALL_UFW_PACKAGES}" 2> /dev/null)
-if [[ -z "${VALIDATE_TMP_SS_INSTALL_UFW_PACKAGES}" ]]; then
-    ss_wget "${TMP_SS_INSTALL_UFW_PACKAGES}" "${GITLAB_SS_INSTALL_UFW_PACKAGES}"
-fi
-
 ## ss-install-wordpress-cli ##
 ss_wget "${TMP_SS_INSTALL_WORDPRESS_CLI}" "${GITHUB_SS_INSTALL_WORDPRESS_CLI}"
 VALIDATE_TMP_SS_INSTALL_WORDPRESS_CLI=$(grep 'SS_EOF' "${TMP_SS_INSTALL_WORDPRESS_CLI}" 2> /dev/null)
@@ -620,6 +620,20 @@ ss_wget "${TMP_SS_PERMS_FAIL2BAN_PACKAGES}" "${GITHUB_SS_PERMS_FAIL2BAN_PACKAGES
 VALIDATE_TMP_SS_PERMS_FAIL2BAN_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_PERMS_FAIL2BAN_PACKAGES}" 2> /dev/null)
 if [[ -z "${VALIDATE_TMP_SS_PERMS_FAIL2BAN_PACKAGES}" ]]; then
     ss_wget "${TMP_SS_PERMS_FAIL2BAN_PACKAGES}" "${GITLAB_SS_PERMS_FAIL2BAN_PACKAGES}"
+fi
+
+## ss-perms-iptables-config ##
+ss_wget "${TMP_SS_PERMS_IPTABLES_CONFIG}" "${GITHUB_SS_PERMS_IPTABLES_CONFIG}"
+VALIDATE_TMP_SS_PERMS_IPTABLES_CONFIG=$(grep 'SS_EOF' "${TMP_SS_PERMS_IPTABLES_CONFIG}" 2> /dev/null)
+if [[ -z "${VALIDATE_TMP_SS_PERMS_IPTABLES_CONFIG}" ]]; then
+    ss_wget "${TMP_SS_PERMS_IPTABLES_CONFIG}" "${GITLAB_SS_PERMS_IPTABLES_CONFIG}"
+fi
+
+## ss-perms-iptables-packages ##
+ss_wget "${TMP_SS_PERMS_IPTABLES_PACKAGES}" "${GITHUB_SS_PERMS_IPTABLES_PACKAGES}"
+VALIDATE_TMP_SS_PERMS_IPTABLES_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_PERMS_IPTABLES_PACKAGES}" 2> /dev/null)
+if [[ -z "${VALIDATE_TMP_SS_PERMS_IPTABLES_PACKAGES}" ]]; then
+    ss_wget "${TMP_SS_PERMS_IPTABLES_PACKAGES}" "${GITLAB_SS_PERMS_IPTABLES_PACKAGES}"
 fi
 
 ## ss-perms-memcached-config ##
@@ -748,20 +762,6 @@ if [[ -z "${VALIDATE_TMP_SS_PERMS_UBUNTU_UTILS}" ]]; then
     ss_wget "${TMP_SS_PERMS_UBUNTU_UTILS}" "${GITLAB_SS_PERMS_UBUNTU_UTILS}"
 fi
 
-## ss-perms-ufw-config ##
-ss_wget "${TMP_SS_PERMS_UFW_CONFIG}" "${GITHUB_SS_PERMS_UFW_CONFIG}"
-VALIDATE_TMP_SS_PERMS_UFW_CONFIG=$(grep 'SS_EOF' "${TMP_SS_PERMS_UFW_CONFIG}" 2> /dev/null)
-if [[ -z "${VALIDATE_TMP_SS_PERMS_UFW_CONFIG}" ]]; then
-    ss_wget "${TMP_SS_PERMS_UFW_CONFIG}" "${GITLAB_SS_PERMS_UFW_CONFIG}"
-fi
-
-## ss-perms-ufw-packages ##
-ss_wget "${TMP_SS_PERMS_UFW_PACKAGES}" "${GITHUB_SS_PERMS_UFW_PACKAGES}"
-VALIDATE_TMP_SS_PERMS_UFW_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_PERMS_UFW_PACKAGES}" 2> /dev/null)
-if [[ -z "${VALIDATE_TMP_SS_PERMS_UFW_PACKAGES}" ]]; then
-    ss_wget "${TMP_SS_PERMS_UFW_PACKAGES}" "${GITLAB_SS_PERMS_UFW_PACKAGES}"
-fi
-
 ## ss-perms-wordpress-cli ##
 ss_wget "${TMP_SS_PERMS_WORDPRESS_CLI}" "${GITHUB_SS_PERMS_WORDPRESS_CLI}"
 VALIDATE_TMP_SS_PERMS_WORDPRESS_CLI=$(grep 'SS_EOF' "${TMP_SS_PERMS_WORDPRESS_CLI}" 2> /dev/null)
@@ -886,13 +886,6 @@ ss_wget "${TMP_SS_RESTART_PHP}" "${GITHUB_SS_RESTART_PHP}"
 VALIDATE_TMP_SS_RESTART_PHP=$(grep 'SS_EOF' "${TMP_SS_RESTART_PHP}" 2> /dev/null)
 if [[ -z "${VALIDATE_TMP_SS_RESTART_PHP}" ]]; then
     ss_wget "${TMP_SS_RESTART_PHP}" "${GITLAB_SS_RESTART_PHP}"
-fi
-
-## ss-restart-ufw ##
-ss_wget "${TMP_SS_RESTART_UFW}" "${GITHUB_SS_RESTART_UFW}"
-VALIDATE_TMP_SS_RESTART_UFW=$(grep 'SS_EOF' "${TMP_SS_RESTART_UFW}" 2> /dev/null)
-if [[ -z "${VALIDATE_TMP_SS_RESTART_UFW}" ]]; then
-    ss_wget "${TMP_SS_RESTART_UFW}" "${GITLAB_SS_RESTART_UFW}"
 fi
 
 ## ss-stack-overview ##
@@ -1222,6 +1215,18 @@ if [[ -n "${VALIDATE2_TMP_SS_INSTALL_FAIL2BAN_PACKAGES}" ]]; then
     ss_mv "${TMP_SS_INSTALL_FAIL2BAN_PACKAGES}" "${PATH_SS_INSTALL_FAIL2BAN_PACKAGES}"
 fi
 
+## ss-install-iptables-config ##
+VALIDATE2_TMP_SS_INSTALL_IPTABLES_CONFIG=$(grep 'SS_EOF' "${TMP_SS_INSTALL_IPTABLES_CONFIG}" 2> /dev/null)
+if [[ -n "${VALIDATE2_TMP_SS_INSTALL_IPTABLES_CONFIG}" ]]; then
+    ss_mv "${TMP_SS_INSTALL_IPTABLES_CONFIG}" "${PATH_SS_INSTALL_IPTABLES_CONFIG}"
+fi
+
+## ss-install-iptables-packages ##
+VALIDATE2_TMP_SS_INSTALL_IPTABLES_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_INSTALL_IPTABLES_PACKAGES}" 2> /dev/null)
+if [[ -n "${VALIDATE2_TMP_SS_INSTALL_IPTABLES_PACKAGES}" ]]; then
+    ss_mv "${TMP_SS_INSTALL_IPTABLES_PACKAGES}" "${PATH_SS_INSTALL_IPTABLES_PACKAGES}"
+fi
+
 ## ss-install-memcached-config ##
 VALIDATE2_TMP_SS_INSTALL_MEMCACHED_CONFIG=$(grep 'SS_EOF' "${TMP_SS_INSTALL_MEMCACHED_CONFIG}" 2> /dev/null)
 if [[ -n "${VALIDATE2_TMP_SS_INSTALL_MEMCACHED_CONFIG}" ]]; then
@@ -1330,18 +1335,6 @@ if [[ -n "${VALIDATE2_TMP_SS_INSTALL_UBUNTU_UTILS}" ]]; then
     ss_mv "${TMP_SS_INSTALL_UBUNTU_UTILS}" "${PATH_SS_INSTALL_UBUNTU_UTILS}"
 fi
 
-## ss-install-ufw-config ##
-VALIDATE2_TMP_SS_INSTALL_UFW_CONFIG=$(grep 'SS_EOF' "${TMP_SS_INSTALL_UFW_CONFIG}" 2> /dev/null)
-if [[ -n "${VALIDATE2_TMP_SS_INSTALL_UFW_CONFIG}" ]]; then
-    ss_mv "${TMP_SS_INSTALL_UFW_CONFIG}" "${PATH_SS_INSTALL_UFW_CONFIG}"
-fi
-
-## ss-install-ufw-packages ##
-VALIDATE2_TMP_SS_INSTALL_UFW_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_INSTALL_UFW_PACKAGES}" 2> /dev/null)
-if [[ -n "${VALIDATE2_TMP_SS_INSTALL_UFW_PACKAGES}" ]]; then
-    ss_mv "${TMP_SS_INSTALL_UFW_PACKAGES}" "${PATH_SS_INSTALL_UFW_PACKAGES}"
-fi
-
 ## ss-install-wordpress-cli ##
 VALIDATE2_TMP_SS_INSTALL_WORDPRESS_CLI=$(grep 'SS_EOF' "${TMP_SS_INSTALL_WORDPRESS_CLI}" 2> /dev/null)
 if [[ -n "${VALIDATE2_TMP_SS_INSTALL_WORDPRESS_CLI}" ]]; then
@@ -1418,6 +1411,18 @@ fi
 VALIDATE2_TMP_SS_PERMS_FAIL2BAN_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_PERMS_FAIL2BAN_PACKAGES}" 2> /dev/null)
 if [[ -n "${VALIDATE2_TMP_SS_PERMS_FAIL2BAN_PACKAGES}" ]]; then
     ss_mv "${TMP_SS_PERMS_FAIL2BAN_PACKAGES}" "${PATH_SS_PERMS_FAIL2BAN_PACKAGES}"
+fi
+
+## ss-perms-iptables-config ##
+VALIDATE2_TMP_SS_PERMS_IPTABLES_CONFIG=$(grep 'SS_EOF' "${TMP_SS_PERMS_IPTABLES_CONFIG}" 2> /dev/null)
+if [[ -n "${VALIDATE2_TMP_SS_PERMS_IPTABLES_CONFIG}" ]]; then
+    ss_mv "${TMP_SS_PERMS_IPTABLES_CONFIG}" "${PATH_SS_PERMS_IPTABLES_CONFIG}"
+fi
+
+## ss-perms-iptables-packages ##
+VALIDATE2_TMP_SS_PERMS_IPTABLES_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_PERMS_IPTABLES_PACKAGES}" 2> /dev/null)
+if [[ -n "${VALIDATE2_TMP_SS_PERMS_IPTABLES_PACKAGES}" ]]; then
+    ss_mv "${TMP_SS_PERMS_IPTABLES_PACKAGES}" "${PATH_SS_PERMS_IPTABLES_PACKAGES}"
 fi
 
 ## ss-perms-memcached-config ##
@@ -1528,18 +1533,6 @@ if [[ -n "${VALIDATE2_TMP_SS_PERMS_UBUNTU_UTILS}" ]]; then
     ss_mv "${TMP_SS_PERMS_UBUNTU_UTILS}" "${PATH_SS_PERMS_UBUNTU_UTILS}"
 fi
 
-## ss-perms-ufw-config ##
-VALIDATE2_TMP_SS_PERMS_UFW_CONFIG=$(grep 'SS_EOF' "${TMP_SS_PERMS_UFW_CONFIG}" 2> /dev/null)
-if [[ -n "${VALIDATE2_TMP_SS_PERMS_UFW_CONFIG}" ]]; then
-    ss_mv "${TMP_SS_PERMS_UFW_CONFIG}" "${PATH_SS_PERMS_UFW_CONFIG}"
-fi
-
-## ss-perms-ufw-packages ##
-VALIDATE2_TMP_SS_PERMS_UFW_PACKAGES=$(grep 'SS_EOF' "${TMP_SS_PERMS_UFW_PACKAGES}" 2> /dev/null)
-if [[ -n "${VALIDATE2_TMP_SS_PERMS_UFW_PACKAGES}" ]]; then
-    ss_mv "${TMP_SS_PERMS_UFW_PACKAGES}" "${PATH_SS_PERMS_UFW_PACKAGES}"
-fi
-
 ## ss-perms-wordpress-cli ##
 VALIDATE2_TMP_SS_PERMS_WORDPRESS_CLI=$(grep 'SS_EOF' "${TMP_SS_PERMS_WORDPRESS_CLI}" 2> /dev/null)
 if [[ -n "${VALIDATE2_TMP_SS_PERMS_WORDPRESS_CLI}" ]]; then
@@ -1646,12 +1639,6 @@ fi
 VALIDATE2_TMP_SS_RESTART_PHP=$(grep 'SS_EOF' "${TMP_SS_RESTART_PHP}" 2> /dev/null)
 if [[ -n "${VALIDATE2_TMP_SS_RESTART_PHP}" ]]; then
     ss_mv "${TMP_SS_RESTART_PHP}" "${PATH_SS_RESTART_PHP}"
-fi
-
-## ss-restart-ufw ##
-VALIDATE2_TMP_SS_RESTART_UFW=$(grep 'SS_EOF' "${TMP_SS_RESTART_UFW}" 2> /dev/null)
-if [[ -n "${VALIDATE2_TMP_SS_RESTART_UFW}" ]]; then
-    ss_mv "${TMP_SS_RESTART_UFW}" "${PATH_SS_RESTART_UFW}"
 fi
 
 ## ss-stack-overview ##
