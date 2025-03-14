@@ -29,15 +29,14 @@
 ## E. Run SS-Dump-Database
 ## F. Install Staging Database (Conditional)
 ## G. Import Production Database To Staging Database
-
 ## H. Copy Relevant Files From Production To Staging
-
 ## I. Run SS-Install-WordPress-Config (Conditional)
 ## J. Run SS-Install-WordPress-MU-Plugins (Conditional)
 ## K. Fix Any Hardcoded Links In Staging Theme Files
 ## L. Fix Incorrect URLs In Staging Database
 ## M. Reset Permissions (WordPress Packages)
 ## N. End If
+## O. Cleanup Temporary Files
 
 ####################################################################################################
 #### A. SS-Sync-Staging: Source SS-Config + SS-Functions ###########################################
@@ -131,9 +130,6 @@ if [[ "${SS_APP}" == "wordpress" ]]; then
     fi
     
 fi
-
-## cleanup files ##
-ss_rm "${TMP_STAGING_SYNC_SQL}"
     
 ####################################################################################################
 #### H. SS-Sync-Staging: Copy Relevant Files From Production To Staging ############################
@@ -181,10 +177,10 @@ fi
 ## many themes (or custom-coded themes) often contain hardcoded HTML assets and links ##
 ## here we forcefully fix these links to ensure staging sites render properly ##
 
-find /var/www/html/staging/wp-content/themes/ -type f -exec ss_sed "s|https://${SITE_DOMAIN_INCLUDING_WWW}|https://staging.${SITE_DOMAIN_EXCLUDING_WWW}|g" {} +
-find /var/www/html/staging/wp-content/themes/ -type f -exec ss_sed "s|http://${SITE_DOMAIN_INCLUDING_WWW}|https://staging.${SITE_DOMAIN_EXCLUDING_WWW}|g" {} +
-find /var/www/html/staging/wp-content/themes/ -type f -exec ss_sed "s|https://${SITE_DOMAIN_EXCLUDING_WWW}|https://staging.${SITE_DOMAIN_EXCLUDING_WWW}|g" {} +
-find /var/www/html/staging/wp-content/themes/ -type f -exec ss_sed "s|http://${SITE_DOMAIN_EXCLUDING_WWW}|https://staging.${SITE_DOMAIN_EXCLUDING_WWW}|g" {} +
+find /var/www/html/staging/wp-content/themes/ -type f -exec sed -i'' "s|https://${SITE_DOMAIN_INCLUDING_WWW}|https://staging.${SITE_DOMAIN_EXCLUDING_WWW}|g" {} +
+find /var/www/html/staging/wp-content/themes/ -type f -exec sed -i'' "s|http://${SITE_DOMAIN_INCLUDING_WWW}|https://staging.${SITE_DOMAIN_EXCLUDING_WWW}|g" {} +
+find /var/www/html/staging/wp-content/themes/ -type f -exec sed -i'' "s|https://${SITE_DOMAIN_EXCLUDING_WWW}|https://staging.${SITE_DOMAIN_EXCLUDING_WWW}|g" {} +
+find /var/www/html/staging/wp-content/themes/ -type f -exec sed -i'' "s|http://${SITE_DOMAIN_EXCLUDING_WWW}|https://staging.${SITE_DOMAIN_EXCLUDING_WWW}|g" {} +
 
 ####################################################################################################
 #### L. SS-Sync-Staging: Fix Incorrect URLs In Staging Database ####################################
@@ -193,7 +189,7 @@ find /var/www/html/staging/wp-content/themes/ -type f -exec ss_sed "s|http://${S
 ## here we use WP-CLI to search and replace prod domain with staging domain in MySQL ##
 ## this is not super necessary due to wp-config.php but can help avoid issues ##
 
-sudo -u "${SFTP_USER}" /usr/local/bin/wp --path=/var/www/html/staging search-replace https://"${SITE_FULL_DOMAIN}" https://staging."${SITE_DOMAIN_EXCLUDING_WWW}" --all-tables > /dev/null
+sudo -u "${SFTP_USER}" /usr/local/bin/wp --path=/var/www/html/staging search-replace https://"${SITE_FULL_DOMAIN}" https://staging."${SITE_DOMAIN_EXCLUDING_WWW}" --all-tables > /dev/null 2>&1
 
 ####################################################################################################
 #### M. SS-Sync-Staging: Reset Permissions (WordPress Packages) ####################################
@@ -206,6 +202,12 @@ source "${PATH_SS_PERMS_WORDPRESS_PACKAGES}"
 ####################################################################################################
 
 fi
+
+####################################################################################################
+#### O. SS-Sync-Staging: Cleanup Temporary Files ###################################################
+####################################################################################################
+
+ss_rm "${TMP_STAGING_SYNC_SQL}"
 
 ####################################################################################################
 #### SlickStack: Reset Permissions (SlickStack Scripts) ############################################
