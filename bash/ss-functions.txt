@@ -1062,6 +1062,7 @@ TMP_OBJECT_CACHE_PHP="/tmp/object-cache.php"
 ## other temp files ##
 TMP_STAGING_PUSH_SQL="/tmp/staging_push.sql"
 TMP_STAGING_SYNC_SQL="/tmp/staging_sync.sql"
+TMP_DEVELOPMENT_SYNC_SQL="/tmp/development_sync.sql"
 
 ####################################################################################################
 #### D. SS-Functions: Permanent File Paths #########################################################
@@ -1730,7 +1731,8 @@ function ss_reload {
 
 ## ss_restart (suppress "Restarting" messages) ##
 function ss_restart {
-    command /etc/init.d/"$1" restart > /dev/null
+    local service_path=(/etc/init.d/"$1") ## expand wildcard
+    command "${service_path[0]}" restart > /dev/null
 }
 
 ## ss_rm ##
@@ -1758,14 +1760,14 @@ function ss_swapon {
     sudo swapon -- "$@"
 }
 
-## ss_tar ##
+## ss_tar (do not add -- argument separator before "$@" as it would prevent additional options from being passed) ##
 function ss_tar {
-    command tar -cf -- "$@"
+    command tar -cf "$@"
 }
 
-## ss_targz (keep flag order) ##
+## ss_targz (keep flag order and do not add -- argument separator before "$@" as it would prevent additional options from being passed) ##
 function ss_targz {
-    command tar -zcf -- "$@"
+    command tar -zcf "$@"
 }
 
 ## ss_touch ##

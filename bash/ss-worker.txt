@@ -8,12 +8,12 @@
 #### destination: n/a (not a boilerplate) ##########################################################
 #### purpose: Performs SlickStack maintenance tasks and updates the ss-check bash script ###########
 #### module version: Ubuntu 18.04 to 24.04 LTS #####################################################
-#### sourced by: ss-install, ss-update-modules #####################################################
+#### sourced by: ss-install ########################################################################
 #### bash aliases: ss worker #######################################################################
 ####################################################################################################
 
 ## SS-WORKER TAKES CARE OF MANY IMPORTANT TASKS AND CRITICAL PATCHES FOR SLICKSTACK ##
-## DISABLE SLICKSTACK CRON JOBS AND SS-CONFIG INTERVALS AT YOUR OWN RISK ##
+## MESS AROUND WITH CRONTAB SCHEDULES AND SS-CONFIG INTERVALS AT YOUR OWN RISK ##
 
 ####################################################################################################
 #### TABLE OF CONTENTS (SS-Worker) #################################################################
@@ -26,8 +26,11 @@
 ## B. Touch Timestamp File
 ## C. Message (Begin Script)
 ## D. Backup SS-Config
+
 ## E. Backup Custom Cron Jobs
-## F. Update SS-Check
+
+## F. Download + Install SS-Check
+
 ## G. Update Blacklist.txt
 
 ## H. Transfer Pilot File Settings (If Exists)
@@ -81,9 +84,9 @@ ss_echo "${COLOR_INFO}Running ss-worker... ${COLOR_RESET}"
 ## the oldest .bak files will be cleaned up periodically by ss-clean-files ##
 
 ## SNIPPET: ss-update-config, ss-worker
-## UPDATED: 20MAR2024
+## UPDATED: 16MAR2025
 
-ss_cp "${PATH_SS_CONFIG}" /var/www/backups/config/ss-config.bak.${SYSTEM_CURRENT_TIME}
+ss_cp "${PATH_SS_CONFIG}" /var/www/backups/config/ss-config.bak."${SYSTEM_CURRENT_TIME}"
 
 ####################################################################################################
 #### E. SS-Worker: Backup Custom Cron Jobs #########################################################
@@ -95,24 +98,19 @@ ss_cp "${PATH_SS_CONFIG}" /var/www/backups/config/ss-config.bak.${SYSTEM_CURRENT
 ss_rsync /var/www/crons/custom/ /var/www/backups/crons
 
 ####################################################################################################
-#### F. SS-Worker: Update SS-Check #################################################################
+#### F. SS-Worker: Download + Install SS-Check #####################################################
 ####################################################################################################
 
 ## here we retrieve the latest ss-check bash script to improve SlickStack redundancy ##
 ## ss-check thus avoids installing itself and single point of failure (SPOF) ##
 
-## retrieve ss-check ##
+## download ss-check from github first then gitlab then sourceforge ##
 ss_wget "${TMP_SS_CHECK}" "${GITHUB_SS_CHECK}"
-VALIDATE_TMP_SS_CHECK=$(grep 'SS_EOF' "${TMP_SS_CHECK}" 2> /dev/null)
-if [[ -z "${VALIDATE_TMP_SS_CHECK}" ]]; then
-    ss_wget "${TMP_SS_CHECK}" "${GITLAB_SS_CHECK}"
-fi
+ss_grep 'SS_EOF' "${TMP_SS_CHECK}" || ss_wget "${TMP_SS_CHECK}" "${GITLAB_SS_CHECK}"
+ss_grep 'SS_EOF' "${TMP_SS_CHECK}" || ss_wget "${TMP_SS_CHECK}" "${SOURCEFORGE_SS_CHECK}"
 
-## install ss-check ##
-VALIDATE2_TMP_SS_CHECK=$(grep 'SS_EOF' "${TMP_SS_CHECK}" 2> /dev/null)
-if [[ -n "${VALIDATE2_TMP_SS_CHECK}" ]]; then
-    ss_mv "${TMP_SS_CHECK}" "${PATH_SS_CHECK}"
-fi
+## install ss-check only if valid ##
+ss_grep 'SS_EOF' "${TMP_SS_CHECK}" && ss_mv "${TMP_SS_CHECK}" "${PATH_SS_CHECK}"
 
 ####################################################################################################
 #### G. SS-Worker: Update Blacklist.txt ############################################################
@@ -178,65 +176,18 @@ PILOT_WHITELABEL_SUPPORT_EMAIL=$(source /tmp/ss-pilot; echo "${WHITELABEL_SUPPOR
 PILOT_WP_PLUGIN_BLACKLIST=$(source /tmp/ss-pilot; echo "${WP_PLUGIN_BLACKLIST}")
 PILOT_WP_PLUGIN_BLACKLIST_SOURCE=$(source /tmp/ss-pilot; echo "${WP_PLUGIN_BLACKLIST_SOURCE}")
 
-## whitelabel brand ##
-if [[ -n "${PILOT_WHITELABEL_BRAND}" ]]; then 
-    ss_sed "s|\(^WHITELABEL_BRAND=\).*|WHITELABEL_BRAND=\"$PILOT_WHITELABEL_BRAND\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## whitelabel homepage ##
-if [[ -n "${PILOT_WHITELABEL_HOMEPAGE}" ]]; then 
-    ss_sed "s|\(^WHITELABEL_HOMEPAGE=\).*|WHITELABEL_HOMEPAGE=\"$PILOT_WHITELABEL_HOMEPAGE\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## whitelabel support url ##
-if [[ -n "${PILOT_WHITELABEL_SUPPORT_URL}" ]]; then 
-    ss_sed "s|\(^WHITELABEL_SUPPORT_URL=\).*|WHITELABEL_SUPPORT_URL=\"$PILOT_WHITELABEL_SUPPORT_URL\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## whitelabel support email ##
-if [[ -n "${PILOT_WHITELABEL_SUPPORT_EMAIL}" ]]; then 
-    ss_sed "s|\(^WHITELABEL_SUPPORT_EMAIL=\).*|WHITELABEL_SUPPORT_EMAIL=\"$PILOT_WHITELABEL_SUPPORT_EMAIL\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## nginx header powered by ##
-if [[ -n "${PILOT_NGINX_HEADER_POWERED_BY}" ]]; then 
-    ss_sed "s|\(^NGINX_HEADER_POWERED_BY=\).*|NGINX_HEADER_POWERED_BY=\"$PILOT_NGINX_HEADER_POWERED_BY\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## cloudflare api key ##
-if [[ -n "${PILOT_CLOUDFLARE_API_KEY}" ]]; then 
-    ss_sed "s|\(^CLOUDFLARE_API_KEY=\).*|CLOUDFLARE_API_KEY=\"$PILOT_CLOUDFLARE_API_KEY\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## cloudflare api email ##
-if [[ -n "${PILOT_CLOUDFLARE_API_EMAIL}" ]]; then 
-    ss_sed "s|\(^CLOUDFLARE_API_EMAIL=\).*|CLOUDFLARE_API_EMAIL=\"$PILOT_CLOUDFLARE_API_EMAIL\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## php extensions ##
-if [[ -n "${PILOT_PHP_EXTENSIONS}" ]]; then 
-    ss_sed "s|\(^PHP_EXTENSIONS=\).*|PHP_EXTENSIONS=\"$PILOT_PHP_EXTENSIONS\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## plugin blacklist status 1 ##
-if [[ -n "${PILOT_WP_PLUGIN_BLACKLIST}" ]]; then 
-    ss_sed "s|\(^SS_WORDPRESS_PLUGIN_BLACKLIST=\).*|SS_WORDPRESS_PLUGIN_BLACKLIST=\"$PILOT_WP_PLUGIN_BLACKLIST\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## plugin blacklist status 2 ##
-if [[ -n "${PILOT_WP_PLUGIN_BLACKLIST}" ]]; then 
-    ss_sed "s|\(^WP_PLUGIN_BLACKLIST=\).*|WP_PLUGIN_BLACKLIST=\"$PILOT_WP_PLUGIN_BLACKLIST\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## plugin blacklist source 1 ##
-if [[ -n "${PILOT_WP_PLUGIN_BLACKLIST_SOURCE}" ]]; then 
-    ss_sed "s|\(^SS_WORDPRESS_PLUGIN_BLACKLIST_SOURCE=\).*|SS_WORDPRESS_PLUGIN_BLACKLIST_SOURCE=\"$PILOT_WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${PATH_SS_CONFIG}"
-fi
-
-## plugin blacklist source 2 ##
-if [[ -n "${PILOT_WP_PLUGIN_BLACKLIST_SOURCE}" ]]; then 
-    ss_sed "s|\(^WP_PLUGIN_BLACKLIST_SOURCE=\).*|WP_PLUGIN_BLACKLIST_SOURCE=\"$PILOT_WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${PATH_SS_CONFIG}"
-fi
+[[ -n "${PILOT_WHITELABEL_BRAND}" ]] && ss_sed "s|\(^WHITELABEL_BRAND=\).*|WHITELABEL_BRAND=\"$PILOT_WHITELABEL_BRAND\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_WHITELABEL_HOMEPAGE}" ]] && ss_sed "s|\(^WHITELABEL_HOMEPAGE=\).*|WHITELABEL_HOMEPAGE=\"$PILOT_WHITELABEL_HOMEPAGE\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_WHITELABEL_SUPPORT_URL}" ]] && ss_sed "s|\(^WHITELABEL_SUPPORT_URL=\).*|WHITELABEL_SUPPORT_URL=\"$PILOT_WHITELABEL_SUPPORT_URL\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_WHITELABEL_SUPPORT_EMAIL}" ]] && ss_sed "s|\(^WHITELABEL_SUPPORT_EMAIL=\).*|WHITELABEL_SUPPORT_EMAIL=\"$PILOT_WHITELABEL_SUPPORT_EMAIL\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_NGINX_HEADER_POWERED_BY}" ]] && ss_sed "s|\(^NGINX_HEADER_POWERED_BY=\).*|NGINX_HEADER_POWERED_BY=\"$PILOT_NGINX_HEADER_POWERED_BY\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_CLOUDFLARE_API_KEY}" ]] && ss_sed "s|\(^CLOUDFLARE_API_KEY=\).*|CLOUDFLARE_API_KEY=\"$PILOT_CLOUDFLARE_API_KEY\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_CLOUDFLARE_API_EMAIL}" ]] && ss_sed "s|\(^CLOUDFLARE_API_EMAIL=\).*|CLOUDFLARE_API_EMAIL=\"$PILOT_CLOUDFLARE_API_EMAIL\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_PHP_EXTENSIONS}" ]] && ss_sed "s|\(^PHP_EXTENSIONS=\).*|PHP_EXTENSIONS=\"$PILOT_PHP_EXTENSIONS\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_WP_PLUGIN_BLACKLIST}" ]] && ss_sed "s|\(^SS_WORDPRESS_PLUGIN_BLACKLIST=\).*|SS_WORDPRESS_PLUGIN_BLACKLIST=\"$PILOT_WP_PLUGIN_BLACKLIST\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_WP_PLUGIN_BLACKLIST}" ]] && ss_sed "s|\(^WP_PLUGIN_BLACKLIST=\).*|WP_PLUGIN_BLACKLIST=\"$PILOT_WP_PLUGIN_BLACKLIST\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_WP_PLUGIN_BLACKLIST_SOURCE}" ]] && ss_sed "s|\(^SS_WORDPRESS_PLUGIN_BLACKLIST_SOURCE=\).*|SS_WORDPRESS_PLUGIN_BLACKLIST_SOURCE=\"$PILOT_WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${PATH_SS_CONFIG}"
+[[ -n "${PILOT_WP_PLUGIN_BLACKLIST_SOURCE}" ]] && ss_sed "s|\(^WP_PLUGIN_BLACKLIST_SOURCE=\).*|WP_PLUGIN_BLACKLIST_SOURCE=\"$PILOT_WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${PATH_SS_CONFIG}"
 
 fi 
 
@@ -248,7 +199,7 @@ fi
 ## this allows SlickStack to use these handy PHP constants inside PHP scripts ##
 
 ## SNIPPET: ss-install-wordpress-config, ss-worker
-## UPDATED: 17FEB2025
+## UPDATED: 16MAR2025
 
 ## download latest boilerplate ##
 ss_wget "${TMP_SS_CONSTANTS_PHP}" "${GITHUB_SS_CONSTANTS_PHP}"
@@ -287,36 +238,17 @@ elif [[ "${SYSTEM_UBUNTU_VERSION}" == "18.04" ]]; then
     SYSTEM_MYSQL_VERSION=$(ss_mysql_root --version |& awk '{print $5}' | sed 's/,//g')
 fi
 
-## mysql version (more) ##
-if [[ "${SS_DATABASE_REMOTE}" != "false" ]]; then
-    ss_sed "s|@SYSTEM_MYSQL_VERSION|Unavailable|g" "${TMP_SS_CONSTANTS_PHP}"
-else
-    ss_sed "s|@SYSTEM_MYSQL_VERSION|${SYSTEM_MYSQL_VERSION}|g" "${TMP_SS_CONSTANTS_PHP}"
-fi
+[[ "${SS_DATABASE_REMOTE}" != "false" ]] && ss_sed "s|@SYSTEM_MYSQL_VERSION|Unavailable|g" "${TMP_SS_CONSTANTS_PHP}" || ss_sed "s|@SYSTEM_MYSQL_VERSION|${SYSTEM_MYSQL_VERSION}|g" "${TMP_SS_CONSTANTS_PHP}"
+[[ "${SS_DATABASE_REMOTE}" != "false" ]] && ss_sed "s|@SYSTEM_MYSQL_SIZE|Unavailable|g" "${TMP_SS_CONSTANTS_PHP}" || ss_sed "s|@SYSTEM_MYSQL_SIZE|${SYSTEM_MYSQL_SIZE}|g" "${TMP_SS_CONSTANTS_PHP}"
 
-## mysql database size ##
-if [[ "${SS_DATABASE_REMOTE}" != "false" ]]; then
-    # ss_sed "/MYSQL_SIZE/d" "${TMP_SS_CONSTANTS_PHP}"
-    ss_sed "s|@SYSTEM_MYSQL_SIZE|Unavailable|g" "${TMP_SS_CONSTANTS_PHP}"
-else
-    ss_sed "s|@SYSTEM_MYSQL_SIZE|${SYSTEM_MYSQL_SIZE}|g" "${TMP_SS_CONSTANTS_PHP}"
-fi
-
-## sftp details ##
 ss_sed "s|@SFTP_USER|${SFTP_USER}|g" "${TMP_SS_CONSTANTS_PHP}"
 ss_sed "s|@SFTP_PASSWORD|${SFTP_PASSWORD}|g" "${TMP_SS_CONSTANTS_PHP}"
 ss_sed "s|@SFTP_PORT|${SSH_PORT}|g" "${TMP_SS_CONSTANTS_PHP}"
-
-## adminer ##
 ss_sed "s|@ADMINER_PUBLIC|${ADMINER_PUBLIC}|g" "${TMP_SS_CONSTANTS_PHP}"
-
-## whitelabel ##
 ss_sed "s|@WHITELABEL_BRAND|${WHITELABEL_BRAND}|g" "${TMP_SS_CONSTANTS_PHP}"
 ss_sed "s|@WHITELABEL_HOMEPAGE|${WHITELABEL_HOMEPAGE}|g" "${TMP_SS_CONSTANTS_PHP}"
 ss_sed "s|@WHITELABEL_SUPPORT_URL|${WHITELABEL_SUPPORT_URL}|g" "${TMP_SS_CONSTANTS_PHP}"
 ss_sed "s|@WHITELABEL_SUPPORT_EMAIL|${WHITELABEL_SUPPORT_EMAIL}|g" "${TMP_SS_CONSTANTS_PHP}"
-
-## staging/dev ##
 ss_sed "s|@STAGING_SITE_STATUS|${STAGING_SITE}|g" "${TMP_SS_CONSTANTS_PHP}"
 ss_sed "s|@DEV_SITE_STATUS|${DEV_SITE}|g" "${TMP_SS_CONSTANTS_PHP}"
 ss_sed "s|@SYNC_STAGING_SITE_STATUS|${SS_SYNC_STAGING}|g" "${TMP_SS_CONSTANTS_PHP}"
@@ -337,7 +269,7 @@ fi
 ## here we install a basic robots.txt file in case none exists yet on production site ##
 ## by default we allow all URLs to be crawled and block archive.org crawling ##
 
-if [[ ! -f "${PATH_ROBOTS_TXT}" ]]; then 
+if [[ ! -s "${PATH_ROBOTS_TXT}" ]]; then 
     ss_wget "${TMP_ROBOTS_TXT}" "${GITHUB_ROBOTS_TXT}"
     ss_cp "${TMP_ROBOTS_TXT}" "${PATH_ROBOTS_TXT}"
     chown www-data:www-data "${PATH_ROBOTS_TXT}"
@@ -348,7 +280,7 @@ fi
 #### L. SS-Worker: Install SS-Icon.svg (If Not Exists) #############################################
 ####################################################################################################
 
-if [[ ! -f "${PATH_SS_ICON_SVG}" ]]; then 
+if [[ ! -s "${PATH_SS_ICON_SVG}" ]]; then 
     ss_wget "${TMP_SS_ICON_SVG}" "${GITHUB_SS_ICON_SVG}"
     ss_mv "${TMP_SS_ICON_SVG}" "${PATH_SS_ICON_SVG}"
 fi
@@ -358,7 +290,7 @@ fi
 ####################################################################################################
 
 ## error_404.html ##
-if [[ ! -f "${PATH_ERROR_404_HTML}" ]]; then 
+if [[ ! -s "${PATH_ERROR_404_HTML}" ]]; then 
 
     ## retrieve error_404.html ##
     ss_wget "${TMP_ERROR_404_HTML}" "${GITHUB_ERROR_404_HTML}"
@@ -378,7 +310,7 @@ if [[ ! -f "${PATH_ERROR_404_HTML}" ]]; then
 fi
 
 ## error_50x.html ##
-if [[ ! -f "${PATH_ERROR_50X_HTML}" ]]; then 
+if [[ ! -s "${PATH_ERROR_50X_HTML}" ]]; then 
 
     ## retrieve error_50x.html ##
     ss_wget "${TMP_ERROR_50X_HTML}" "${GITHUB_ERROR_50X_HTML}"
@@ -596,6 +528,7 @@ chmod 0700 /var/www/crons/custom/*cron* ## 0700 means only root/sudo can execute
 #### SlickStack: External References Used To Improve This Script (Thanks, Interwebz) ###############
 ####################################################################################################
 
+## Ref: ChatGPT
 ## Ref: https://linuxize.com/post/bash-functions/
 ## Ref: https://www.cyberciti.biz/faq/unix-linux-appleosx-bsd-shell-appending-date-to-filename/
 ## Ref: https://wordpress.stackexchange.com/questions/199725/triggering-cron-by-calling-wp-cron-php-on-the-command-line-rather-than-with-wget
