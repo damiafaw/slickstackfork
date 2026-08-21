@@ -1166,7 +1166,7 @@ if [[ -z "${VALIDATE_TMP_AUTHENTICATED_ORIGIN_CONF}" ]]; then
 fi
 
 ## retrieve origin-gate.conf boilerplate ##
-ss_wget /tmp/origin-gate.conf https://raw.githubusercontent.com/littlebizzy/slickstack/refs/heads/master/modules/nginx/includes/origin-gate-conf.txt
+ss_wget /tmp/origin-gate.conf https://raw.githubusercontent.com/damiafaw/slickstackfork/refs/heads/master/modules/nginx/includes/origin-gate-conf.txt
 
 ## install if valid ##
 VALIDATE_TMP_AUTHENTICATED_ORIGIN_CONF=$(grep 'ssl_verify_client' "${TMP_AUTHENTICATED_ORIGIN_CONF}" 2> /dev/null)
@@ -1197,7 +1197,7 @@ ss_rm "${TMP_AUTHENTICATED_ORIGIN_CONF}"
 
 VALIDATE_ACTIVE_PERMS_POLICY_CONF=$(grep 'add_header Permissions-Policy' /var/www/sites/includes/perms-policy.conf 2> /dev/null)
 if [[ -z "${VALIDATE_ACTIVE_PERMS_POLICY_CONF}" ]]; then
-    ss_wget /tmp/perms-policy.conf https://raw.githubusercontent.com/littlebizzy/slickstack/master/modules/nginx/includes/perms-policy-conf.txt
+    ss_wget /tmp/perms-policy.conf https://raw.githubusercontent.com/damiafaw/slickstackfork/master/modules/nginx/includes/perms-policy-conf.txt
     ss_cp_if_not_exists /tmp/perms-policy.conf /var/www/sites/includes/perms-policy.conf
 fi
 
