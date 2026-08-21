@@ -156,21 +156,30 @@ chmod 0440 "${PATH_BLACKLIST_TXT}" ## must be 0440
 ## it replaces ss-config options with these values for multi-server management ##
 
 ## retrieve pilot file if exists ##
-if [[ -n "${SS_PILOT_FILE}" ]]; then 
+## SECURITY: the pilot file is fetched from a remote URL and historically was "source"d ##
+## directly, which executes it as root bash on every ss-worker run (cron). We instead ##
+## require https:// and parse it as inert KEY="value" lines (grep/sed only) so the ##
+## pilot file can never run arbitrary code, no matter what it contains. ##
+if [[ "${SS_PILOT_FILE}" == https://* ]]; then
 
 ss_wget "${TMP_SS_PILOT_FILE}" "${SS_PILOT_FILE}"
 
-## read variables from pilot file ##
-PILOT_CLOUDFLARE_API_KEY=$(source /tmp/ss-pilot; echo "${CLOUDFLARE_API_KEY}")
-PILOT_CLOUDFLARE_API_EMAIL=$(source /tmp/ss-pilot; echo "${CLOUDFLARE_API_EMAIL}")
-PILOT_NGINX_HEADER_POWERED_BY=$(source /tmp/ss-pilot; echo "${NGINX_HEADER_POWERED_BY}")
-PILOT_PHP_EXTENSIONS=$(source /tmp/ss-pilot; echo "${PHP_EXTENSIONS}")
-PILOT_WHITELABEL_BRAND=$(source /tmp/ss-pilot; echo "${WHITELABEL_BRAND}")
-PILOT_WHITELABEL_HOMEPAGE=$(source /tmp/ss-pilot; echo "${WHITELABEL_HOMEPAGE}")
-PILOT_WHITELABEL_SUPPORT_URL=$(source /tmp/ss-pilot; echo "${WHITELABEL_SUPPORT_URL}")
-PILOT_WHITELABEL_SUPPORT_EMAIL=$(source /tmp/ss-pilot; echo "${WHITELABEL_SUPPORT_EMAIL}")
-PILOT_WP_PLUGIN_BLACKLIST=$(source /tmp/ss-pilot; echo "${WP_PLUGIN_BLACKLIST}")
-PILOT_WP_PLUGIN_BLACKLIST_SOURCE=$(source /tmp/ss-pilot; echo "${WP_PLUGIN_BLACKLIST_SOURCE}")
+## extract a KEY="value" (or KEY=value) assignment without ever executing the file ##
+function ss_pilot_get {
+    command grep -E "^${1}=" "${TMP_SS_PILOT_FILE}" 2> /dev/null | tail -n1 | command sed -E "s/^${1}=//; s/^\"//; s/\"\$//; s/^'//; s/'\$//"
+}
+
+## read variables from pilot file (no code execution) ##
+PILOT_CLOUDFLARE_API_KEY=$(ss_pilot_get CLOUDFLARE_API_KEY)
+PILOT_CLOUDFLARE_API_EMAIL=$(ss_pilot_get CLOUDFLARE_API_EMAIL)
+PILOT_NGINX_HEADER_POWERED_BY=$(ss_pilot_get NGINX_HEADER_POWERED_BY)
+PILOT_PHP_EXTENSIONS=$(ss_pilot_get PHP_EXTENSIONS)
+PILOT_WHITELABEL_BRAND=$(ss_pilot_get WHITELABEL_BRAND)
+PILOT_WHITELABEL_HOMEPAGE=$(ss_pilot_get WHITELABEL_HOMEPAGE)
+PILOT_WHITELABEL_SUPPORT_URL=$(ss_pilot_get WHITELABEL_SUPPORT_URL)
+PILOT_WHITELABEL_SUPPORT_EMAIL=$(ss_pilot_get WHITELABEL_SUPPORT_EMAIL)
+PILOT_WP_PLUGIN_BLACKLIST=$(ss_pilot_get WP_PLUGIN_BLACKLIST)
+PILOT_WP_PLUGIN_BLACKLIST_SOURCE=$(ss_pilot_get WP_PLUGIN_BLACKLIST_SOURCE)
 
 [[ -n "${PILOT_WHITELABEL_BRAND}" ]] && ss_sed "s|\(^WHITELABEL_BRAND=\).*|WHITELABEL_BRAND=\"$PILOT_WHITELABEL_BRAND\"|g" "${PATH_SS_CONFIG}"
 [[ -n "${PILOT_WHITELABEL_HOMEPAGE}" ]] && ss_sed "s|\(^WHITELABEL_HOMEPAGE=\).*|WHITELABEL_HOMEPAGE=\"$PILOT_WHITELABEL_HOMEPAGE\"|g" "${PATH_SS_CONFIG}"
@@ -185,7 +194,12 @@ PILOT_WP_PLUGIN_BLACKLIST_SOURCE=$(source /tmp/ss-pilot; echo "${WP_PLUGIN_BLACK
 [[ -n "${PILOT_WP_PLUGIN_BLACKLIST_SOURCE}" ]] && ss_sed "s|\(^SS_WORDPRESS_PLUGIN_BLACKLIST_SOURCE=\).*|SS_WORDPRESS_PLUGIN_BLACKLIST_SOURCE=\"$PILOT_WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${PATH_SS_CONFIG}"
 [[ -n "${PILOT_WP_PLUGIN_BLACKLIST_SOURCE}" ]] && ss_sed "s|\(^WP_PLUGIN_BLACKLIST_SOURCE=\).*|WP_PLUGIN_BLACKLIST_SOURCE=\"$PILOT_WP_PLUGIN_BLACKLIST_SOURCE\"|g" "${PATH_SS_CONFIG}"
 
-fi 
+## cleanup ##
+ss_rm "${TMP_SS_PILOT_FILE}"
+
+elif [[ -n "${SS_PILOT_FILE}" ]]; then
+    ss_echo "${COLOR_WARN}ss-worker: SS_PILOT_FILE must use https:// -- skipping pilot file sync for safety... ${COLOR_RESET}"
+fi
 
 ####################################################################################################
 #### I. SS-Worker: Install SS-Constants.php ########################################################

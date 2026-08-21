@@ -1780,8 +1780,11 @@ function ss_rsync {
 }
 
 ## ss_rsync_backup ##
+## SECURITY: password is passed via SSHPASS env var (sshpass -e) instead of -p so it is not ##
+## visible to other local users via ps/proc, and StrictHostKeyChecking=accept-new is used ##
+## instead of "no" so the host key is still pinned/verified after the first connection ##
 function ss_rsync_backup {
-    command rsync -azc --mkpath --rsh="sshpass -p ${RSYNC_PASSWORD} ssh -p ${RSYNC_PORT:-22} -o StrictHostKeyChecking=no -l ${RSYNC_USER}" "$@"
+    SSHPASS="${RSYNC_PASSWORD}" command rsync -azc --mkpath --rsh="sshpass -e ssh -p ${RSYNC_PORT:-22} -o StrictHostKeyChecking=accept-new -l ${RSYNC_USER}" "$@"
 }
 
 ## ss_sed ##

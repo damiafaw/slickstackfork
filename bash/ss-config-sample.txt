@@ -163,10 +163,13 @@ DB_COLLATE=""
 ## Adminer is a lightweight alternative to phpMyAdmin for database management ##
 ## your freelancers or team members might occasionally need to use Adminer ##
 
-## ADMINER_PUBLIC = [true|false] enables a randomized link accessible from the frontend ##
+## ADMINER_PUBLIC = [false|true] enables a randomized link accessible from the frontend ##
+## SECURITY: Adminer is a full database admin tool; the random URL is obscurity, not ##
+## authentication. Only enable this if you specifically need frontend DB access and ##
+## understand the exposure, ideally combined with an IP allow-list or VPN. ##
 ## ADMINER_URL = [*must be unique*] should be long and completely random for security ##
 
-ADMINER_PUBLIC="true"
+ADMINER_PUBLIC="false"
 ADMINER_URL="@RANDOM_STRING_ADMINER_URL"
 
 ####################################################################################################
